@@ -43,35 +43,3 @@ swag                           Generate swagger docs
 help                           Display this help screen
 ```
 
-## Available Endpoint
-
-In the project directory, you can call:
-
-### `GET /`
-
-For getting status page
-
-### `POST /login`
-
-For generating a JWT
-
-### `GET /api/users`
-
-For getting all of users
-
-### `GET /api/users/:id`
-
-For getting user by ID
-
-### `POST /api/users`
-
-For creating new user
-
-### `DELETE /api/users/:id`
-
-For removing existing user
-
-### `PUT /api/users/:id`
-
-For updating existing user
-
