@@ -31,8 +31,16 @@ type OrderItem struct {
 }
 
 type AdminOrdersResponse struct {
-	Pending   []Order
-	Shipped   []Order
-	Delivered []Order
-	Canceled  []Order
+	Pending   []OrderDetails
+	Shipped   []OrderDetails
+	Delivered []OrderDetails
+	Canceled  []OrderDetails
+}
+
+type OrderDetails struct {
+	Id            int     `json:"order_id"`
+	Username      string  `json:"name"`
+	Address       string  `json:"address"`
+	Paymentmethod string  `json:"payment_method"`
+	Total         float64 `json:"total"`
 }

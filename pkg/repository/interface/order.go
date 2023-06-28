@@ -12,5 +12,5 @@ type OrderRepository interface {
 	AddOrderProducts(order_id int, cart []models.GetCart) error
 	CancelOrder(status string, id int) error
 	EditOrderStatus(status string, id int) error
-	AdminOrders(status string) ([]domain.Order, error)
+	AdminOrders(status string) ([]domain.OrderDetails, error)
 }
