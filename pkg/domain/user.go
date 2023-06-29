@@ -7,6 +7,7 @@ type Users struct {
 	Password string `json:"password" validate:"min=8,max=20"`
 	Phone    string `json:"phone"`
 	Blocked  bool   `json:"blocked" gorm:"default:false"`
+	IsAdmin  bool   `json:"is_admin" gorm:"default:false"`
 }
 
 type Address struct {
