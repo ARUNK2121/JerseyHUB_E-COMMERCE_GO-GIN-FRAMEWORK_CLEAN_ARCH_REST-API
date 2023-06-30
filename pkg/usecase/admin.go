@@ -47,7 +47,7 @@ func (ad *adminUseCase) LoginHandler(adminDetails models.AdminLogin) (domain.Tok
 		return domain.TokenAdmin{}, err
 	}
 
-	tokenString, err := helper.GenerateTokenAdmin(adminDetailsResponse)
+	access, refresh, err := helper.GenerateTokenAdmin(adminDetailsResponse)
 
 	if err != nil {
 		return domain.TokenAdmin{}, err
@@ -61,8 +61,9 @@ func (ad *adminUseCase) LoginHandler(adminDetails models.AdminLogin) (domain.Tok
 	// }
 
 	return domain.TokenAdmin{
-		Admin: adminDetailsResponse,
-		Token: tokenString,
+		Admin:        adminDetailsResponse,
+		AccessToken:  access,
+		RefreshToken: refresh,
 	}, nil
 
 }

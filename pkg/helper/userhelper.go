@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-type authCustomClaims struct {
+type AuthCustomClaims struct {
 	Id    int    `json:"id"`
 	Email string `json:"email"`
 	Role  string `json:"role"`
@@ -39,7 +39,7 @@ type authCustomClaims struct {
 // }
 
 func GenerateTokenClients(user models.UserDetailsResponse) (string, error) {
-	claims := &authCustomClaims{
+	claims := &AuthCustomClaims{
 		Id:    user.Id,
 		Email: user.Email,
 		Role:  "client",
