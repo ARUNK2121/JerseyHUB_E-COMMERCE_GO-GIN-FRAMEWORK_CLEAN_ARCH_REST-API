@@ -22,6 +22,15 @@ func NewAdminHandler(usecase services.AdminUseCase) *AdminHandler {
 	}
 }
 
+// @Summary Admin Login
+// @Description Login handler for jerseyhub admins
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Param  admin body models.AdminLogin true "Admin login details"
+// @Success 200 {object} response.Response{}
+// @Failure 500 {object} response.Response{}
+// @Router /admin/adminlogin [post]
 func (ad *AdminHandler) LoginHandler(c *gin.Context) { // login handler for the admin
 
 	// var adminDetails models.AdminLogin
@@ -45,6 +54,25 @@ func (ad *AdminHandler) LoginHandler(c *gin.Context) { // login handler for the 
 
 }
 
+// @Summary Block User
+// @Description using this handler admins can block an user
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @param token string true "Insert your access token" default(Bearer)
+
+// @securityDefinitions.apikey OtherAuth
+// @in header
+// @name Authorization
+// @param token string true "Insert your other access token" default(Bearer)
+
+// @Param  id query string true "user-id"
+// @Success 200 {object} response.Response{}
+// @Failure 500 {object} response.Response{}
+// @Router /admin/users/block [post]
 func (ad *AdminHandler) BlockUser(c *gin.Context) {
 
 	id := c.Query("id")

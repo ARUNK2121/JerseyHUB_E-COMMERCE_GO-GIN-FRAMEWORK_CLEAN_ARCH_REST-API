@@ -1,0 +1,76 @@
+definitions:
+  models.AdminLogin:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 20
+        minLength: 8
+        type: string
+    required:
+    - email
+    type: object
+  response.Response:
+    properties:
+      data: {}
+      error: {}
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /admin/adminlogin:
+    post:
+      consumes:
+      - application/json
+      description: Login handler for jerseyhub admins
+      parameters:
+      - description: Admin login details
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/models.AdminLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Admin Login
+      tags:
+      - Admin
+  /admin/users/block:
+    post:
+      consumes:
+      - application/json
+      description: using this handler admins can block an user
+      parameters:
+      - description: user-id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Block User
+      tags:
+      - Admin
+swagger: "2.0"

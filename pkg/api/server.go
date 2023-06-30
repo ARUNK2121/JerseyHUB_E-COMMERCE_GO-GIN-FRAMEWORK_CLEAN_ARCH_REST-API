@@ -5,6 +5,9 @@ import (
 
 	handler "jerseyhub/pkg/api/handler"
 	"jerseyhub/pkg/routes"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type ServerHTTP struct {
@@ -17,8 +20,8 @@ func NewServerHTTP(userHandler *handler.UserHandler, adminHandler *handler.Admin
 	// Use logger from Gin
 	engine.Use(gin.Logger())
 
-	// Swagger docs
-	// engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	//Swagger docs
+	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// engine.POST("users/signup", userHandler.UserSignUp)
 	// engine.POST("users/login", userHandler.LoginHandler)
