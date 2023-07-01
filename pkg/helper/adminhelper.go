@@ -35,7 +35,7 @@ func GenerateTokenAdmin(admin models.AdminDetailsResponse) (string, string, erro
 		Email: admin.Email,
 		Role:  "admin",
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Minute * 1).Unix(),
+			ExpiresAt: time.Now().Add(time.Minute * 20).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 	}

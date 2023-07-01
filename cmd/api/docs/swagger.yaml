@@ -1,4 +1,11 @@
 definitions:
+  models.AddToCart:
+    properties:
+      inventory_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
   models.AdminLogin:
     properties:
       email:
@@ -9,6 +16,11 @@ definitions:
         type: string
     required:
     - email
+    type: object
+  models.NewPaymentMethod:
+    properties:
+      payment_method:
+        type: string
     type: object
   response.Response:
     properties:
@@ -48,6 +60,61 @@ paths:
       summary: Admin Login
       tags:
       - Admin
+  /admin/payment/payment-method/new:
+    post:
+      consumes:
+      - application/json
+      description: admin can add new payment methods
+      parameters:
+      - description: payment method
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/models.NewPaymentMethod'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: ADD NEW PAYMENT METHOD
+      tags:
+      - Admin
+  /admin/users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve users with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Get Users
+      tags:
+      - Admin
   /admin/users/block:
     post:
       consumes:
@@ -70,7 +137,37 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
       summary: Block User
       tags:
       - Admin
+  /users/home/add-to-cart:
+    post:
+      consumes:
+      - application/json
+      description: Add products to carts  for the purchase
+      parameters:
+      - description: Add To Cart
+        in: body
+        name: cart
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddToCart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Add To Cart
+      tags:
+      - Users
 swagger: "2.0"

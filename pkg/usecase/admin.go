@@ -59,7 +59,6 @@ func (ad *adminUseCase) LoginHandler(adminDetails models.AdminLogin) (domain.Tok
 	// if err != nil {
 	// 	return domain.TokenAdmin{}, err
 	// }
-
 	return domain.TokenAdmin{
 		Admin:        adminDetailsResponse,
 		AccessToken:  access,
@@ -113,9 +112,9 @@ func (ad *adminUseCase) UnBlockUser(id string) error {
 
 }
 
-func (ad *adminUseCase) GetUsers(page int, count int) ([]models.UserDetailsAtAdmin, error) {
+func (ad *adminUseCase) GetUsers(page int) ([]models.UserDetailsAtAdmin, error) {
 
-	userDetails, err := ad.adminRepository.GetUsers(page, count)
+	userDetails, err := ad.adminRepository.GetUsers(page)
 	if err != nil {
 		return []models.UserDetailsAtAdmin{}, err
 	}

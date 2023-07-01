@@ -22,15 +22,15 @@ func NewAdminHandler(usecase services.AdminUseCase) *AdminHandler {
 	}
 }
 
-// @Summary Admin Login
-// @Description Login handler for jerseyhub admins
-// @Tags Admin
-// @Accept json
-// @Produce json
-// @Param  admin body models.AdminLogin true "Admin login details"
-// @Success 200 {object} response.Response{}
-// @Failure 500 {object} response.Response{}
-// @Router /admin/adminlogin [post]
+//	@Summary		Admin Login
+//	@Description	Login handler for jerseyhub admins
+//	@Tags			Admin
+//	@Accept			json
+//	@Produce		json
+//	@Param			admin	body		models.AdminLogin	true	"Admin login details"
+//	@Success		200		{object}	response.Response{}
+//	@Failure		500		{object}	response.Response{}
+//	@Router			/admin/adminlogin [post]
 func (ad *AdminHandler) LoginHandler(c *gin.Context) { // login handler for the admin
 
 	// var adminDetails models.AdminLogin
@@ -49,30 +49,24 @@ func (ad *AdminHandler) LoginHandler(c *gin.Context) { // login handler for the 
 		return
 	}
 
+	c.Set("Access", admin.AccessToken)
+	c.Set("Refresh", admin.RefreshToken)
+
 	successRes := response.ClientResponse(http.StatusOK, "Admin authenticated successfully", admin, nil)
 	c.JSON(http.StatusOK, successRes)
 
 }
 
-// @Summary Block User
-// @Description using this handler admins can block an user
-// @Tags Admin
-// @Accept json
-// @Produce json
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
-// @param token string true "Insert your access token" default(Bearer)
-
-// @securityDefinitions.apikey OtherAuth
-// @in header
-// @name Authorization
-// @param token string true "Insert your other access token" default(Bearer)
-
-// @Param  id query string true "user-id"
-// @Success 200 {object} response.Response{}
-// @Failure 500 {object} response.Response{}
-// @Router /admin/users/block [post]
+//	@Summary		Block User
+//	@Description	using this handler admins can block an user
+//	@Tags			Admin
+//	@Accept			json
+//	@Produce		json
+//	@Security		Bearer
+//	@Param			id	query		string	true	"user-id"
+//	@Success		200	{object}	response.Response{}
+//	@Failure		500	{object}	response.Response{}
+//	@Router			/admin/users/block [post]
 func (ad *AdminHandler) BlockUser(c *gin.Context) {
 
 	id := c.Query("id")
@@ -87,6 +81,17 @@ func (ad *AdminHandler) BlockUser(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+//	@Summary		UnBlock an existing user
+//	@Description	UnBlock user
+//	@Tags			Admin
+//	@Accept			json
+//	@Produce		json
+//	@Security		Bearer
+//	@Param			id	query		string	true	"user-id"
+//	@Success		200	{object}	response.Response{}
+//	@Failure		500	{object}	response.Response{}
+//	@Router			/admin/users/unblock [POST]
 
 func (ad *AdminHandler) UnBlockUser(c *gin.Context) {
 
@@ -103,6 +108,16 @@ func (ad *AdminHandler) UnBlockUser(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+//	@Summary		Get Users
+//	@Description	Retrieve users with pagination
+//	@Tags			Admin
+//	@Accept			json
+//	@Produce		json
+//	@Security		Bearer
+//	@Param			page	query		string	true	"Page number"
+//	@Success		200		{object}	response.Response{}
+//	@Failure		500		{object}	response.Response{}
+//	@Router			/admin/users [get]
 func (ad *AdminHandler) GetUsers(c *gin.Context) {
 
 	pageStr := c.Query("page")
@@ -113,14 +128,8 @@ func (ad *AdminHandler) GetUsers(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	count, err := strconv.Atoi(c.Query("count"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "user count in a page not in right format", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
 
-	users, err := ad.adminUseCase.GetUsers(page, count)
+	users, err := ad.adminUseCase.GetUsers(page)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
@@ -131,6 +140,16 @@ func (ad *AdminHandler) GetUsers(c *gin.Context) {
 
 }
 
+//	@Summary		ADD NEW PAYMENT METHOD
+//	@Description	admin can add new payment methods
+//	@Tags			Admin
+//	@Accept			json
+//	@Produce		json
+//	@Security		Bearer
+//	@Param			payment	body		models.NewPaymentMethod	true	"payment method"
+//	@Success		200		{object}	response.Response{}
+//	@Failure		500		{object}	response.Response{}
+//	@Router			/admin/payment/payment-method/new [post]
 func (i *AdminHandler) NewPaymentMethod(c *gin.Context) {
 
 	var method models.NewPaymentMethod

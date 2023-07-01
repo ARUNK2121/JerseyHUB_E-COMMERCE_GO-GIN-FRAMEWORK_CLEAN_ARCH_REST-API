@@ -69,15 +69,15 @@ func (ad *adminRepository) UpdateBlockUserByID(user domain.Users) error {
 
 }
 
-func (ad *adminRepository) GetUsers(page int, count int) ([]models.UserDetailsAtAdmin, error) {
+func (ad *adminRepository) GetUsers(page int) ([]models.UserDetailsAtAdmin, error) {
 	// pagination purpose -
 	if page == 0 {
 		page = 1
 	}
-	offset := (page - 1) * count
+	offset := (page - 1) * 5
 	var userDetails []models.UserDetailsAtAdmin
 
-	if err := ad.DB.Raw("select id,name,email,phone,blocked from users limit ? offset ?", count, offset).Scan(&userDetails).Error; err != nil {
+	if err := ad.DB.Raw("select id,name,email,phone,blocked from users limit ? offset ?", 5, offset).Scan(&userDetails).Error; err != nil {
 		return []models.UserDetailsAtAdmin{}, err
 	}
 

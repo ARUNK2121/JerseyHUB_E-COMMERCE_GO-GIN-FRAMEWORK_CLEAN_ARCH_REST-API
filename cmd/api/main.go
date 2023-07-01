@@ -8,6 +8,14 @@ import (
 	di "jerseyhub/pkg/di"
 )
 
+// @SecurityDefinition BearerAuth
+// @TokenUrl /auth/token
+
+//	@securityDefinitions.Bearer		type apiKey
+//	@securityDefinitions.Bearer		name Authorization
+//	@securityDefinitions.Bearer		in header
+//	@securityDefinitions.BasicAuth	type basic
+
 func main() {
 
 	// // swagger 2.0 Meta Information
