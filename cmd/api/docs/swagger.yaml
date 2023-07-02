@@ -494,6 +494,114 @@ paths:
       summary: Block User
       tags:
       - Admin
+  /users/cart:
+    get:
+      consumes:
+      - application/json
+      description: user can view their cart details
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Get Cart
+      tags:
+      - User
+  /users/cart//updateQuantity/minus:
+    put:
+      consumes:
+      - application/json
+      description: user can subtract 1 quantity of product from their cart
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Subtract quantity in cart by one
+      tags:
+      - User
+  /users/cart//updateQuantity/plus:
+    put:
+      consumes:
+      - application/json
+      description: user can add 1 quantity of product to their cart
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Add quantity in cart by one
+      tags:
+      - User
+  /users/cart/remove:
+    delete:
+      consumes:
+      - application/json
+      description: user can remove products from their cart
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Remove from Cart
+      tags:
+      - User
   /users/check-out:
     get:
       consumes:
