@@ -21,6 +21,16 @@ func NewCategoryHandler(usecase services.CategoryUseCase) *CategoryHandler {
 	}
 }
 
+// @Summary		Add Category
+// @Description	Admin can add new categories for products
+// @Tags			Admin
+// @Accept			json
+// @Produce		    json
+// @Param			category	body	domain.Category	true	"category"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/admin/category/add [post]
 func (Cat *CategoryHandler) AddCategory(c *gin.Context) {
 
 	var category domain.Category
@@ -42,6 +52,16 @@ func (Cat *CategoryHandler) AddCategory(c *gin.Context) {
 
 }
 
+// @Summary		Update Category
+// @Description	Admin can update name of a category into new name
+// @Tags			Admin
+// @Accept			json
+// @Produce		    json
+// @Param			set_new_name	body	models.SetNewName	true	"set new name"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/admin/category/update [put]
 func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 
 	var p models.SetNewName
@@ -64,6 +84,16 @@ func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 
 }
 
+// @Summary		Delete Category
+// @Description	Admin can delete a category
+// @Tags			Admin
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/admin/category/delete [delete]
 func (Cat *CategoryHandler) DeleteCategory(c *gin.Context) {
 
 	categoryID := c.Query("id")

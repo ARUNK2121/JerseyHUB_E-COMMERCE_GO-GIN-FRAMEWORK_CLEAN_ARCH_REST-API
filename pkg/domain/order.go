@@ -17,7 +17,7 @@ type Order struct {
 	PaymentMethodID uint          `json:"paymentmethod_id"`
 	PaymentMethod   PaymentMethod `json:"-" gorm:"foreignkey:PaymentMethodID"`
 	FinalPrice      float64       `json:"price"`
-	OrderStatus     string        `json:"order_status" gorm:"order_status:4;default:'ordered';check:order_status IN ('ordered', 'shipped', 'delivered','canceled')"`
+	OrderStatus     string        `json:"status"`
 }
 
 type OrderItem struct {

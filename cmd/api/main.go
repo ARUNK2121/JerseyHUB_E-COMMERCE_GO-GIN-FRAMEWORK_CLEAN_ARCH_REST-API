@@ -20,7 +20,7 @@ func main() {
 
 	// // swagger 2.0 Meta Information
 	docs.SwaggerInfo.Title = "JERSEYHUB"
-	docs.SwaggerInfo.Description = "Here passion meets the fashion"
+	docs.SwaggerInfo.Description = "Here passion meets the fashion,This is an online store for purchasing high quality jerseys of your favorite clubs.."
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Host = "localhost:3000"
 	docs.SwaggerInfo.BasePath = ""

@@ -78,9 +78,9 @@ func (i *orderRepository) AddOrderProducts(order_id int, cart []models.GetCart) 
 
 }
 
-func (i *orderRepository) CancelOrder(status string, id int) error {
+func (i *orderRepository) CancelOrder(id int) error {
 
-	if err := i.DB.Exec("update orders set order_status=$1 where id=$2", status, id).Error; err != nil {
+	if err := i.DB.Exec("update orders set order_status='canceled' where id=$1", id).Error; err != nil {
 		return err
 	}
 

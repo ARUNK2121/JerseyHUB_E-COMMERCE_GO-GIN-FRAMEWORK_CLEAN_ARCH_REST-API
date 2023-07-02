@@ -72,9 +72,9 @@ func (i *inventoryUseCase) ShowIndividualProducts(id string) (domain.Inventories
 
 }
 
-func (i *inventoryUseCase) ListProducts(page int, count int) ([]domain.Inventories, error) {
+func (i *inventoryUseCase) ListProducts(page int) ([]domain.Inventories, error) {
 
-	productDetails, err := i.repository.ListProducts(page, count)
+	productDetails, err := i.repository.ListProducts(page)
 	if err != nil {
 		return []domain.Inventories{}, err
 	}

@@ -21,6 +21,16 @@ func NewOtpHandler(useCase services.OtpUseCase) *OtpHandler {
 	}
 }
 
+// @Summary		Send OTP
+// @Description	OTP login send otp
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			otp  body  models.OTPData true	"otp-data"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/otplogin [post]
 func (ot *OtpHandler) SendOTP(c *gin.Context) {
 
 	var phone models.OTPData
@@ -41,6 +51,16 @@ func (ot *OtpHandler) SendOTP(c *gin.Context) {
 
 }
 
+// @Summary		Verify OTP
+// @Description	OTP login verify otp
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			otp  body  models.VerifyData  true	"otp-verify"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/verifyotp [post]
 func (ot *OtpHandler) VerifyOTP(c *gin.Context) {
 	fmt.Println(1)
 

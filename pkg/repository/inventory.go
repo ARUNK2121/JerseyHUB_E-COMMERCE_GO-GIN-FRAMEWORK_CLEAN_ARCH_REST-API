@@ -134,15 +134,15 @@ func (i *inventoryRepository) ShowIndividualProducts(id string) (domain.Inventor
 
 }
 
-func (ad *inventoryRepository) ListProducts(page int, count int) ([]domain.Inventories, error) {
+func (ad *inventoryRepository) ListProducts(page int) ([]domain.Inventories, error) {
 	// pagination purpose -
 	if page == 0 {
 		page = 1
 	}
-	offset := (page - 1) * count
+	offset := (page - 1) * 5
 	var productDetails []domain.Inventories
 
-	if err := ad.DB.Raw("select id,category_id,product_name,size,stock,price from inventories limit ? offset ?", count, offset).Scan(&productDetails).Error; err != nil {
+	if err := ad.DB.Raw("select id,category_id,product_name,size,stock,price from inventories limit ? offset ?", 5, offset).Scan(&productDetails).Error; err != nil {
 		return []domain.Inventories{}, err
 	}
 

@@ -51,9 +51,9 @@ func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid i
 
 }
 
-func (i *orderUseCase) CancelOrder(status string, id int) error {
+func (i *orderUseCase) CancelOrder(id int) error {
 
-	err := i.orderRepository.CancelOrder(status, id)
+	err := i.orderRepository.CancelOrder(id)
 	if err != nil {
 		return err
 	}

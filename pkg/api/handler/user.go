@@ -29,6 +29,16 @@ func NewUserHandler(usecase services.UserUseCase) *UserHandler {
 	}
 }
 
+// @Summary		User Signup
+// @Description	user can signup by giving their details
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			signup  body  models.UserDetails  true	"signup"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/signup [post]
 func (u *UserHandler) UserSignUp(c *gin.Context) {
 
 	var user models.UserDetails
@@ -61,6 +71,16 @@ func (u *UserHandler) UserSignUp(c *gin.Context) {
 
 }
 
+// @Summary		User Login
+// @Description	user can log in by giving their details
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			login  body  models.UserLogin  true	"login"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/login [post]
 func (u *UserHandler) LoginHandler(c *gin.Context) {
 
 	var user models.UserLogin
@@ -90,6 +110,17 @@ func (u *UserHandler) LoginHandler(c *gin.Context) {
 
 }
 
+// @Summary		Add Address
+// @Description	user can add their addresses
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Param			address  body  models.AddAddress  true	"address"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/address/add [post]
 func (i *UserHandler) AddAddress(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Query("id"))
@@ -117,6 +148,16 @@ func (i *UserHandler) AddAddress(c *gin.Context) {
 
 }
 
+// @Summary		Get Addresses
+// @Description	user can get all their addresses
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/address [get]
 func (i *UserHandler) GetAddresses(c *gin.Context) {
 	idString := c.Query("id")
 	id, err := strconv.Atoi(idString)
@@ -137,6 +178,16 @@ func (i *UserHandler) GetAddresses(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary		Get User Details
+// @Description	user can get all their details
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/details [get]
 func (i *UserHandler) GetUserDetails(c *gin.Context) {
 	idString := c.Query("id")
 	id, err := strconv.Atoi(idString)
@@ -157,6 +208,16 @@ func (i *UserHandler) GetUserDetails(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary		Change Password
+// @Description	user can change their password
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/security/change-password [put]
 func (i *UserHandler) ChangePassword(c *gin.Context) {
 	fmt.Println("heyy again")
 
@@ -185,6 +246,16 @@ func (i *UserHandler) ChangePassword(c *gin.Context) {
 
 }
 
+// @Summary		Forgot password Send OTP
+// @Description	user can change their password if user forgot the password and login
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			model  body  models.ForgotPasswordSend  true	"forgot-send"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/forgot-password [get]
 func (i *UserHandler) ForgotPasswordSend(c *gin.Context) {
 
 	var model models.ForgotPasswordSend
@@ -204,6 +275,16 @@ func (i *UserHandler) ForgotPasswordSend(c *gin.Context) {
 
 }
 
+// @Summary		Forgot password Verfy and Change
+// @Description	user can change their password if user forgot the password and login
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			model  body  models.ForgotVerify  true	"forgot-verify"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/forgot-password [get]
 func (i *UserHandler) ForgotPasswordVerifyAndChange(c *gin.Context) {
 
 	var model models.ForgotVerify
@@ -225,6 +306,17 @@ func (i *UserHandler) ForgotPasswordVerifyAndChange(c *gin.Context) {
 
 }
 
+// @Summary		Edit Name
+// @Description	user can change their name
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Param			model  body  models.EditName  true	"edit-name"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/edit/name [put]
 func (i *UserHandler) EditName(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Query("id"))
@@ -252,6 +344,17 @@ func (i *UserHandler) EditName(c *gin.Context) {
 
 }
 
+// @Summary		Edit Email
+// @Description	user can change their Email
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Param			model  body  models.EditEmail true	"edit-email"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/edit/email [put]
 func (i *UserHandler) EditEmail(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Query("id"))
@@ -279,6 +382,17 @@ func (i *UserHandler) EditEmail(c *gin.Context) {
 
 }
 
+// @Summary		Edit Phone
+// @Description	user can change their Phone
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Param			model  body  models.EditPhone true	"edit-phone"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/edit/phone [put]
 func (i *UserHandler) EditPhone(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Query("id"))
@@ -306,6 +420,16 @@ func (i *UserHandler) EditPhone(c *gin.Context) {
 
 }
 
+// @Summary		Get Cart
+// @Description	user can view their cart details
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/cart [get]
 func (i *UserHandler) GetCart(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
@@ -324,6 +448,16 @@ func (i *UserHandler) GetCart(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary		Remove from Cart
+// @Description	user can remove products from their cart
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/cart/remove [delete]
 func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
@@ -342,6 +476,16 @@ func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary		Add quantity in cart by one
+// @Description	user can add 1 quantity of product to their cart
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/cart//updateQuantity/plus [put]
 func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
@@ -360,6 +504,16 @@ func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary		Subtract quantity in cart by one
+// @Description	user can subtract 1 quantity of product from their cart
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/cart//updateQuantity/minus [put]
 func (i *UserHandler) UpdateQuantityLess(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {

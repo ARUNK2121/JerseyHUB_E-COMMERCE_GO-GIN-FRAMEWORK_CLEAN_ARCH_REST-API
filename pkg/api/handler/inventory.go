@@ -22,6 +22,16 @@ func NewInventoryHandler(usecase services.InventoryUseCase) *InventoryHandler {
 	}
 }
 
+// @Summary		Add Inventory
+// @Description	Admin can add new  products
+// @Tags			Admin
+// @Accept			json
+// @Produce		    json
+// @Param			inventory	body	domain.Inventories	true	"inventory"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/admin/inventories/add [post]
 func (i *InventoryHandler) AddInventory(c *gin.Context) {
 
 	var inventory domain.Inventories
@@ -43,6 +53,16 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 
 }
 
+// @Summary		Update Stock
+// @Description	Admin can update stock of the inventories
+// @Tags			Admin
+// @Accept			json
+// @Produce		    json
+// @Param			add-stock	body	models.InventoryUpdate	true	"update stock"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/admin/inventories/update [put]
 func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 
 	var p models.InventoryUpdate
@@ -65,6 +85,16 @@ func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 
 }
 
+// @Summary		Delete Inventory
+// @Description	Admin can delete a product
+// @Tags			Admin
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/admin/inventories/delete [delete]
 func (i *InventoryHandler) DeleteInventory(c *gin.Context) {
 
 	inventoryID := c.Query("id")
@@ -81,6 +111,16 @@ func (i *InventoryHandler) DeleteInventory(c *gin.Context) {
 
 }
 
+// @Summary		Show Product Details
+// @Description	user can view the details of the product
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/products/details [get]
 func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 
 	id := c.Query("id")
@@ -97,6 +137,16 @@ func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 
 }
 
+// @Summary		List Products
+// @Description	user can view the list of available products
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			page	query	string	true	"page"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/products [get]
 func (i *InventoryHandler) ListProducts(c *gin.Context) {
 	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)
@@ -106,14 +156,8 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	count, err := strconv.Atoi(c.Query("count"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "user count in a page not in right format", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
 
-	products, err := i.InventoryUseCase.ListProducts(page, count)
+	products, err := i.InventoryUseCase.ListProducts(page)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)

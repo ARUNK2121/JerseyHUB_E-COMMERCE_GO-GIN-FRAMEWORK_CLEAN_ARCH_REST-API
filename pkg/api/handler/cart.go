@@ -22,7 +22,7 @@ func NewCartHandler(usecase services.CartUseCase) *CartHandler {
 
 // @Summary		Add To Cart
 // @Description	Add products to carts  for the purchase
-// @Tags			Users
+// @Tags			User
 // @Accept			json
 // @Produce		json
 // @Param			cart	body	models.AddToCart	true	"Add To Cart"
@@ -50,6 +50,16 @@ func (i *CartHandler) AddToCart(c *gin.Context) {
 
 }
 
+// @Summary		Checkout section
+// @Description	Add products to carts  for the purchase
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			cart	query	string	true	"cart id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/check-out [get]
 func (i *CartHandler) CheckOut(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
