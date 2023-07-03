@@ -56,19 +56,27 @@ func (i *OrderHandler) GetOrders(c *gin.Context) {
 // @Accept			json
 // @Produce		    json
 // @Param			order body	models.Order  true	"id"
+// @Param			coupon-id query	int  true	"coupon-id"
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
 // @Router			/users/check-out/order [post]
 func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
+	idstring := c.Query("coupon-id")
+	couponId, err := strconv.Atoi(idstring)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "coupon id trouble", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
 	var order models.Order
 	if err := c.BindJSON(&order); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	err := i.orderUseCase.OrderItemsFromCart(order.UserID, order.AddressID, order.PaymentMethodID)
-	if err != nil {
+	if err := i.orderUseCase.OrderItemsFromCart(order.UserID, order.AddressID, order.PaymentMethodID, couponId); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not make the order", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return

@@ -104,3 +104,7 @@ type CheckOut struct {
 	PaymentMethods []PaymentMethod
 	TotalPrice     float64
 }
+
+type Search struct {
+	Key string `json:"searchkey"`
+}

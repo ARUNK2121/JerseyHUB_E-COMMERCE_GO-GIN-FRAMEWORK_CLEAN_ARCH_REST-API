@@ -61,6 +61,15 @@ definitions:
     required:
     - email
     type: object
+  models.Coupons:
+    properties:
+      coupon:
+        type: string
+      discount_rate:
+        type: integer
+      valid:
+        type: boolean
+    type: object
   models.EditEmail:
     properties:
       email:
@@ -117,6 +126,11 @@ definitions:
         type: integer
       user_id:
         type: integer
+    type: object
+  models.Search:
+    properties:
+      searchkey:
+        type: string
     type: object
   models.SetNewName:
     properties:
@@ -274,6 +288,62 @@ paths:
       security:
       - Bearer: []
       summary: Update Category
+      tags:
+      - Admin
+  /admin/coupons/create:
+    post:
+      consumes:
+      - application/json
+      description: Admin can add new coupons
+      parameters:
+      - description: coupon
+        in: body
+        name: coupon
+        required: true
+        schema:
+          $ref: '#/definitions/models.Coupons'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Add Coupon
+      tags:
+      - Admin
+  /admin/coupons/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Admin can make the coupons as invalid so that users cannot use
+        that particular coupon
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Make Coupon ad invalid
       tags:
       - Admin
   /admin/inventories/add:
@@ -521,60 +591,6 @@ paths:
       summary: Get Cart
       tags:
       - User
-  /users/cart//updateQuantity/minus:
-    put:
-      consumes:
-      - application/json
-      description: user can subtract 1 quantity of product from their cart
-      parameters:
-      - description: id
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: Subtract quantity in cart by one
-      tags:
-      - User
-  /users/cart//updateQuantity/plus:
-    put:
-      consumes:
-      - application/json
-      description: user can add 1 quantity of product to their cart
-      parameters:
-      - description: id
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: Add quantity in cart by one
-      tags:
-      - User
   /users/cart/remove:
     delete:
       consumes:
@@ -602,15 +618,69 @@ paths:
       summary: Remove from Cart
       tags:
       - User
+  /users/cart/updateQuantity/minus:
+    put:
+      consumes:
+      - application/json
+      description: user can subtract 1 quantity of product from their cart
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Subtract quantity in cart by one
+      tags:
+      - User
+  /users/cart/updateQuantity/plus:
+    put:
+      consumes:
+      - application/json
+      description: user can add 1 quantity of product to their cart
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Add quantity in cart by one
+      tags:
+      - User
   /users/check-out:
     get:
       consumes:
       - application/json
       description: Add products to carts  for the purchase
       parameters:
-      - description: cart id
+      - description: id
         in: query
-        name: cart
+        name: id
         required: true
         type: string
       produces:
@@ -641,6 +711,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.Order'
+      - description: coupon-id
+        in: query
+        name: coupon-id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -737,8 +812,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
       summary: User Login
       tags:
       - User
@@ -765,8 +838,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
       summary: Send OTP
       tags:
       - User
@@ -1090,6 +1161,33 @@ paths:
       summary: Change Password
       tags:
       - User
+  /users/search:
+    post:
+      consumes:
+      - application/json
+      description: user can search with a key and get the list of  products similar
+        to that key
+      parameters:
+      - description: search
+        in: body
+        name: key
+        required: true
+        schema:
+          $ref: '#/definitions/models.Search'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Search Products
+      tags:
+      - User
   /users/signup:
     post:
       consumes:
@@ -1113,8 +1211,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
       summary: User Signup
       tags:
       - User
@@ -1141,8 +1237,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
       summary: Verify OTP
       tags:
       - User

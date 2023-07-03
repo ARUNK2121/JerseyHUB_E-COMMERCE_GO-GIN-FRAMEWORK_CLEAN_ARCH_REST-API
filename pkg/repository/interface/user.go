@@ -10,7 +10,7 @@ type UserRepository interface {
 	CheckUserAvailability(email string) bool
 	FindUserByEmail(user models.UserLogin) (models.UserSignInResponse, error)
 	UserBlockStatus(email string) (bool, error)
-	AddAddress(id int, address models.AddAddress) error
+	AddAddress(id int, address models.AddAddress, result bool) error
 	GetAddresses(id int) ([]domain.Address, error)
 	GetUserDetails(id int) (models.UserDetailsResponse, error)
 	ChangePassword(id int, password string) error
@@ -24,4 +24,5 @@ type UserRepository interface {
 	RemoveFromCart(id int) error
 	UpdateQuantityAdd(id int) error
 	UpdateQuantityLess(id int) error
+	CheckIfFirstAddress(id int) bool
 }

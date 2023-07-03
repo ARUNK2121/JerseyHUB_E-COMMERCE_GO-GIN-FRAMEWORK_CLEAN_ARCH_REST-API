@@ -177,6 +177,94 @@
                 }
             }
         },
+        "/admin/coupons/create": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Admin can add new coupons",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Add Coupon",
+                "parameters": [
+                    {
+                        "description": "coupon",
+                        "name": "coupon",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Coupons"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/coupons/delete": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Admin can make the coupons as invalid so that users cannot use that particular coupon",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Make Coupon ad invalid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/inventories/add": {
             "post": {
                 "security": [
@@ -568,7 +656,50 @@
                 }
             }
         },
-        "/users/cart//updateQuantity/minus": {
+        "/users/cart/remove": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "user can remove products from their cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Remove from Cart",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/cart/updateQuantity/minus": {
             "put": {
                 "security": [
                     {
@@ -611,7 +742,7 @@
                 }
             }
         },
-        "/users/cart//updateQuantity/plus": {
+        "/users/cart/updateQuantity/plus": {
             "put": {
                 "security": [
                     {
@@ -629,49 +760,6 @@
                     "User"
                 ],
                 "summary": "Add quantity in cart by one",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/cart/remove": {
-            "delete": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "user can remove products from their cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Remove from Cart",
                 "parameters": [
                     {
                         "type": "string",
@@ -718,8 +806,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "cart id",
-                        "name": "cart",
+                        "description": "id",
+                        "name": "id",
                         "in": "query",
                         "required": true
                     }
@@ -767,6 +855,13 @@
                         "schema": {
                             "$ref": "#/definitions/models.Order"
                         }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "coupon-id",
+                        "name": "coupon-id",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -877,11 +972,6 @@
         },
         "/users/login": {
             "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "description": "user can log in by giving their details",
                 "consumes": [
                     "application/json"
@@ -922,11 +1012,6 @@
         },
         "/users/otplogin": {
             "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "description": "OTP login send otp",
                 "consumes": [
                     "application/json"
@@ -1472,13 +1557,48 @@
                 }
             }
         },
-        "/users/signup": {
+        "/users/search": {
             "post": {
-                "security": [
+                "description": "user can search with a key and get the list of  products similar to that key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Search Products",
+                "parameters": [
                     {
-                        "Bearer": []
+                        "description": "search",
+                        "name": "key",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Search"
+                        }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/signup": {
+            "post": {
                 "description": "user can signup by giving their details",
                 "consumes": [
                     "application/json"
@@ -1519,11 +1639,6 @@
         },
         "/users/verifyotp": {
             "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "description": "OTP login verify otp",
                 "consumes": [
                     "application/json"
@@ -1656,6 +1771,20 @@
                 }
             }
         },
+        "models.Coupons": {
+            "type": "object",
+            "properties": {
+                "coupon": {
+                    "type": "string"
+                },
+                "discount_rate": {
+                    "type": "integer"
+                },
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        },
         "models.EditEmail": {
             "type": "object",
             "properties": {
@@ -1743,6 +1872,14 @@
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.Search": {
+            "type": "object",
+            "properties": {
+                "searchkey": {
+                    "type": "string"
                 }
             }
         },

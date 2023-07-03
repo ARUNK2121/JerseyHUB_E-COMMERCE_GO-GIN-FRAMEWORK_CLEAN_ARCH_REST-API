@@ -16,6 +16,7 @@ type Order struct {
 	Address         Address       `json:"-" gorm:"foreignkey:AddressID"`
 	PaymentMethodID uint          `json:"paymentmethod_id"`
 	PaymentMethod   PaymentMethod `json:"-" gorm:"foreignkey:PaymentMethodID"`
+	CouponUsed      string        `json:"coupon_used" gorm:"default:null"`
 	FinalPrice      float64       `json:"price"`
 	OrderStatus     string        `json:"status"`
 }

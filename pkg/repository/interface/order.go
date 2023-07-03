@@ -13,4 +13,7 @@ type OrderRepository interface {
 	CancelOrder(id int) error
 	EditOrderStatus(status string, id int) error
 	AdminOrders(status string) ([]domain.OrderDetails, error)
+
+	CheckOrder(orderID string, userID int) error
+	GetOrderDetail(orderID string) (domain.Order, error)
 }

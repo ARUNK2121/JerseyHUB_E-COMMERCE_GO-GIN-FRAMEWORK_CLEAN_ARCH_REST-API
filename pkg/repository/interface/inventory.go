@@ -14,4 +14,5 @@ type InventoryRepository interface {
 	ListProducts(page int) ([]domain.Inventories, error)
 	CheckStock(inventory_id int) (int, error)
 	CheckPrice(inventory_id int) (float64, error)
+	SearchProducts(key string) ([]domain.Inventories, error)
 }

@@ -19,6 +19,12 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 
 	engine.Use(middleware.UserAuthMiddleware)
 	{
+
+		search := engine.Group("/search")
+		{
+			search.POST("/", inventoryHandler.SearchProducts)
+		}
+
 		home := engine.Group("/home")
 		{
 			home.GET("/products", inventoryHandler.ListProducts)

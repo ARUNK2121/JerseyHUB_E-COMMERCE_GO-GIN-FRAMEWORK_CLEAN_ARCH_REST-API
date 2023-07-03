@@ -35,7 +35,6 @@ func NewUserHandler(usecase services.UserUseCase) *UserHandler {
 // @Accept			json
 // @Produce		    json
 // @Param			signup  body  models.UserDetails  true	"signup"
-// @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
 // @Router			/users/signup [post]
@@ -77,7 +76,6 @@ func (u *UserHandler) UserSignUp(c *gin.Context) {
 // @Accept			json
 // @Produce		    json
 // @Param			login  body  models.UserLogin  true	"login"
-// @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
 // @Router			/users/login [post]
@@ -485,7 +483,7 @@ func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/users/cart//updateQuantity/plus [put]
+// @Router			/users/cart/updateQuantity/plus [put]
 func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
@@ -513,7 +511,7 @@ func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/users/cart//updateQuantity/minus [put]
+// @Router			/users/cart/updateQuantity/minus [put]
 func (i *UserHandler) UpdateQuantityLess(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {

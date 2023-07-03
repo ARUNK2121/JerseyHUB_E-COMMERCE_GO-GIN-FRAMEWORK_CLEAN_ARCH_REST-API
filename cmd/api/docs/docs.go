@@ -15,13 +15,6 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "securityDefinitions": {
-        "Bearer": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
-        }
-        },
     "paths": {
         "/admin/adminlogin": {
             "post": {
@@ -178,6 +171,94 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.SetNewName"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/coupons/create": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Admin can add new coupons",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Add Coupon",
+                "parameters": [
+                    {
+                        "description": "coupon",
+                        "name": "coupon",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Coupons"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/coupons/delete": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Admin can make the coupons as invalid so that users cannot use that particular coupon",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Make Coupon ad invalid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -587,7 +668,50 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/cart//updateQuantity/minus": {
+        "/users/cart/remove": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "user can remove products from their cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Remove from Cart",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/cart/updateQuantity/minus": {
             "put": {
                 "security": [
                     {
@@ -630,7 +754,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/cart//updateQuantity/plus": {
+        "/users/cart/updateQuantity/plus": {
             "put": {
                 "security": [
                     {
@@ -648,49 +772,6 @@ const docTemplate = `{
                     "User"
                 ],
                 "summary": "Add quantity in cart by one",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/cart/remove": {
-            "delete": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "user can remove products from their cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Remove from Cart",
                 "parameters": [
                     {
                         "type": "string",
@@ -737,8 +818,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "cart id",
-                        "name": "cart",
+                        "description": "id",
+                        "name": "id",
                         "in": "query",
                         "required": true
                     }
@@ -786,6 +867,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.Order"
                         }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "coupon-id",
+                        "name": "coupon-id",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -896,11 +984,6 @@ const docTemplate = `{
         },
         "/users/login": {
             "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "description": "user can log in by giving their details",
                 "consumes": [
                     "application/json"
@@ -941,11 +1024,6 @@ const docTemplate = `{
         },
         "/users/otplogin": {
             "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "description": "OTP login send otp",
                 "consumes": [
                     "application/json"
@@ -1491,13 +1569,48 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/signup": {
+        "/users/search": {
             "post": {
-                "security": [
+                "description": "user can search with a key and get the list of  products similar to that key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Search Products",
+                "parameters": [
                     {
-                        "Bearer": []
+                        "description": "search",
+                        "name": "key",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Search"
+                        }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/signup": {
+            "post": {
                 "description": "user can signup by giving their details",
                 "consumes": [
                     "application/json"
@@ -1538,11 +1651,6 @@ const docTemplate = `{
         },
         "/users/verifyotp": {
             "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
                 "description": "OTP login verify otp",
                 "consumes": [
                     "application/json"
@@ -1675,6 +1783,20 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Coupons": {
+            "type": "object",
+            "properties": {
+                "coupon": {
+                    "type": "string"
+                },
+                "discount_rate": {
+                    "type": "integer"
+                },
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        },
         "models.EditEmail": {
             "type": "object",
             "properties": {
@@ -1762,6 +1884,14 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.Search": {
+            "type": "object",
+            "properties": {
+                "searchkey": {
+                    "type": "string"
                 }
             }
         },

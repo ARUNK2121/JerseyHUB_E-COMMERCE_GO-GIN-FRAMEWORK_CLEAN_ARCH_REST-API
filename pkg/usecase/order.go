@@ -6,12 +6,14 @@ import (
 )
 
 type orderUseCase struct {
-	orderRepository interfaces.OrderRepository
+	orderRepository  interfaces.OrderRepository
+	couponRepository interfaces.CouponRepository
 }
 
-func NewOrderUseCase(repo interfaces.OrderRepository) *orderUseCase {
+func NewOrderUseCase(repo interfaces.OrderRepository, coup interfaces.CouponRepository) *orderUseCase {
 	return &orderUseCase{
-		orderRepository: repo,
+		orderRepository:  repo,
+		couponRepository: coup,
 	}
 }
 
@@ -26,7 +28,7 @@ func (i *orderUseCase) GetOrders(id int) ([]domain.Order, error) {
 
 }
 
-func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid int) error {
+func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid int, couponID int) error {
 
 	cart, err := i.orderRepository.GetCart(userid)
 	if err != nil {
@@ -37,6 +39,13 @@ func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid i
 	for _, v := range cart {
 		total = total + v.Total
 	}
+
+	//finding discount if any
+	DiscountRate := i.couponRepository.FindCouponDiscount(couponID)
+
+	totalDiscount := (total * float64(DiscountRate)) / 100
+
+	total = total - totalDiscount
 
 	order_id, err := i.orderRepository.OrderItems(userid, addressid, paymentid, total)
 	if err != nil {

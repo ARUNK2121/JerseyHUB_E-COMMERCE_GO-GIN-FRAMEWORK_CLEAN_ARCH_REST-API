@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 	"jerseyhub/pkg/domain"
 	"jerseyhub/pkg/utils/models"
@@ -106,5 +107,40 @@ func (or *orderRepository) AdminOrders(status string) ([]domain.OrderDetails, er
 	}
 
 	return orders, nil
+
+}
+
+func (o *orderRepository) CheckOrder(orderID string, userID int) error {
+
+	var count int
+	err := o.DB.Raw("select count(*) from orders where order_id = ?", orderID).Scan(&count).Error
+	if err != nil {
+		return err
+	}
+	if count < 0 {
+		return errors.New("no such order exist")
+	}
+	var checkUser int
+	err = o.DB.Raw("select user_id from orders where order_id = ?", orderID).Scan(&checkUser).Error
+	if err != nil {
+		return err
+	}
+
+	if userID != checkUser {
+		return errors.New("the order is not did by this user")
+	}
+
+	return nil
+}
+
+func (o *orderRepository) GetOrderDetail(orderID string) (domain.Order, error) {
+
+	var orderDetails domain.Order
+	err := o.DB.Raw("select * from orders where order_id = ?", orderID).Scan(&orderDetails).Error
+	if err != nil {
+		return domain.Order{}, err
+	}
+
+	return orderDetails, nil
 
 }

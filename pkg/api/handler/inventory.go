@@ -142,7 +142,7 @@ func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 // @Tags			User
 // @Accept			json
 // @Produce		    json
-// @Param			page	query	string	true	"page"
+// @Param			page	query  string 	true	"page"
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
@@ -164,5 +164,34 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 		return
 	}
 	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", products, nil)
+	c.JSON(http.StatusOK, successRes)
+}
+
+// @Summary		Search Products
+// @Description	user can search with a key and get the list of  products similar to that key
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			key	body	models.Search	true	"search"
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/search [post]
+func (i *InventoryHandler) SearchProducts(c *gin.Context) {
+
+	var searchkey models.Search
+	if err := c.BindJSON(&searchkey); err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	results, err := i.InventoryUseCase.SearchProducts(searchkey.Key)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve the records", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", results, nil)
 	c.JSON(http.StatusOK, successRes)
 }

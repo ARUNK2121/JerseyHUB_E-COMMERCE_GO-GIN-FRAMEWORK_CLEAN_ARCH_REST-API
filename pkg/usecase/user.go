@@ -123,7 +123,16 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 
 func (i *userUseCase) AddAddress(id int, address models.AddAddress) error {
 
-	err := i.userRepo.AddAddress(id, address)
+	rslt := i.userRepo.CheckIfFirstAddress(id)
+	var result bool
+
+	if !rslt {
+		result = true
+	} else {
+		result = false
+	}
+
+	err := i.userRepo.AddAddress(id, address, result)
 	if err != nil {
 		return err
 	}

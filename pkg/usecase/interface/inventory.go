@@ -11,4 +11,5 @@ type InventoryUseCase interface {
 	DeleteInventory(id string) error
 	ShowIndividualProducts(sku string) (domain.Inventories, error)
 	ListProducts(page int) ([]domain.Inventories, error)
+	SearchProducts(key string) ([]domain.Inventories, error)
 }

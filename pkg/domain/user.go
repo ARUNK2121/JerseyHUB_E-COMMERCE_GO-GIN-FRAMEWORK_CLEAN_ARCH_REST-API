@@ -20,4 +20,5 @@ type Address struct {
 	City      string `json:"city" validate:"required"`
 	State     string `json:"state" validate:"required"`
 	Pin       string `json:"pin" validate:"required"`
+	Default   bool   `json:"default" gorm:"default:false"`
 }

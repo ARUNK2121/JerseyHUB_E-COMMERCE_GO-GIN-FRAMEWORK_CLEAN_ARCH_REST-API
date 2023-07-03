@@ -142,7 +142,7 @@ func (ad *inventoryRepository) ListProducts(page int) ([]domain.Inventories, err
 	offset := (page - 1) * 5
 	var productDetails []domain.Inventories
 
-	if err := ad.DB.Raw("select id,category_id,product_name,size,stock,price from inventories limit ? offset ?", 5, offset).Scan(&productDetails).Error; err != nil {
+	if err := ad.DB.Raw("select id,category_id,product_name,size,stock,price from inventories limit $1 offset $2", 5, offset).Scan(&productDetails).Error; err != nil {
 		return []domain.Inventories{}, err
 	}
 
@@ -151,12 +151,13 @@ func (ad *inventoryRepository) ListProducts(page int) ([]domain.Inventories, err
 }
 
 func (i *inventoryRepository) CheckStock(pid int) (int, error) {
+	fmt.Println("pid", pid)
 	var k int
-	err := i.DB.Raw("SELECT stock FROM inventories WHERE id=?", pid).Scan(&k).Error
-	if err != nil {
+	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=$1", pid).Scan(&k).Error; err != nil {
+		fmt.Println("here it is", k)
 		return 0, err
 	}
-
+	fmt.Println(k)
 	return k, nil
 }
 
@@ -168,4 +169,20 @@ func (i *inventoryRepository) CheckPrice(pid int) (float64, error) {
 	}
 
 	return k, nil
+}
+
+func (ad *inventoryRepository) SearchProducts(key string) ([]domain.Inventories, error) {
+	var productDetails []domain.Inventories
+
+	query := `
+		SELECT *
+		FROM inventories
+		WHERE product_name ILIKE '%' || ? || '%'
+	`
+
+	if err := ad.DB.Raw(query, key).Scan(&productDetails).Error; err != nil {
+		return []domain.Inventories{}, err
+	}
+
+	return productDetails, nil
 }

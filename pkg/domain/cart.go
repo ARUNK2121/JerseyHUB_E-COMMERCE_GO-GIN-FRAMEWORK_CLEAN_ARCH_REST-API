@@ -6,7 +6,7 @@ type CartProducts struct {
 	Users       Users       `json:"-" gorm:"foreignkey:UserID"`
 	InventoryID uint        `json:"inventory_id"`
 	Inventories Inventories `json:"-" gorm:"foreignkey:InventoryID"`
-	Quantity    float64     `json:"quantity"`
+	Quantity    int         `json:"quantity"`
 	TotalPrice  float64     `json:"total_price"`
 	Deleted     bool        `gorm:"default:false"`
 }

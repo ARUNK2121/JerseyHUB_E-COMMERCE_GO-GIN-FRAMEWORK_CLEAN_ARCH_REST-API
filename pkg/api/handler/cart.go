@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	services "jerseyhub/pkg/usecase/interface"
 	"jerseyhub/pkg/utils/models"
 	"jerseyhub/pkg/utils/response"
@@ -38,7 +39,7 @@ func (i *CartHandler) AddToCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-
+	fmt.Println("userid,inv id in handler:", model.UserID, model.InventoryID)
 	if err := i.usecase.AddToCart(model.UserID, model.InventoryID); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not add the Cart", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
@@ -55,7 +56,7 @@ func (i *CartHandler) AddToCart(c *gin.Context) {
 // @Tags			User
 // @Accept			json
 // @Produce		    json
-// @Param			cart	query	string	true	"cart id"
+// @Param			id	query	string	true	"id"
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}

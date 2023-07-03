@@ -82,18 +82,30 @@ func (c *userDatabase) FindUserByEmail(user models.UserLogin) (models.UserSignIn
 
 // }
 
-func (i *userDatabase) AddAddress(id int, address models.AddAddress) error {
+func (i *userDatabase) AddAddress(id int, address models.AddAddress, result bool) error {
 	fmt.Println(id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Pin)
 	err := i.DB.Exec(`
-		INSERT INTO addresses (user_id, name, house_name, street, city, state, pin)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		INSERT INTO addresses (user_id, name, house_name, street, city, state, pin,"default")
+		VALUES ($1, $2, $3, $4, $5, $6, $7,$8 )
 		RETURNING id`,
-		id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Pin).Error
+		id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Pin, result).Error
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (c *userDatabase) CheckIfFirstAddress(id int) bool {
+
+	var count int
+	// query := fmt.Sprintf("select count(*) from addresses where user_id='%s'", id)
+	if err := c.DB.Raw("select count(*) from addresses where user_id=$1", id).Scan(&count).Error; err != nil {
+		return false
+	}
+	// if count is greater than 0 that means the user already exist
+	return count > 0
+
 }
 
 func (ad *userDatabase) GetAddresses(id int) ([]domain.Address, error) {
@@ -204,17 +216,28 @@ func (ad *userDatabase) RemoveFromCart(id int) error {
 
 }
 
-func (ad *userDatabase) UpdateQuantityAdd(id int) error {
+// func (ad *userDatabase) UpdateQuantityAdd(id int) error {
 
-	if err := ad.DB.Exec(`UPDATE cart_products
-	SET quantity = quantity + 1,
-	total_price = total_price + (
-	SELECT price
-	FROM inventories
-	WHERE inventories.id = cart_products.inventory_id
-	)
-	WHERE id = $1;
-	`, id).Error; err != nil {
+// 	fmt.Println("heyy back again", id)
+
+// 	if err := ad.DB.Exec(`UPDATE cart_products SET quantity = quantity + 1,total_price = total_price + (SELECT price FROM inventories WHERE inventories.id = cart_products.inventory_id) WHERE id = ?`, id).Error; err != nil {
+// 		return err
+// 	}
+
+//		return nil
+//	}
+func (ad *userDatabase) UpdateQuantityAdd(id int) error {
+	fmt.Println("heyy back again", id)
+
+	query := `
+		UPDATE cart_products
+		SET quantity = quantity + 1, total_price = total_price + (
+			SELECT price FROM inventories WHERE inventories.id = cart_products.inventory_id
+		)
+		WHERE id = ?
+	`
+
+	if err := ad.DB.Exec(query, id).Error; err != nil {
 		return err
 	}
 
@@ -237,4 +260,15 @@ func (ad *userDatabase) UpdateQuantityLess(id int) error {
 
 	return nil
 
+}
+
+func (cr *userDatabase) FindUserByOrderID(orderId string) (domain.Users, error) {
+
+	var userDetails domain.Users
+	err := cr.DB.Raw("select users.name,users.email,users.phone from users inner join orders on orders.user_id = users.id where order_id = ?", orderId).Scan(&userDetails).Error
+	if err != nil {
+		return domain.Users{}, err
+	}
+
+	return userDetails, nil
 }

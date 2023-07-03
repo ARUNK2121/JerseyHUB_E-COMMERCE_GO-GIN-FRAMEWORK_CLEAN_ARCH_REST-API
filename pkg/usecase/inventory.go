@@ -82,3 +82,14 @@ func (i *inventoryUseCase) ListProducts(page int) ([]domain.Inventories, error) 
 	return productDetails, nil
 
 }
+
+func (i *inventoryUseCase) SearchProducts(key string) ([]domain.Inventories, error) {
+
+	productDetails, err := i.repository.SearchProducts(key)
+	if err != nil {
+		return []domain.Inventories{}, err
+	}
+
+	return productDetails, nil
+
+}
