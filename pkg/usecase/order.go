@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	domain "jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 )
@@ -84,25 +85,88 @@ func (i *orderUseCase) AdminOrders() (domain.AdminOrdersResponse, error) {
 
 	var response domain.AdminOrdersResponse
 
-	pending, err := i.orderRepository.AdminOrders("ordered")
+	pending, err := i.orderRepository.AdminOrders("ORDERED")
 	if err != nil {
 		return domain.AdminOrdersResponse{}, err
 	}
 
-	shipped, err := i.orderRepository.AdminOrders("shipped")
+	shipped, err := i.orderRepository.AdminOrders("SHIPPED")
 	if err != nil {
 		return domain.AdminOrdersResponse{}, err
 	}
 
-	delivered, err := i.orderRepository.AdminOrders("delivered")
+	delivered, err := i.orderRepository.AdminOrders("DELIVERED")
 	if err != nil {
 		return domain.AdminOrdersResponse{}, err
 	}
 
+	returned, err := i.orderRepository.AdminOrders("RETURNED")
+	if err != nil {
+		return domain.AdminOrdersResponse{}, err
+	}
+
+	canceled, err := i.orderRepository.AdminOrders("CANCELED")
+	if err != nil {
+		return domain.AdminOrdersResponse{}, err
+	}
+
+	response.Canceled = canceled
 	response.Pending = pending
 	response.Shipped = shipped
+	response.Returned = returned
 	response.Delivered = delivered
 
 	return response, nil
+
+}
+
+func (i *orderUseCase) ReturnOrder(id int) error {
+
+	//should check if the order is already returned peoples will misuse this security breach
+	// and will get  unlimited money into their wallet
+	status, err := i.orderRepository.CheckIfTheOrderIsAlreadyReturned(id)
+	if err != nil {
+		return err
+	}
+
+	if status == "RETURNED" {
+		return errors.New("order already returned")
+	}
+
+	//should also check if the order is already returned
+	//or users will also earn money by returning pending orders by opting COD
+
+	if status != "DELIVERED" {
+		return errors.New("user is trying to return an order which is still not delivered")
+	}
+
+	//make order as returned order
+	if err := i.orderRepository.ReturnOrder(id); err != nil {
+		return err
+	}
+
+	//find amount to be credited to user
+	amount, err := i.orderRepository.FindAmountFromOrderID(id)
+	if err != nil {
+		return err
+	}
+
+	//find the user
+	userID, err := i.orderRepository.FindUserIdFromOrderID(id)
+	//find if the user having a wallet
+	walletID, err := i.orderRepository.FindWalletIdFromUserID(userID)
+	//if no wallet create new one
+	if walletID == 0 {
+		walletID, err = i.orderRepository.CreateNewWallet(userID)
+		if err != nil {
+			return err
+		}
+	}
+	//credit the amount into users wallet
+	if err := i.orderRepository.CreditToUserWallet(amount, walletID); err != nil {
+		return err
+	}
+
+	return nil
 
 }

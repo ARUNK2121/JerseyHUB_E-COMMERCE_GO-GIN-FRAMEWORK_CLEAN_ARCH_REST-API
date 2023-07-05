@@ -165,3 +165,31 @@ func (i *OrderHandler) AdminOrders(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", orders, nil)
 	c.JSON(http.StatusOK, successRes)
 }
+
+// @Summary		Return Order
+// @Description	user can return the ordered products which is already delivered and then get the amount fot that particular purchase back in their wallet
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/orders/return [put]
+func (i *OrderHandler) ReturnOrder(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "conversion to integer not possible", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	if err := i.orderUseCase.ReturnOrder(id); err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Return success.The amount will be Credited your wallet", nil, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}

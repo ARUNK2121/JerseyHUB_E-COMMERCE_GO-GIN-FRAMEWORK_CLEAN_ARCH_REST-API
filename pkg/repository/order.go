@@ -81,7 +81,7 @@ func (i *orderRepository) AddOrderProducts(order_id int, cart []models.GetCart) 
 
 func (i *orderRepository) CancelOrder(id int) error {
 
-	if err := i.DB.Exec("update orders set order_status='canceled' where id=$1", id).Error; err != nil {
+	if err := i.DB.Exec("update orders set order_status='CANCELED' where id=$1", id).Error; err != nil {
 		return err
 	}
 
@@ -143,4 +143,92 @@ func (o *orderRepository) GetOrderDetail(orderID string) (domain.Order, error) {
 
 	return orderDetails, nil
 
+}
+
+func (i *orderRepository) ReturnOrder(id int) error {
+
+	if err := i.DB.Exec("update orders set order_status='RETURNED' where id=$1", id).Error; err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (o *orderRepository) CheckIfTheOrderIsAlreadyReturned(id int) (string, error) {
+
+	var status string
+	err := o.DB.Raw("select order_status from orders where id = ?", id).Scan(&status).Error
+	if err != nil {
+		return "", err
+	}
+
+	return status, nil
+}
+
+func (o *orderRepository) FindAmountFromOrderID(id int) (float64, error) {
+
+	var amount float64
+	err := o.DB.Raw("select final_price from orders where id = ?", id).Scan(&amount).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return amount, nil
+}
+
+func (i *orderRepository) CreditToUserWallet(amount float64, walletId int) error {
+
+	if err := i.DB.Exec("update wallets set amount=$1 where id=$2", amount, walletId).Error; err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (o *orderRepository) FindUserIdFromOrderID(id int) (int, error) {
+
+	var user_id int
+	err := o.DB.Raw("select user_id from orders where id = ?", id).Scan(&user_id).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return user_id, nil
+}
+
+func (o *orderRepository) FindWalletIdFromUserID(userId int) (int, error) {
+
+	var count int
+	err := o.DB.Raw("select count(*) from wallets where user_id = ?", userId).Scan(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	var walletID int
+	if count > 0 {
+		err := o.DB.Raw("select id from wallets where user_id = ?", userId).Scan(&walletID).Error
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	return walletID, nil
+
+}
+
+func (o *orderRepository) CreateNewWallet(userID int) (int, error) {
+
+	var wallet_id int
+	err := o.DB.Exec("Insert into wallets(user_id,amount) values($1,$2)", userID, 0).Error
+	if err != nil {
+		return 0, err
+	}
+
+	if err := o.DB.Raw("select id from wallets where user_id=$1", userID).Scan(&wallet_id).Error; err != nil {
+		return 0, err
+	}
+
+	return wallet_id, nil
 }

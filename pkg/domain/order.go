@@ -18,7 +18,7 @@ type Order struct {
 	PaymentMethod   PaymentMethod `json:"-" gorm:"foreignkey:PaymentMethodID"`
 	CouponUsed      string        `json:"coupon_used" gorm:"default:null"`
 	FinalPrice      float64       `json:"price"`
-	OrderStatus     string        `json:"status"`
+	OrderStatus     string        `json:"order_status" gorm:"order_status:4;default:'PENDING';check:order_status IN ('PENDING', 'SHIPPED','DELIVERED','CANCELED','RETURNED')"`
 	PaymentStatus   string        `json:"payment_status" gorm:"payment_status:2;default:'NOT PAID';check:payment_status IN ('PAID', 'NOT PAID')"`
 }
 
@@ -37,6 +37,7 @@ type AdminOrdersResponse struct {
 	Shipped   []OrderDetails
 	Delivered []OrderDetails
 	Canceled  []OrderDetails
+	Returned  []OrderDetails
 }
 
 type OrderDetails struct {

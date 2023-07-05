@@ -16,4 +16,12 @@ type OrderRepository interface {
 
 	CheckOrder(orderID string, userID int) error
 	GetOrderDetail(orderID string) (domain.Order, error)
+
+	CheckIfTheOrderIsAlreadyReturned(id int) (string, error)
+	ReturnOrder(id int) error
+	FindAmountFromOrderID(id int) (float64, error)
+	CreditToUserWallet(amount float64, walletID int) error
+	FindUserIdFromOrderID(id int) (int, error)
+	FindWalletIdFromUserID(userId int) (int, error)
+	CreateNewWallet(userID int) (int, error)
 }

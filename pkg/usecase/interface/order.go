@@ -10,4 +10,5 @@ type OrderUseCase interface {
 	CancelOrder(id int) error
 	EditOrderStatus(status string, id int) error
 	AdminOrders() (domain.AdminOrdersResponse, error)
+	ReturnOrder(id int) error
 }
