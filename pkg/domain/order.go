@@ -19,6 +19,7 @@ type Order struct {
 	CouponUsed      string        `json:"coupon_used" gorm:"default:null"`
 	FinalPrice      float64       `json:"price"`
 	OrderStatus     string        `json:"status"`
+	PaymentStatus   string        `json:"payment_status" gorm:"payment_status:2;default:'NOT PAID';check:payment_status IN ('PAID', 'NOT PAID')"`
 }
 
 type OrderItem struct {
