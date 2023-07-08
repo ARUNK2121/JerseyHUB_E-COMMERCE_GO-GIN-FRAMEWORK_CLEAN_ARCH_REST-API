@@ -153,8 +153,14 @@ func (i *orderUseCase) ReturnOrder(id int) error {
 
 	//find the user
 	userID, err := i.orderRepository.FindUserIdFromOrderID(id)
+	if err != nil {
+		return err
+	}
 	//find if the user having a wallet
 	walletID, err := i.orderRepository.FindWalletIdFromUserID(userID)
+	if err != nil {
+		return err
+	}
 	//if no wallet create new one
 	if walletID == 0 {
 		walletID, err = i.orderRepository.CreateNewWallet(userID)

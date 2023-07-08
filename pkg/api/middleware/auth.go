@@ -10,40 +10,17 @@ import (
 )
 
 func AdminAuthMiddleware(c *gin.Context) {
-	// Get the access token from the header.
+
 	accessToken := c.Request.Header.Get("Authorization")
-	// Check if the access token is valid.
+
 	_, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte("accesssecret"), nil
 	})
 
 	if err == nil {
-		fmt.Println("heyy")
 		c.Next()
 	}
 
-	// // Extract the claims from the token.
-	// claims, ok := token.Claims.(jwt.MapClaims)
-	// if !ok {
-	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization token"})
-	// 	c.Abort()
-	// 	return
-	// }
-
-	// // Check the expiry manually.
-	// expiryUnix, ok := claims["exp"].(float64)
-	// if !ok {
-	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization token"})
-	// 	c.Abort()
-	// 	return
-	// }
-
-	// expiryTime := time.Unix(int64(expiryUnix), 0)
-	// if expiryTime.After(time.Now()) {
-	// 	c.Next()
-	// 	return
-	// }
-	fmt.Println("yes my boy")
 	refreshToken := c.Request.Header.Get("RefreshToken")
 
 	// Check if the refresh token is valid.
@@ -56,29 +33,6 @@ func AdminAuthMiddleware(c *gin.Context) {
 		return
 	}
 	// The access token is invalid. Check the refresh token.
-
-	// Extract the claims from the token.
-	// claims, ok = refresh.Claims.(jwt.MapClaims)
-	// if !ok {
-	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization token"})
-	// 	c.Abort()
-	// 	return
-	// }
-
-	// // Check the expiry manually.
-	// expiryUnix, ok = claims["exp"].(float64)
-	// if !ok {
-	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization token"})
-	// 	c.Abort()
-	// 	return
-	// }
-
-	// expiryTime = time.Unix(int64(expiryUnix), 0)
-	// if expiryTime.Before(time.Now()) {
-	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Expired authorization token"})
-	// 	c.Abort()
-	// 	return
-	// }
 
 	// The refresh token is valid. Generate a new access token.
 	newAccessToken, err := CreateNewAccessTokenAdmin()
@@ -109,6 +63,6 @@ func CreateNewAccessTokenAdmin() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("created and returned")
+
 	return newAccessToken, nil
 }

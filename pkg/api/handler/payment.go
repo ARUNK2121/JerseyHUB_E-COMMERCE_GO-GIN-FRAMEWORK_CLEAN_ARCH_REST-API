@@ -61,3 +61,26 @@ func (p *PaymentHandler) VerifyPayment(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+func (p *PaymentHandler) MakePaymentFromWallet(c *gin.Context) {
+
+	fmt.Println("reached wallet handler")
+
+	orderID := c.Query("order_id")
+	userID := c.Query("user_id")
+
+	fmt.Println("2")
+
+	orderDetail, err := p.usecase.UseWallet(orderID, userID)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "could not make payment from wallet", nil, err.Error())
+		c.JSON(http.StatusInternalServerError, errorRes)
+		return
+	}
+
+	fmt.Println("3")
+	fmt.Println(orderDetail.FinalPrice)
+
+	fmt.Println(orderDetail.Razor_id)
+	c.HTML(http.StatusOK, "razorpay.html", orderDetail)
+}
