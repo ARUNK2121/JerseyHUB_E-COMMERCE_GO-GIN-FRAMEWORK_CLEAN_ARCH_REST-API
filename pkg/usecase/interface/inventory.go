@@ -9,7 +9,7 @@ type InventoryUseCase interface {
 	AddInventory(inventory domain.Inventories) (models.InventoryResponse, error)
 	UpdateInventory(ProductID int, Stock int) (models.InventoryResponse, error)
 	DeleteInventory(id string) error
-	ShowIndividualProducts(sku string) (domain.Inventories, error)
+	ShowIndividualProducts(sku string) (models.Inventories, error)
 	ListProducts(page int) ([]domain.Inventories, error)
 	SearchProducts(key string) ([]domain.Inventories, error)
 }

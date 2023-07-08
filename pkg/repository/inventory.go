@@ -111,12 +111,12 @@ func (i *inventoryRepository) DeleteInventory(inventoryID string) error {
 }
 
 // detailed product details
-func (i *inventoryRepository) ShowIndividualProducts(id string) (domain.Inventories, error) {
+func (i *inventoryRepository) ShowIndividualProducts(id string) (models.Inventories, error) {
 	pid, error := strconv.Atoi(id)
 	if error != nil {
-		return domain.Inventories{}, errors.New("convertion not happened")
+		return models.Inventories{}, errors.New("convertion not happened")
 	}
-	var product domain.Inventories
+	var product models.Inventories
 	err := i.DB.Raw(`
 	SELECT
 		*
@@ -128,7 +128,7 @@ func (i *inventoryRepository) ShowIndividualProducts(id string) (domain.Inventor
 			`, pid).Scan(&product).Error
 
 	if err != nil {
-		return domain.Inventories{}, errors.New("error retrieved record")
+		return models.Inventories{}, errors.New("error retrieved record")
 	}
 	return product, nil
 

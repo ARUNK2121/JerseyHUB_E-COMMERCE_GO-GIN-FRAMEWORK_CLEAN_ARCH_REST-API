@@ -9,12 +9,14 @@ import (
 )
 
 type inventoryUseCase struct {
-	repository interfaces.InventoryRepository
+	repository      interfaces.InventoryRepository
+	offerRepository interfaces.OfferRepository
 }
 
-func NewInventoryUseCase(repo interfaces.InventoryRepository) *inventoryUseCase {
+func NewInventoryUseCase(repo interfaces.InventoryRepository, offer interfaces.OfferRepository) *inventoryUseCase {
 	return &inventoryUseCase{
-		repository: repo,
+		repository:      repo,
+		offerRepository: offer,
 	}
 }
 
@@ -61,12 +63,27 @@ func (i *inventoryUseCase) DeleteInventory(inventoryID string) error {
 
 }
 
-func (i *inventoryUseCase) ShowIndividualProducts(id string) (domain.Inventories, error) {
+func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.Inventories, error) {
 
 	product, err := i.repository.ShowIndividualProducts(id)
 	if err != nil {
-		return domain.Inventories{}, err
+		return models.Inventories{}, err
 	}
+	DiscountPercentage := 0
+	//if there is an offer then find percentage
+
+	DiscountPercentage, err = i.offerRepository.FindDiscountPercentage(product.CategoryID)
+	if err != nil {
+		return models.Inventories{}, err
+	}
+	fmt.Println("discount:", DiscountPercentage)
+	//make discounted price by calculation
+	var discount float64
+	if DiscountPercentage > 0 {
+		discount = (product.Price * float64(DiscountPercentage)) / 100
+	}
+
+	product.DiscountedPrice = product.Price - discount
 
 	return product, nil
 

@@ -31,3 +31,13 @@ func (repo *offerRepository) MakeOfferExpire(id int) error {
 
 	return nil
 }
+
+func (repo *offerRepository) FindDiscountPercentage(cat_id int) (int, error) {
+	var percentage int
+	err := repo.DB.Raw("select discount_rate from offers where category_id=$1 and valid=true", cat_id).Scan(&percentage).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return percentage, nil
+}
