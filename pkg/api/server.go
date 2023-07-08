@@ -14,7 +14,7 @@ type ServerHTTP struct {
 	engine *gin.Engine
 }
 
-func NewServerHTTP(userHandler *handler.UserHandler, adminHandler *handler.AdminHandler, categoryHandler *handler.CategoryHandler, inventoryHandler *handler.InventoryHandler, otpHandler *handler.OtpHandler, orderHandler *handler.OrderHandler, cartHandler *handler.CartHandler, couponHandler *handler.CouponHandler, paymentHandler *handler.PaymentHandler) *ServerHTTP {
+func NewServerHTTP(userHandler *handler.UserHandler, adminHandler *handler.AdminHandler, categoryHandler *handler.CategoryHandler, inventoryHandler *handler.InventoryHandler, otpHandler *handler.OtpHandler, orderHandler *handler.OrderHandler, cartHandler *handler.CartHandler, couponHandler *handler.CouponHandler, paymentHandler *handler.PaymentHandler, offerhandler *handler.OfferHandler) *ServerHTTP {
 	engine := gin.New()
 
 	engine.LoadHTMLGlob("templates/*.html")
@@ -35,7 +35,7 @@ func NewServerHTTP(userHandler *handler.UserHandler, adminHandler *handler.Admin
 	// engine.POST("otp/verify-otp", otpHandler.VerifyOTP)
 
 	routes.UserRoutes(engine.Group("/users"), userHandler, otpHandler, inventoryHandler, orderHandler, cartHandler, paymentHandler)
-	routes.AdminRoutes(engine.Group("/admin"), adminHandler, inventoryHandler, userHandler, categoryHandler, orderHandler, couponHandler)
+	routes.AdminRoutes(engine.Group("/admin"), adminHandler, inventoryHandler, userHandler, categoryHandler, orderHandler, couponHandler, offerhandler)
 
 	return &ServerHTTP{engine: engine}
 }
