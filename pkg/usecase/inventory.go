@@ -69,14 +69,13 @@ func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.Inventories
 	if err != nil {
 		return models.Inventories{}, err
 	}
-	DiscountPercentage := 0
-	//if there is an offer then find percentage
 
-	DiscountPercentage, err = i.offerRepository.FindDiscountPercentage(product.CategoryID)
+	DiscountPercentage, err := i.offerRepository.FindDiscountPercentage(product.CategoryID)
 	if err != nil {
 		return models.Inventories{}, err
 	}
 	fmt.Println("discount:", DiscountPercentage)
+
 	//make discounted price by calculation
 	var discount float64
 	if DiscountPercentage > 0 {
@@ -89,13 +88,30 @@ func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.Inventories
 
 }
 
-func (i *inventoryUseCase) ListProducts(page int) ([]domain.Inventories, error) {
+func (i *inventoryUseCase) ListProducts(page int) ([]models.Inventories, error) {
 
 	productDetails, err := i.repository.ListProducts(page)
 	if err != nil {
-		return []domain.Inventories{}, err
+		return []models.Inventories{}, err
 	}
 
+	//loop inside products and then calculate discounted price of each then return
+	for j := range productDetails {
+		discount_percentage, err := i.offerRepository.FindDiscountPercentage(productDetails[j].CategoryID)
+		if err != nil {
+			return []models.Inventories{}, errors.New("there was some error in finding the discounted prices")
+		}
+		var discount float64
+
+		if discount_percentage > 0 {
+			discount = (productDetails[j].Price * float64(discount_percentage)) / 100
+		}
+
+		productDetails[j].DiscountedPrice = productDetails[j].Price - discount
+
+	}
+
+	fmt.Println("the discounted price:", productDetails[0].DiscountedPrice)
 	return productDetails, nil
 
 }
