@@ -171,8 +171,8 @@ func (i *inventoryRepository) CheckPrice(pid int) (float64, error) {
 	return k, nil
 }
 
-func (ad *inventoryRepository) SearchProducts(key string) ([]domain.Inventories, error) {
-	var productDetails []domain.Inventories
+func (ad *inventoryRepository) SearchProducts(key string) ([]models.Inventories, error) {
+	var productDetails []models.Inventories
 
 	query := `
 		SELECT *
@@ -181,7 +181,7 @@ func (ad *inventoryRepository) SearchProducts(key string) ([]domain.Inventories,
 	`
 
 	if err := ad.DB.Raw(query, key).Scan(&productDetails).Error; err != nil {
-		return []domain.Inventories{}, err
+		return []models.Inventories{}, err
 	}
 
 	return productDetails, nil
