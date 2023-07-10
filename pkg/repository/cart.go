@@ -17,18 +17,6 @@ func NewCartRepository(db *gorm.DB) *cartRepository {
 	}
 }
 
-func (i *cartRepository) AddToCart(id, inventory_id, quantity int, price float64) error {
-	err := i.DB.Exec(`
-		INSERT INTO cart_products (user_id,inventory_id,quantity,total_price)
-		VALUES ($1, $2, $3, $4)
-		RETURNING id`, id, inventory_id, quantity, price).Error
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (ad *cartRepository) GetAddresses(id int) ([]models.Address, error) {
 
 	var addresses []models.Address
@@ -63,4 +51,44 @@ func (ad *cartRepository) GetPaymentOptions() ([]models.PaymentMethod, error) {
 	fmt.Println(payment)
 	return payment, nil
 
+}
+
+func (ad *cartRepository) GetCartId(user_id int) (int, error) {
+
+	var id int
+
+	if err := ad.DB.Raw("SELECT id FROM carts WHERE user_id=?", user_id).Scan(&id).Error; err != nil {
+		return 0, err
+	}
+	fmt.Println(id)
+	return id, nil
+
+}
+
+func (i *cartRepository) CreateNewCart(user_id int) (int, error) {
+	var id int
+	err := i.DB.Exec(`
+		INSERT INTO carts (user_id)
+		VALUES ($1)`, user_id).Error
+	if err != nil {
+		return 0, err
+	}
+
+	if err := i.DB.Raw("select id from carts where user_id=?", user_id).Scan(&id).Error; err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func (i *cartRepository) AddLineItems(cart_id, inventory_id int) error {
+
+	err := i.DB.Exec(`
+		INSERT INTO line_items (cart_id,inventory_id)
+		VALUES ($1,$2)`, cart_id, inventory_id).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

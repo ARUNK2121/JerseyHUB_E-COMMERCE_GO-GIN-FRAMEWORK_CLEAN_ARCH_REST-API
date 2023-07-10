@@ -21,6 +21,6 @@ type UserUseCase interface {
 
 	GetCart(id int) ([]models.GetCart, error)
 	RemoveFromCart(id int) error
-	UpdateQuantityAdd(id int) error
-	UpdateQuantityLess(id int) error
+	UpdateQuantityAdd(id, inv_id int) error
+	UpdateQuantityLess(id, inv_id int) error
 }

@@ -480,6 +480,7 @@ func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 // @Accept			json
 // @Produce		    json
 // @Param			id	query	string	true	"id"
+// @Param			inventory	query	string	true	"inv_id"
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
@@ -492,7 +493,14 @@ func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
 		return
 	}
 
-	if err := i.userUseCase.UpdateQuantityAdd(id); err != nil {
+	inv, err := strconv.Atoi(c.Query("inventory"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	if err := i.userUseCase.UpdateQuantityAdd(id, inv); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not Add the quantity", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
@@ -508,6 +516,7 @@ func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
 // @Accept			json
 // @Produce		    json
 // @Param			id	query	string	true	"id"
+// @Param			inventory	query	string	true	"inv_id"
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
@@ -520,7 +529,14 @@ func (i *UserHandler) UpdateQuantityLess(c *gin.Context) {
 		return
 	}
 
-	if err := i.userUseCase.UpdateQuantityLess(id); err != nil {
+	inv, err := strconv.Atoi(c.Query("inventory"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	if err := i.userUseCase.UpdateQuantityLess(id, inv); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not  subtract quantity", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return

@@ -22,7 +22,15 @@ type UserRepository interface {
 
 	GetCart(id int) ([]models.GetCart, error)
 	RemoveFromCart(id int) error
-	UpdateQuantityAdd(id int) error
-	UpdateQuantityLess(id int) error
+	UpdateQuantityAdd(id, inv_id int) error
+	UpdateQuantityLess(id, inv_id int) error
 	CheckIfFirstAddress(id int) bool
+
+	GetCartID(id int) (int, error)
+	GetProductsInCart(cart_id int) ([]int, error)
+	FindProductNames(inventory_id int) (string, error)
+	FindCartQuantity(cart_id, inventory_id int) (int, error)
+	FindPrice(inventory_id int) (float64, error)
+	FindCategory(inventory_id int) (int, error)
+	FindofferPercentage(category_id int) (int, error)
 }

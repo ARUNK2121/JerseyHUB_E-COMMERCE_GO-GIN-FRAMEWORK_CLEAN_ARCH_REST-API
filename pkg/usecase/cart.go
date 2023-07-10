@@ -28,16 +28,25 @@ func (i *cartUseCase) AddToCart(user_id, inventory_id int) error {
 	if stock <= 0 {
 		return errors.New("out of stock")
 	}
-	//find price
-	price, err := i.inventoryRepository.CheckPrice(inventory_id)
+
+	//find user cart id
+	cart_id, err := i.repo.GetCartId(user_id)
 	if err != nil {
-		return err
+		return errors.New("some error in geting user cart")
 	}
-	quantity := 1
-	if err := i.repo.AddToCart(user_id, inventory_id, quantity, price); err != nil {
-		return err
+	//if user has no existing cart create new cart
+	if cart_id == 0 {
+		cart_id, err = i.repo.CreateNewCart(user_id)
+		if err != nil {
+			return errors.New("cannot create cart fro user")
+		}
 	}
-	//if no error then return nil
+
+	//add product to line items
+	if err := i.repo.AddLineItems(cart_id, inventory_id); err != nil {
+		return errors.New("error in adding products")
+	}
+
 	return nil
 }
 

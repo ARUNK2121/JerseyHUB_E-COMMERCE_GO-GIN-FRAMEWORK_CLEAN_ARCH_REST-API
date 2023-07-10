@@ -2,19 +2,23 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	domain "jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
+	services "jerseyhub/pkg/usecase/interface"
 )
 
 type orderUseCase struct {
 	orderRepository  interfaces.OrderRepository
 	couponRepository interfaces.CouponRepository
+	userUseCase      services.UserUseCase
 }
 
-func NewOrderUseCase(repo interfaces.OrderRepository, coup interfaces.CouponRepository) *orderUseCase {
+func NewOrderUseCase(repo interfaces.OrderRepository, coup interfaces.CouponRepository, userUseCase services.UserUseCase) *orderUseCase {
 	return &orderUseCase{
 		orderRepository:  repo,
 		couponRepository: coup,
+		userUseCase:      userUseCase,
 	}
 }
 
@@ -31,15 +35,17 @@ func (i *orderUseCase) GetOrders(id int) ([]domain.Order, error) {
 
 func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid int, couponID int) error {
 
-	cart, err := i.orderRepository.GetCart(userid)
+	cart, err := i.userUseCase.GetCart(userid)
 	if err != nil {
 		return err
 	}
+	fmt.Println("cart:", cart)
 
 	var total float64
 	for _, v := range cart {
-		total = total + v.Total
+		total = total + v.DiscountedPrice
 	}
+	fmt.Println("heyy", total)
 
 	//finding discount if any
 	DiscountRate := i.couponRepository.FindCouponDiscount(couponID)
@@ -85,7 +91,7 @@ func (i *orderUseCase) AdminOrders() (domain.AdminOrdersResponse, error) {
 
 	var response domain.AdminOrdersResponse
 
-	pending, err := i.orderRepository.AdminOrders("ORDERED")
+	pending, err := i.orderRepository.AdminOrders("PENDING")
 	if err != nil {
 		return domain.AdminOrdersResponse{}, err
 	}

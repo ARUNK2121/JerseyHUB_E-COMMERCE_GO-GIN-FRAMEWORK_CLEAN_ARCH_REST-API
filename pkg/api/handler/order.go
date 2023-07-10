@@ -63,6 +63,9 @@ func (i *OrderHandler) GetOrders(c *gin.Context) {
 // @Router			/users/check-out/order [post]
 func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 	idstring := c.Query("coupon-id")
+	if idstring == "" {
+		idstring = "0"
+	}
 	couponId, err := strconv.Atoi(idstring)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "coupon id trouble", nil, err.Error())
@@ -81,7 +84,7 @@ func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", nil, nil)
+	successRes := response.ClientResponse(http.StatusOK, "Successfully made the order", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 }
 

@@ -19,7 +19,7 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 	db.AutoMigrate(&domain.Category{})
 	db.AutoMigrate(&domain.Users{})
 	db.AutoMigrate(&domain.Admin{})
-	db.AutoMigrate(domain.CartProducts{})
+	db.AutoMigrate(domain.Cart{})
 	db.AutoMigrate(domain.Address{})
 	db.AutoMigrate(domain.Order{})
 	db.AutoMigrate(domain.OrderItem{})
@@ -28,6 +28,7 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 	db.AutoMigrate(domain.RazorPay{})
 	db.AutoMigrate(domain.Wallet{})
 	db.AutoMigrate(domain.Offer{})
+	db.AutoMigrate(domain.LineItems{})
 	CheckAndCreateAdmin(db)
 
 	return db, dbErr
