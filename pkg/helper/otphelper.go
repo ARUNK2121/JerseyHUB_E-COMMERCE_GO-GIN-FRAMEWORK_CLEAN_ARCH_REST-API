@@ -2,7 +2,6 @@ package helper
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/twilio/twilio-go"
 	twilioApi "github.com/twilio/twilio-go/rest/verify/v2"
@@ -11,7 +10,6 @@ import (
 var client *twilio.RestClient
 
 func TwilioSetup(username string, password string) {
-	fmt.Println(username, password)
 	client = twilio.NewRestClientWithParams(twilio.ClientParams{
 		Username: username,
 		Password: password,
@@ -20,19 +18,14 @@ func TwilioSetup(username string, password string) {
 }
 
 func TwilioSendOTP(phone string, serviceID string) (string, error) {
-	fmt.Println("anybody here?")
 	to := "+91" + phone
 	params := &twilioApi.CreateVerificationParams{}
 	params.SetTo(to)
 	params.SetChannel("sms")
-	fmt.Println(*params.To, *params.Channel)
-	fmt.Println(serviceID)
 
 	resp, err := client.VerifyV2.CreateVerification(serviceID, params)
 	if err != nil {
 
-		fmt.Println("CHECK CHECK")
-		fmt.Println(err)
 		return " ", err
 	}
 

@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 	"jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	services "jerseyhub/pkg/usecase/interface"
@@ -34,18 +33,15 @@ func (Cat *categoryUseCase) UpdateCategory(current string, new string) (domain.C
 
 	result, err := Cat.repository.CheckCategory(current)
 	if err != nil {
-		fmt.Println("1")
 		return domain.Category{}, err
 	}
 
 	if !result {
-		fmt.Println("2")
 		return domain.Category{}, errors.New("there is no category as you mentioned")
 	}
 
 	newcat, err := Cat.repository.UpdateCategory(current, new)
 	if err != nil {
-		fmt.Println("3")
 		return domain.Category{}, err
 	}
 

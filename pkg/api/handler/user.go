@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -220,7 +219,6 @@ func (i *UserHandler) GetUserDetails(c *gin.Context) {
 // @Failure		500	{object}	response.Response{}
 // @Router			/users/profile/security/change-password [put]
 func (i *UserHandler) ChangePassword(c *gin.Context) {
-	fmt.Println("heyy again")
 
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
@@ -270,7 +268,7 @@ func (i *UserHandler) ForgotPasswordSend(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	fmt.Println("code runs until here for sure 3")
+
 	successRes := response.ClientResponse(http.StatusOK, "OTP sent successfully", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 

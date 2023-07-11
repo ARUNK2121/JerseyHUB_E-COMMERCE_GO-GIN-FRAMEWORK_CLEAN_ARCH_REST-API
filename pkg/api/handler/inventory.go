@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"jerseyhub/pkg/domain"
 	services "jerseyhub/pkg/usecase/interface"
 	"jerseyhub/pkg/utils/models"
@@ -98,7 +97,6 @@ func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 func (i *InventoryHandler) DeleteInventory(c *gin.Context) {
 
 	inventoryID := c.Query("id")
-	fmt.Println("inventoryId is", inventoryID)
 	err := i.InventoryUseCase.DeleteInventory(inventoryID)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())

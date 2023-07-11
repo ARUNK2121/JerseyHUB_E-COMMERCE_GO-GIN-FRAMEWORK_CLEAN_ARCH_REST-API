@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 	"jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	"jerseyhub/pkg/utils/models"
@@ -40,13 +39,11 @@ func (i *inventoryUseCase) UpdateInventory(pid int, stock int) (models.Inventory
 	}
 
 	if !result {
-		fmt.Println("2")
 		return models.InventoryResponse{}, errors.New("there is no inventory as you mentioned")
 	}
 
 	newcat, err := i.repository.UpdateInventory(pid, stock)
 	if err != nil {
-		fmt.Println("3")
 		return models.InventoryResponse{}, err
 	}
 
@@ -74,7 +71,6 @@ func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.Inventories
 	if err != nil {
 		return models.Inventories{}, err
 	}
-	fmt.Println("discount:", DiscountPercentage)
 
 	//make discounted price by calculation
 	var discount float64
@@ -111,7 +107,6 @@ func (i *inventoryUseCase) ListProducts(page int) ([]models.Inventories, error) 
 
 	}
 
-	fmt.Println("the discounted price:", productDetails[0].DiscountedPrice)
 	return productDetails, nil
 
 }

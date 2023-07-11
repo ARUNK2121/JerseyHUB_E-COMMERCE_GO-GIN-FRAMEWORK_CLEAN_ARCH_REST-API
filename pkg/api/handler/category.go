@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"jerseyhub/pkg/domain"
 	services "jerseyhub/pkg/usecase/interface"
 	"jerseyhub/pkg/utils/models"
@@ -97,7 +96,6 @@ func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 func (Cat *CategoryHandler) DeleteCategory(c *gin.Context) {
 
 	categoryID := c.Query("id")
-	fmt.Println("categoryId is", categoryID)
 	err := Cat.CategoryUseCase.DeleteCategory(categoryID)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())

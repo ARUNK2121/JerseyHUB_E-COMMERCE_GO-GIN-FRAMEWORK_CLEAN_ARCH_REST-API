@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 
 	domain "jerseyhub/pkg/domain"
 	helper "jerseyhub/pkg/helper"
@@ -34,7 +33,6 @@ func (ad *adminUseCase) LoginHandler(adminDetails models.AdminLogin) (domain.Tok
 
 	// compare password from database and that provided from admins
 	err = bcrypt.CompareHashAndPassword([]byte(adminCompareDetails.Password), []byte(adminDetails.Password))
-	fmt.Println(err)
 	if err != nil {
 		return domain.TokenAdmin{}, err
 	}
@@ -53,12 +51,6 @@ func (ad *adminUseCase) LoginHandler(adminDetails models.AdminLogin) (domain.Tok
 		return domain.TokenAdmin{}, err
 	}
 
-	// var admin models.AdminDetails
-
-	// err = copier.Copy(&admin, &adminCompareDetails)
-	// if err != nil {
-	// 	return domain.TokenAdmin{}, err
-	// }
 	return domain.TokenAdmin{
 		Admin:        adminDetailsResponse,
 		AccessToken:  access,

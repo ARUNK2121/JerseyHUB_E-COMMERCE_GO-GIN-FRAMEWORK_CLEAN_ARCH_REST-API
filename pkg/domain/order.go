@@ -9,7 +9,6 @@ type PaymentMethod struct {
 
 type Order struct {
 	gorm.Model
-	// OrderId         string        `json:"order_id" gorm:"primaryKey;autoIncrement"`
 	UserID          uint          `json:"user_id" gorm:"not null"`
 	Users           Users         `json:"-" gorm:"foreignkey:UserID"`
 	AddressID       uint          `json:"address_id" gorm:"not null"`

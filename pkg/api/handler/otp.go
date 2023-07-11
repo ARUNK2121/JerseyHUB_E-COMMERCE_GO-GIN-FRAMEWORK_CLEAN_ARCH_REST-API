@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	services "jerseyhub/pkg/usecase/interface"
@@ -44,7 +43,6 @@ func (ot *OtpHandler) SendOTP(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	fmt.Println("code runs until here for sure 3")
 	successRes := response.ClientResponse(http.StatusOK, "OTP sent successfully", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 
@@ -60,7 +58,6 @@ func (ot *OtpHandler) SendOTP(c *gin.Context) {
 // @Failure		500	{object}	response.Response{}
 // @Router			/users/verifyotp [post]
 func (ot *OtpHandler) VerifyOTP(c *gin.Context) {
-	fmt.Println(1)
 
 	var code models.VerifyData
 	if err := c.BindJSON(&code); err != nil {
@@ -68,14 +65,13 @@ func (ot *OtpHandler) VerifyOTP(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	fmt.Println(2)
+
 	users, err := ot.otpUseCase.VerifyOTP(code)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not verify OTP", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	fmt.Println(3)
 
 	successRes := response.ClientResponse(http.StatusOK, "Successfully verified OTP", users, nil)
 	c.JSON(http.StatusOK, successRes)

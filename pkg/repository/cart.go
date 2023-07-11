@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"jerseyhub/pkg/utils/models"
 
 	"gorm.io/gorm"
@@ -36,7 +35,7 @@ func (ad *cartRepository) GetCart(id int) ([]models.GetCart, error) {
 	if err := ad.DB.Raw("SELECT inventories.product_name,cart_products.quantity,cart_products.total_price AS Total FROM cart_products JOIN inventories ON cart_products.inventory_id=inventories.id WHERE user_id=$1", id).Scan(&cart).Error; err != nil {
 		return []models.GetCart{}, err
 	}
-	fmt.Println(cart)
+
 	return cart, nil
 
 }
@@ -48,7 +47,7 @@ func (ad *cartRepository) GetPaymentOptions() ([]models.PaymentMethod, error) {
 	if err := ad.DB.Raw("SELECT * FROM payment_methods").Scan(&payment).Error; err != nil {
 		return []models.PaymentMethod{}, err
 	}
-	fmt.Println(payment)
+
 	return payment, nil
 
 }
@@ -60,7 +59,7 @@ func (ad *cartRepository) GetCartId(user_id int) (int, error) {
 	if err := ad.DB.Raw("SELECT id FROM carts WHERE user_id=?", user_id).Scan(&id).Error; err != nil {
 		return 0, err
 	}
-	fmt.Println(id)
+
 	return id, nil
 
 }

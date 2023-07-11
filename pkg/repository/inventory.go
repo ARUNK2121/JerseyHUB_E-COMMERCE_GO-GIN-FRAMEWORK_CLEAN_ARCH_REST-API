@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"jerseyhub/pkg/domain"
 	"jerseyhub/pkg/utils/models"
 	"strconv"
@@ -22,12 +21,6 @@ func NewInventoryRepository(DB *gorm.DB) *inventoryRepository {
 
 func (i *inventoryRepository) AddInventory(inventory domain.Inventories) (models.InventoryResponse, error) {
 
-	// var id int
-
-	// err := i.DB.Raw("INSERT INTO inventories (category_id,product_name,size,stock,price) VALUES (?, ?, ?, ?, ?) RETURNING id", inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price).Scan(&id).Error
-	// if err != nil {
-	// 	return models.InventoryResponse{}, err
-	// }
 	var id uint
 	query := `
     INSERT INTO inventories (category_id, product_name, size, stock, price)
@@ -54,7 +47,6 @@ func (i *inventoryRepository) AddInventory(inventory domain.Inventories) (models
 func (i *inventoryRepository) CheckInventory(pid int) (bool, error) {
 	var k int
 	err := i.DB.Raw("SELECT COUNT(*) FROM inventories WHERE id=?", pid).Scan(&k).Error
-	fmt.Println("i:", k)
 	if err != nil {
 		return false, err
 	}
@@ -67,7 +59,6 @@ func (i *inventoryRepository) CheckInventory(pid int) (bool, error) {
 }
 
 func (i *inventoryRepository) UpdateInventory(pid int, stock int) (models.InventoryResponse, error) {
-	fmt.Println("values:", pid, stock)
 
 	// Check the database connection
 	if i.DB == nil {
@@ -83,13 +74,10 @@ func (i *inventoryRepository) UpdateInventory(pid int, stock int) (models.Invent
 	var newdetails models.InventoryResponse
 	var newstock int
 	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=?", pid).Scan(&newstock).Error; err != nil {
-		fmt.Println("debug:1")
 		return models.InventoryResponse{}, err
 	}
 	newdetails.ProductID = pid
 	newdetails.Stock = newstock
-
-	fmt.Println(newdetails)
 
 	return newdetails, nil
 }
@@ -99,7 +87,6 @@ func (i *inventoryRepository) DeleteInventory(inventoryID string) error {
 	if err != nil {
 		return errors.New("converting into integer not happened")
 	}
-	fmt.Println("This is the ID:", id)
 
 	result := i.DB.Exec("DELETE FROM inventories WHERE id = ?", id)
 
@@ -151,13 +138,10 @@ func (ad *inventoryRepository) ListProducts(page int) ([]models.Inventories, err
 }
 
 func (i *inventoryRepository) CheckStock(pid int) (int, error) {
-	fmt.Println("pid", pid)
 	var k int
 	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=$1", pid).Scan(&k).Error; err != nil {
-		fmt.Println("here it is", k)
 		return 0, err
 	}
-	fmt.Println(k)
 	return k, nil
 }
 
