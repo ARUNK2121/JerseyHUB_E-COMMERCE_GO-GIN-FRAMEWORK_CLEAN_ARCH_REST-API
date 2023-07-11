@@ -19,18 +19,20 @@ type userUseCase struct {
 	cfg                 config.Config
 	otpRepository       interfaces.OtpRepository
 	inventoryRepository interfaces.InventoryRepository
+	orderRepository     interfaces.OrderRepository
 }
 
-func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, inv interfaces.InventoryRepository) *userUseCase {
+func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, inv interfaces.InventoryRepository, order interfaces.OrderRepository) *userUseCase {
 	return &userUseCase{
 		userRepo:            repo,
 		cfg:                 cfg,
 		otpRepository:       otp,
 		inventoryRepository: inv,
+		orderRepository:     order,
 	}
 }
 
-func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, error) {
+func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.TokenUsers, error) {
 	fmt.Println("add users")
 	// Check whether the user already exist. If yes, show the error message, since this is signUp
 	userExist := u.userRepo.CheckUserAvailability(user.Email)
@@ -43,6 +45,13 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 		return models.TokenUsers{}, errors.New("password does not match")
 	}
 
+	referenceUser, err := u.userRepo.FindUserFromReference(ref)
+	if err != nil {
+		return models.TokenUsers{}, err
+	}
+
+	fmt.Println("the reference user is:", referenceUser)
+
 	// Hash password since details are validated
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
@@ -50,12 +59,21 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 	}
 	user.Password = string(hashedPassword)
 
+	referral, err := helper.GenerateRefferalCode()
+	if err != nil {
+		fmt.Println("Error generating referral code:", err)
+		return models.TokenUsers{}, errors.New("internal server error")
+	}
+
+	fmt.Println("Generated Referal Code:", referral)
+
 	// add user details to the database
-	userData, err := u.userRepo.UserSignUp(user)
+	userData, err := u.userRepo.UserSignUp(user, referral)
 	if err != nil {
 		return models.TokenUsers{}, err
 	}
 
+	fmt.Println("is it here?")
 	// crete a JWT token string for the user
 	tokenString, err := helper.GenerateTokenClients(userData)
 	if err != nil {
@@ -69,6 +87,18 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 		return models.TokenUsers{}, err
 	}
 
+	//credit 20 rupees to the user which is the source of the reference code
+	if err := u.userRepo.CreditReferencePointsToWallet(referenceUser); err != nil {
+		return models.TokenUsers{}, err
+	}
+
+	//create new wallet for user
+	fmt.Println("id data:", userData.Id)
+	fmt.Println("id details:", userDetails.Id)
+	if _, err := u.orderRepository.CreateNewWallet(userData.Id); err != nil {
+		return models.TokenUsers{}, err
+	}
+	fmt.Println("hey hey")
 	return models.TokenUsers{
 		Users: userDetails,
 		Token: tokenString,
@@ -379,4 +409,21 @@ func (i *userUseCase) UpdateQuantityLess(id, inv_id int) error {
 
 	return nil
 
+}
+
+func (i *userUseCase) GetMyReferenceLink(id int) (string, error) {
+
+	baseURL := "jerseyhub.com/users/signup"
+
+	referralCode, err := i.userRepo.GetReferralCodeFromID(id)
+	if err != nil {
+		return "", err
+	}
+
+	referralLink := fmt.Sprintf("%s?ref=%s", baseURL, referralCode)
+
+	fmt.Println("Referral Link:", referralLink)
+
+	//returning the link
+	return referralLink, nil
 }

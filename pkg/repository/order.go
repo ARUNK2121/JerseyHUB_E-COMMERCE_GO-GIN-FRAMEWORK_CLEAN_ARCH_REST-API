@@ -220,6 +220,8 @@ func (o *orderRepository) FindWalletIdFromUserID(userId int) (int, error) {
 
 func (o *orderRepository) CreateNewWallet(userID int) (int, error) {
 
+	fmt.Println("now it reaches order repository")
+
 	var wallet_id int
 	err := o.DB.Exec("Insert into wallets(user_id,amount) values($1,$2)", userID, 0).Error
 	if err != nil {

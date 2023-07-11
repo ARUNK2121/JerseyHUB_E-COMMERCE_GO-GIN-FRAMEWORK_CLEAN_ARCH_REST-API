@@ -57,8 +57,11 @@ func (u *UserHandler) UserSignUp(c *gin.Context) {
 		return
 	}
 
+	//if the user wants to mention the referral code of other user
+	ref := c.Query("reference")
+
 	// business logic goes inside this function
-	userCreated, err := u.userUseCase.UserSignUp(user)
+	userCreated, err := u.userUseCase.UserSignUp(user, ref)
 	if err != nil {
 		errRes := response.ClientResponse(http.StatusBadRequest, "User could not signed up", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errRes)
@@ -543,5 +546,33 @@ func (i *UserHandler) UpdateQuantityLess(c *gin.Context) {
 	}
 
 	successRes := response.ClientResponse(http.StatusOK, "Successfully subtracted quantity", nil, nil)
+	c.JSON(http.StatusOK, successRes)
+}
+
+// @Summary		Get Referral link
+// @Description	user can get a referral link and it is a share able link
+// @Tags			User
+// @Accept			json
+// @Produce		    json
+// @Param			id	query	string	true	"id"
+// @Security		Bearer
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/users/profile/get-link [get]
+func (i *UserHandler) GetMyReferenceLink(c *gin.Context) {
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	link, err := i.userUseCase.GetMyReferenceLink(id)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve referral link", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all products in cart", link, nil)
 	c.JSON(http.StatusOK, successRes)
 }
