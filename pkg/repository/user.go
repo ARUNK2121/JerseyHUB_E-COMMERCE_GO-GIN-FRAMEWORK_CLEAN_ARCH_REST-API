@@ -31,10 +31,10 @@ func (c *userDatabase) CheckUserAvailability(email string) bool {
 
 }
 
-func (c *userDatabase) UserSignUp(user models.UserDetails) (models.UserDetailsResponse, error) {
+func (c *userDatabase) UserSignUp(user models.UserDetails, referral string) (models.UserDetailsResponse, error) {
 
 	var userDetails models.UserDetailsResponse
-	err := c.DB.Raw("INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?) RETURNING id, name, email, phone", user.Name, user.Email, user.Password, user.Phone).Scan(&userDetails).Error
+	err := c.DB.Raw("INSERT INTO users (name, email, password, phone,referral_code) VALUES (?, ?, ?, ?,?) RETURNING id, name, email, phone", user.Name, user.Email, user.Password, user.Phone, referral).Scan(&userDetails).Error
 
 	if err != nil {
 		return models.UserDetailsResponse{}, err
@@ -349,4 +349,35 @@ func (ad *userDatabase) FindofferPercentage(category_id int) (int, error) {
 	}
 
 	return percentage, nil
+}
+
+func (ad *userDatabase) FindUserFromReference(ref string) (int, error) {
+	var user int
+
+	fmt.Println(ref, " ", "is ref")
+
+	if err := ad.DB.Raw("SELECT id FROM users WHERE referral_code = ?", ref).Find(&user).Error; err != nil {
+		return 0, err
+	}
+
+	return user, nil
+}
+
+func (i *userDatabase) CreditReferencePointsToWallet(user_id int) error {
+	err := i.DB.Exec("Update wallets set amount=amount+20 where user_id=$1", user_id).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (i *userDatabase) GetReferralCodeFromID(id int) (string, error) {
+	var referral string
+	err := i.DB.Raw("SELECT referral_code FROM users WHERE id=?", id).Scan(&referral).Error
+	if err != nil {
+		return "", err
+	}
+
+	return referral, nil
 }

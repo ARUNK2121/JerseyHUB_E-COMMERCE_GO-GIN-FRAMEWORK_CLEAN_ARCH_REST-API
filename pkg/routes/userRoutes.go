@@ -44,6 +44,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 			profile.GET("/details", userHandler.GetUserDetails)
 			profile.GET("/address", userHandler.GetAddresses)
 			profile.POST("/address/add", userHandler.AddAddress)
+			profile.GET("/get-link", userHandler.GetMyReferenceLink)
 
 			orders := profile.Group("/orders")
 			{

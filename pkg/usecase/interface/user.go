@@ -6,7 +6,7 @@ import (
 )
 
 type UserUseCase interface {
-	UserSignUp(user models.UserDetails) (models.TokenUsers, error)
+	UserSignUp(user models.UserDetails, ref string) (models.TokenUsers, error)
 	LoginHandler(user models.UserLogin) (models.TokenUsers, error)
 	AddAddress(id int, address models.AddAddress) error
 	GetAddresses(id int) ([]domain.Address, error)
@@ -23,4 +23,6 @@ type UserUseCase interface {
 	RemoveFromCart(id int) error
 	UpdateQuantityAdd(id, inv_id int) error
 	UpdateQuantityLess(id, inv_id int) error
+
+	GetMyReferenceLink(id int) (string, error)
 }
