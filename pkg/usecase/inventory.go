@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"errors"
-	"jerseyhub/pkg/domain"
+	"jerseyhub/pkg/helper"
 	interfaces "jerseyhub/pkg/repository/interface"
 	"jerseyhub/pkg/utils/models"
+	"mime/multipart"
 )
 
 type inventoryUseCase struct {
@@ -19,9 +20,15 @@ func NewInventoryUseCase(repo interfaces.InventoryRepository, offer interfaces.O
 	}
 }
 
-func (i *inventoryUseCase) AddInventory(inventory domain.Inventories) (models.InventoryResponse, error) {
+func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, image *multipart.FileHeader) (models.InventoryResponse, error) {
 
-	InventoryResponse, err := i.repository.AddInventory(inventory)
+	url, err := helper.AddImageToS3(image)
+	if err != nil {
+		return models.InventoryResponse{}, err
+	}
+
+	//send the url and save it in database
+	InventoryResponse, err := i.repository.AddInventory(inventory, url)
 	if err != nil {
 		return models.InventoryResponse{}, err
 	}

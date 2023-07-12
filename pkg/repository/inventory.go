@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"jerseyhub/pkg/domain"
 	"jerseyhub/pkg/utils/models"
 	"strconv"
 
@@ -19,26 +18,15 @@ func NewInventoryRepository(DB *gorm.DB) *inventoryRepository {
 	}
 }
 
-func (i *inventoryRepository) AddInventory(inventory domain.Inventories) (models.InventoryResponse, error) {
+func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url string) (models.InventoryResponse, error) {
 
-	var id uint
 	query := `
-    INSERT INTO inventories (category_id, product_name, size, stock, price)
-    VALUES (?, ?, ?, ?, ?)
-    RETURNING id
+    INSERT INTO inventories (category_id, product_name, size, stock, price, image)
+    VALUES (?, ?, ?, ?, ?, ?);
     `
-	i.DB.Raw(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price).Scan(&id)
+	i.DB.Exec(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price, url)
 
 	var inventoryResponse models.InventoryResponse
-	i.DB.Raw(`
-	SELECT
-		i.product_name,
-		i.stock
-		FROM
-			 inventories i
-		WHERE
-			inventories.id = ?
-			`, id).Scan(&inventoryResponse)
 
 	return inventoryResponse, nil
 

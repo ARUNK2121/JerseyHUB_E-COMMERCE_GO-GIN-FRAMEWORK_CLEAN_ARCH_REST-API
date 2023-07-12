@@ -1,12 +1,11 @@
 package interfaces
 
 import (
-	"jerseyhub/pkg/domain"
 	"jerseyhub/pkg/utils/models"
 )
 
 type InventoryRepository interface {
-	AddInventory(inventory domain.Inventories) (models.InventoryResponse, error)
+	AddInventory(inventory models.AddInventories, url string) (models.InventoryResponse, error)
 	CheckInventory(pid int) (bool, error)
 	UpdateInventory(pid int, stock int) (models.InventoryResponse, error)
 	DeleteInventory(id string) error

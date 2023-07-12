@@ -6,6 +6,8 @@ import (
 	"jerseyhub/cmd/api/docs"
 	config "jerseyhub/pkg/config"
 	di "jerseyhub/pkg/di"
+
+	"github.com/joho/godotenv"
 )
 
 // @SecurityDefinition BearerAuth
@@ -25,6 +27,12 @@ func main() {
 	docs.SwaggerInfo.Host = "localhost:3000"
 	docs.SwaggerInfo.BasePath = ""
 	docs.SwaggerInfo.Schemes = []string{"http"}
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error loading the env file")
+	}
+
 	config, configErr := config.LoadConfig()
 	if configErr != nil {
 		log.Fatal("cannot load config: ", configErr)

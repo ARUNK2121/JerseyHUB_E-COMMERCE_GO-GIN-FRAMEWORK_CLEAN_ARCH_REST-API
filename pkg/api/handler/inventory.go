@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"jerseyhub/pkg/domain"
 	services "jerseyhub/pkg/usecase/interface"
 	"jerseyhub/pkg/utils/models"
 	"jerseyhub/pkg/utils/response"
@@ -26,21 +25,50 @@ func NewInventoryHandler(usecase services.InventoryUseCase) *InventoryHandler {
 // @Tags			Admin
 // @Accept			json
 // @Produce		    json
-// @Param			inventory	body	domain.Inventories	true	"inventory"
+// @Param			inventory	body	models.AddInventories	true	"inventory"
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
 // @Router			/admin/inventories/add [post]
 func (i *InventoryHandler) AddInventory(c *gin.Context) {
 
-	var inventory domain.Inventories
-	if err := c.BindJSON(&inventory); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+	var inventory models.AddInventories
+	categoryID, err := strconv.Atoi(c.Request.FormValue("category_id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "form file error", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	product_name := c.Request.FormValue("product_name")
+	size := c.Request.FormValue("size")
+	p, err := strconv.Atoi(c.Request.FormValue("price"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "form file error", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	price := float64(p)
+	stock, err := strconv.Atoi(c.Request.FormValue("stock"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "form file error", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
 
-	InventoryResponse, err := i.InventoryUseCase.AddInventory(inventory)
+	inventory.CategoryID = categoryID
+	inventory.ProductName = product_name
+	inventory.Size = size
+	inventory.Price = price
+	inventory.Stock = stock
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "retrieving image from form error", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	InventoryResponse, err := i.InventoryUseCase.AddInventory(inventory, file)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not add the Inventory", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
