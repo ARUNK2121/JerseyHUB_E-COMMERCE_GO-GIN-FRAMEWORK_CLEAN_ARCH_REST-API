@@ -16,11 +16,20 @@ type AddToCart struct {
 }
 
 type Inventories struct {
-	ID              uint    `json:"id" gorm:"unique;not null"`
+	ID              uint    `json:"id"`
 	CategoryID      int     `json:"category_id"`
 	ProductName     string  `json:"product_name"`
 	Size            string  `json:"size"`
 	Stock           int     `json:"stock"`
 	Price           float64 `json:"price"`
 	DiscountedPrice float64 `json:"discounted_price"`
+}
+
+type AddInventories struct {
+	ID          uint    `json:"id"`
+	CategoryID  int     `json:"category_id"`
+	ProductName string  `json:"product_name"`
+	Size        string  `json:"size"`
+	Stock       int     `json:"stock"`
+	Price       float64 `json:"price"`
 }

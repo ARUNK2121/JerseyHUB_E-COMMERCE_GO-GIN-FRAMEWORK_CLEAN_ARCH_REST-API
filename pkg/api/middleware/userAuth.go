@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -17,7 +16,6 @@ func UserAuthMiddleware(c *gin.Context) {
 		return
 	}
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
-	fmt.Println(tokenString)
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 

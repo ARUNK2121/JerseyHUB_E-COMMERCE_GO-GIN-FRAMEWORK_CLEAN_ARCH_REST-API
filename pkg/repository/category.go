@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	"strconv"
@@ -48,7 +47,6 @@ func (p *categoryRepository) AddCategory(c domain.Category) (domain.Category, er
 func (p *categoryRepository) CheckCategory(current string) (bool, error) {
 	var i int
 	err := p.DB.Raw("SELECT COUNT(*) FROM categories WHERE category=?", current).Scan(&i).Error
-	fmt.Println("i:", i)
 	if err != nil {
 		return false, err
 	}
@@ -61,7 +59,6 @@ func (p *categoryRepository) CheckCategory(current string) (bool, error) {
 }
 
 func (p *categoryRepository) UpdateCategory(current, new string) (domain.Category, error) {
-	fmt.Println("values:", new, current)
 
 	// Check the database connection
 	if p.DB == nil {
@@ -79,36 +76,14 @@ func (p *categoryRepository) UpdateCategory(current, new string) (domain.Categor
 		return domain.Category{}, err
 	}
 
-	fmt.Println(newcat)
-
 	return newcat, nil
 }
-
-// func (c *categoryRepository) DeleteCategory(categoryID string) error {
-
-// 	id, _ := strconv.Atoi(categoryID)
-// 	fmt.Println("heyy this is the id:", id)
-// 	result := c.DB.Exec("delete from categories where id = ?", id)
-
-// 	if result.RowsAffected < 1 {
-// 		return errors.New("no records were of that id exists")
-// 	}
-
-// 	fmt.Println(result.Error)
-// 	if result.Error != nil {
-// 		return result.Error
-// 	}
-
-// 	return nil
-
-// }
 
 func (c *categoryRepository) DeleteCategory(categoryID string) error {
 	id, err := strconv.Atoi(categoryID)
 	if err != nil {
 		return errors.New("converting into integer not happened")
 	}
-	fmt.Println("This is the ID:", id)
 
 	result := c.DB.Exec("DELETE FROM categories WHERE id = ?", id)
 

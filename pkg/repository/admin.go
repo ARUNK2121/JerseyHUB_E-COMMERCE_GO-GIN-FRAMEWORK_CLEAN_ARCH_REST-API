@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 	"fmt"
+
 	"jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	"jerseyhub/pkg/utils/models"
@@ -61,7 +62,6 @@ func (ad *adminRepository) UpdateBlockUserByID(user domain.Users) error {
 
 	err := ad.DB.Exec("update users set blocked = ? where id = ?", user.Blocked, user.ID).Error
 	if err != nil {
-		fmt.Println("Error updating user:", err)
 		return err
 	}
 

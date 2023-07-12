@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 	domain "jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	services "jerseyhub/pkg/usecase/interface"
@@ -39,13 +38,11 @@ func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid i
 	if err != nil {
 		return err
 	}
-	fmt.Println("cart:", cart)
 
 	var total float64
 	for _, v := range cart {
 		total = total + v.DiscountedPrice
 	}
-	fmt.Println("heyy", total)
 
 	//finding discount if any
 	DiscountRate := i.couponRepository.FindCouponDiscount(couponID)

@@ -44,13 +44,11 @@ func (c *userDatabase) UserSignUp(user models.UserDetails, referral string) (mod
 }
 
 func (cr *userDatabase) UserBlockStatus(email string) (bool, error) {
-	fmt.Println(email)
 	var isBlocked bool
 	err := cr.DB.Raw("select blocked from users where email = ?", email).Scan(&isBlocked).Error
 	if err != nil {
 		return false, err
 	}
-	fmt.Println(isBlocked)
 	return isBlocked, nil
 }
 
@@ -71,19 +69,7 @@ func (c *userDatabase) FindUserByEmail(user models.UserLogin) (models.UserSignIn
 
 }
 
-// func (i *userDatabase) AddAddress(id int, address models.AddAddress) error {
-// 	fmt.Println(id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Pin)
-// 	err := i.DB.Raw("insert into addresses(user_id,name,house_name,street,city,state,pin) values($1,$2,$3,$4,$5,$6,$7)returning id", id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Pin).Error
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-
-// }
-
 func (i *userDatabase) AddAddress(id int, address models.AddAddress, result bool) error {
-	fmt.Println(id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Pin)
 	err := i.DB.Exec(`
 		INSERT INTO addresses (user_id, name, house_name, street, city, state, pin,"default")
 		VALUES ($1, $2, $3, $4, $5, $6, $7,$8 )
@@ -136,7 +122,6 @@ func (i *userDatabase) ChangePassword(id int, password string) error {
 
 	err := i.DB.Exec("UPDATE users SET password=$1 WHERE id=$2", password, id).Error
 	if err != nil {
-		fmt.Println("Error updating password:", err)
 		return err
 	}
 
@@ -217,7 +202,6 @@ func (ad *userDatabase) RemoveFromCart(id int) error {
 }
 
 func (ad *userDatabase) UpdateQuantityAdd(id, inv_id int) error {
-	fmt.Println("heyy back again", id, inv_id)
 
 	query := `
 		UPDATE line_items
@@ -265,8 +249,6 @@ func (ad *userDatabase) GetCartID(id int) (int, error) {
 		return 0, err
 	}
 
-	fmt.Println("cart_id", cart_id)
-
 	return cart_id, nil
 
 }
@@ -278,8 +260,6 @@ func (ad *userDatabase) GetProductsInCart(cart_id int) ([]int, error) {
 	if err := ad.DB.Raw("select inventory_id from line_items where cart_id=?", cart_id).Scan(&cart_products).Error; err != nil {
 		return []int{}, err
 	}
-
-	fmt.Println("cart_id", cart_id)
 
 	return cart_products, nil
 
@@ -293,8 +273,6 @@ func (ad *userDatabase) FindProductNames(inventory_id int) (string, error) {
 		return "", err
 	}
 
-	fmt.Println("inventory_name", product_name)
-
 	return product_name, nil
 
 }
@@ -306,8 +284,6 @@ func (ad *userDatabase) FindCartQuantity(cart_id, inventory_id int) (int, error)
 	if err := ad.DB.Raw("select quantity from line_items where id=$1 and inventory_id=$2", cart_id, inventory_id).Scan(&quantity).Error; err != nil {
 		return 0, err
 	}
-
-	fmt.Println("quantity", quantity)
 
 	return quantity, nil
 
@@ -321,8 +297,6 @@ func (ad *userDatabase) FindPrice(inventory_id int) (float64, error) {
 		return 0, err
 	}
 
-	fmt.Println("price", price)
-
 	return price, nil
 
 }
@@ -334,8 +308,6 @@ func (ad *userDatabase) FindCategory(inventory_id int) (int, error) {
 	if err := ad.DB.Raw("select category_id from inventories where id=?", inventory_id).Scan(&category).Error; err != nil {
 		return 0, err
 	}
-
-	fmt.Println("category_id", category)
 
 	return category, nil
 
@@ -353,8 +325,6 @@ func (ad *userDatabase) FindofferPercentage(category_id int) (int, error) {
 
 func (ad *userDatabase) FindUserFromReference(ref string) (int, error) {
 	var user int
-
-	fmt.Println(ref, " ", "is ref")
 
 	if err := ad.DB.Raw("SELECT id FROM users WHERE referral_code = ?", ref).Find(&user).Error; err != nil {
 		return 0, err

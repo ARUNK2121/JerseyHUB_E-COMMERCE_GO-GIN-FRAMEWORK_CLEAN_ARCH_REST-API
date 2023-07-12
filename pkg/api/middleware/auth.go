@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"jerseyhub/pkg/helper"
 	"time"
 
@@ -37,14 +36,12 @@ func AdminAuthMiddleware(c *gin.Context) {
 	// The refresh token is valid. Generate a new access token.
 	newAccessToken, err := CreateNewAccessTokenAdmin()
 	if err != nil {
-		fmt.Println(err)
 		// An error occurred while generating the new access token.
 		c.AbortWithStatus(500)
 		return
 	}
 
 	// Set the new access token in the response header.
-	fmt.Println("accesstoken validity extended")
 	c.Header("Authorization", "Bearer "+newAccessToken)
 	c.Next()
 }

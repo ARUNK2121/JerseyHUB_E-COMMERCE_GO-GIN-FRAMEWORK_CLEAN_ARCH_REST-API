@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 
 	config "jerseyhub/pkg/config"
 	helper "jerseyhub/pkg/helper"
@@ -33,8 +32,6 @@ func (ot *otpUseCase) SendOTP(phone string) error {
 	}
 
 	helper.TwilioSetup(ot.cfg.ACCOUNTSID, ot.cfg.AUTHTOKEN)
-	fmt.Println("accsid:", ot.cfg.ACCOUNTSID)
-	fmt.Println("auth:", ot.cfg.AUTHTOKEN)
 	_, err := helper.TwilioSendOTP(phone, ot.cfg.SERVICESID)
 	if err != nil {
 		return errors.New("error ocurred while generating OTP")

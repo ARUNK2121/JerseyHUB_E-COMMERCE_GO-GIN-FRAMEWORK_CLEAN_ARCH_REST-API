@@ -33,14 +33,11 @@ func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp inter
 }
 
 func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.TokenUsers, error) {
-	fmt.Println("add users")
 	// Check whether the user already exist. If yes, show the error message, since this is signUp
 	userExist := u.userRepo.CheckUserAvailability(user.Email)
-	fmt.Println("user exists", userExist)
 	if userExist {
 		return models.TokenUsers{}, errors.New("user already exist, sign in")
 	}
-	fmt.Println(user)
 	if user.Password != user.ConfirmPassword {
 		return models.TokenUsers{}, errors.New("password does not match")
 	}
@@ -49,8 +46,6 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 	if err != nil {
 		return models.TokenUsers{}, err
 	}
-
-	fmt.Println("the reference user is:", referenceUser)
 
 	// Hash password since details are validated
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
@@ -61,11 +56,8 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 
 	referral, err := helper.GenerateRefferalCode()
 	if err != nil {
-		fmt.Println("Error generating referral code:", err)
 		return models.TokenUsers{}, errors.New("internal server error")
 	}
-
-	fmt.Println("Generated Referal Code:", referral)
 
 	// add user details to the database
 	userData, err := u.userRepo.UserSignUp(user, referral)
@@ -73,7 +65,6 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 		return models.TokenUsers{}, err
 	}
 
-	fmt.Println("is it here?")
 	// crete a JWT token string for the user
 	tokenString, err := helper.GenerateTokenClients(userData)
 	if err != nil {
@@ -93,12 +84,9 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 	}
 
 	//create new wallet for user
-	fmt.Println("id data:", userData.Id)
-	fmt.Println("id details:", userDetails.Id)
 	if _, err := u.orderRepository.CreateNewWallet(userData.Id); err != nil {
 		return models.TokenUsers{}, err
 	}
-	fmt.Println("hey hey")
 	return models.TokenUsers{
 		Users: userDetails,
 		Token: tokenString,
@@ -226,8 +214,6 @@ func (i *userUseCase) ForgotPasswordSend(phone string) error {
 	}
 
 	helper.TwilioSetup(i.cfg.ACCOUNTSID, i.cfg.AUTHTOKEN)
-	fmt.Println("accsid:", i.cfg.ACCOUNTSID)
-	fmt.Println("auth:", i.cfg.AUTHTOKEN)
 	_, err := helper.TwilioSendOTP(phone, i.cfg.SERVICESID)
 	if err != nil {
 		return errors.New("error ocurred while generating OTP")
@@ -421,8 +407,6 @@ func (i *userUseCase) GetMyReferenceLink(id int) (string, error) {
 	}
 
 	referralLink := fmt.Sprintf("%s?ref=%s", baseURL, referralCode)
-
-	fmt.Println("Referral Link:", referralLink)
 
 	//returning the link
 	return referralLink, nil

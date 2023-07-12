@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"jerseyhub/pkg/domain"
 	"jerseyhub/pkg/utils/models"
 
@@ -38,7 +37,6 @@ func (ad *orderRepository) GetCart(id int) ([]models.GetCart, error) {
 	if err := ad.DB.Raw("SELECT inventories.product_name,cart_products.quantity,cart_products.total_price AS Total FROM cart_products JOIN inventories ON cart_products.inventory_id=inventories.id WHERE user_id=$1", id).Scan(&cart).Error; err != nil {
 		return []models.GetCart{}, err
 	}
-	fmt.Println(cart)
 	return cart, nil
 
 }
@@ -219,8 +217,6 @@ func (o *orderRepository) FindWalletIdFromUserID(userId int) (int, error) {
 }
 
 func (o *orderRepository) CreateNewWallet(userID int) (int, error) {
-
-	fmt.Println("now it reaches order repository")
 
 	var wallet_id int
 	err := o.DB.Exec("Insert into wallets(user_id,amount) values($1,$2)", userID, 0).Error
