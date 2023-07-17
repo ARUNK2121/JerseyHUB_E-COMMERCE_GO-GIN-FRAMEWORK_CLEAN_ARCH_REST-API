@@ -67,6 +67,7 @@ func AddImageToS3(file *multipart.FileHeader) (string, error) {
 		fmt.Println("opening error:", openErr)
 		return "", openErr
 	}
+	defer f.Close()
 
 	result, uploadErr := uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String("jerseyhub"),
