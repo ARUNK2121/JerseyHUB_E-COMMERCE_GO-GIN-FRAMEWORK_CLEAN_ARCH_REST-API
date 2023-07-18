@@ -23,9 +23,14 @@ func NewInventoryHandler(usecase services.InventoryUseCase) *InventoryHandler {
 // @Summary		Add Inventory
 // @Description	Admin can add new  products
 // @Tags			Admin
-// @Accept			json
+// @Accept			multipart/form-data
 // @Produce		    json
-// @Param			inventory	body	models.AddInventories	true	"inventory"
+// @Param			category_id		formData	string	true	"category_id"
+// @Param			product_name	formData	string	true	"product_name"
+// @Param			size		formData	string	true	"size"
+// @Param			price	formData	string	true	"price"
+// @Param			stock		formData	string	true	"stock"
+// @Param           image      formData     file   true   "image"
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
@@ -146,7 +151,7 @@ func (i *InventoryHandler) DeleteInventory(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/users/products/details [get]
+// @Router			/users/home/products/details [get]
 func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 
 	id := c.Query("id")
@@ -172,7 +177,7 @@ func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/users/products [get]
+// @Router			/users/home/products [get]
 func (i *InventoryHandler) ListProducts(c *gin.Context) {
 	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)

@@ -80,17 +80,16 @@ func (ad *AdminHandler) BlockUser(c *gin.Context) {
 
 }
 
-//	@Summary		UnBlock an existing user
-//	@Description	UnBlock user
-//	@Tags			Admin
-//	@Accept			json
-//	@Produce		json
-//	@Security		Bearer
-//	@Param			id	query		string	true	"user-id"
-//	@Success		200	{object}	response.Response{}
-//	@Failure		500	{object}	response.Response{}
-//	@Router			/admin/users/unblock [POST]
-
+// @Summary		UnBlock an existing user
+// @Description	UnBlock user
+// @Tags			Admin
+// @Accept			json
+// @Produce		json
+// @Security		Bearer
+// @Param			id	query		string	true	"user-id"
+// @Success		200	{object}	response.Response{}
+// @Failure		500	{object}	response.Response{}
+// @Router			/admin/users/unblock [POST]
 func (ad *AdminHandler) UnBlockUser(c *gin.Context) {
 
 	id := c.Query("id")

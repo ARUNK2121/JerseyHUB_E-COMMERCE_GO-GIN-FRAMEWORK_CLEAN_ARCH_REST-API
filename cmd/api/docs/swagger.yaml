@@ -6,21 +6,6 @@ definitions:
       id:
         type: integer
     type: object
-  domain.Inventories:
-    properties:
-      category_id:
-        type: integer
-      id:
-        type: integer
-      price:
-        type: number
-      product_name:
-        type: string
-      size:
-        type: string
-      stock:
-        type: integer
-    type: object
   models.AddAddress:
     properties:
       city:
@@ -117,6 +102,13 @@ definitions:
         type: string
     required:
     - phone
+    type: object
+  models.OfferMaking:
+    properties:
+      category_id:
+        type: integer
+      discount:
+        type: integer
     type: object
   models.Order:
     properties:
@@ -349,15 +341,39 @@ paths:
   /admin/inventories/add:
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Admin can add new  products
       parameters:
-      - description: inventory
-        in: body
-        name: inventory
+      - description: category_id
+        in: formData
+        name: category_id
         required: true
-        schema:
-          $ref: '#/definitions/domain.Inventories'
+        type: string
+      - description: product_name
+        in: formData
+        name: product_name
+        required: true
+        type: string
+      - description: size
+        in: formData
+        name: size
+        required: true
+        type: string
+      - description: price
+        in: formData
+        name: price
+        required: true
+        type: string
+      - description: stock
+        in: formData
+        name: stock
+        required: true
+        type: string
+      - description: image
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:
@@ -427,6 +443,34 @@ paths:
       security:
       - Bearer: []
       summary: Update Stock
+      tags:
+      - Admin
+  /admin/offers/add:
+    post:
+      consumes:
+      - application/json
+      description: Admin can add new offers forspecified categories
+      parameters:
+      - description: offer
+        in: body
+        name: offer
+        required: true
+        schema:
+          $ref: '#/definitions/models.OfferMaking'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Add Offer
       tags:
       - Admin
   /admin/orders:
@@ -564,6 +608,33 @@ paths:
       summary: Block User
       tags:
       - Admin
+  /admin/users/unblock:
+    post:
+      consumes:
+      - application/json
+      description: UnBlock user
+      parameters:
+      - description: user-id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: UnBlock an existing user
+      tags:
+      - Admin
   /users/cart:
     get:
       consumes:
@@ -629,6 +700,11 @@ paths:
         name: id
         required: true
         type: string
+      - description: inv_id
+        in: query
+        name: inventory
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -654,6 +730,11 @@ paths:
       - description: id
         in: query
         name: id
+        required: true
+        type: string
+      - description: inv_id
+        in: query
+        name: inventory
         required: true
         type: string
       produces:
@@ -789,6 +870,33 @@ paths:
       summary: Add To Cart
       tags:
       - User
+  /users/home/products:
+    get:
+      consumes:
+      - application/json
+      description: user can view the list of available products
+      parameters:
+      - description: page
+        in: query
+        name: page
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: List Products
+      tags:
+      - User
   /users/login:
     post:
       consumes:
@@ -839,33 +947,6 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: Send OTP
-      tags:
-      - User
-  /users/products:
-    get:
-      consumes:
-      - application/json
-      description: user can view the list of available products
-      parameters:
-      - description: page
-        in: query
-        name: page
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: List Products
       tags:
       - User
   /users/products/details:
@@ -1081,6 +1162,33 @@ paths:
       summary: Edit Phone
       tags:
       - User
+  /users/profile/get-link:
+    get:
+      consumes:
+      - application/json
+      description: user can get a referral link and it is a share able link
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Get Referral link
+      tags:
+      - User
   /users/profile/orders:
     delete:
       consumes:
@@ -1132,6 +1240,28 @@ paths:
       security:
       - Bearer: []
       summary: Get Orders
+      tags:
+      - User
+  /users/profile/orders/return:
+    put:
+      consumes:
+      - application/json
+      description: user can return the ordered products which is already delivered
+        and then get the amount fot that particular purchase back in their wallet
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Return Order
       tags:
       - User
   /users/profile/security/change-password:
