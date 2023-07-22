@@ -52,6 +52,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 	if err != nil {
 		return models.TokenUsers{}, errors.New("internal server error")
 	}
+
 	user.Password = string(hashedPassword)
 
 	referral, err := helper.GenerateRefferalCode()
