@@ -11,6 +11,7 @@ import (
 	"jerseyhub/pkg/api/handler"
 	"jerseyhub/pkg/config"
 	"jerseyhub/pkg/db"
+	"jerseyhub/pkg/helper"
 	"jerseyhub/pkg/repository"
 	"jerseyhub/pkg/usecase"
 )
@@ -23,12 +24,14 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		return nil, err
 	}
 
+	helper:=helper.NewHelper()
+
 	offerRepository := repository.NewOfferRepository(gormDB)
 	offerUseCase := usecase.NewOfferUseCase(offerRepository)
 	offerHandler := handler.NewOfferHandler(offerUseCase)
 
 	adminRepository := repository.NewAdminRepository(gormDB)
-	adminUseCase := usecase.NewAdminUseCase(adminRepository)
+	adminUseCase := usecase.NewAdminUseCase(adminRepository,helper)
 	adminHandler := handler.NewAdminHandler(adminUseCase)
 
 	categoryRepository := repository.NewCategoryRepository(gormDB)
@@ -36,18 +39,18 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	categoryHandler := handler.NewCategoryHandler(categoryUseCase)
 
 	inventoryRepository := repository.NewInventoryRepository(gormDB)
-	inventoryUseCase := usecase.NewInventoryUseCase(inventoryRepository,offerRepository)
+	inventoryUseCase := usecase.NewInventoryUseCase(inventoryRepository,offerRepository,helper)
 	inventoryHandler := handler.NewInventoryHandler(inventoryUseCase)
 
 	otpRepository := repository.NewOtpRepository(gormDB)
-	otpUseCase := usecase.NewOtpUseCase(cfg, otpRepository)
+	otpUseCase := usecase.NewOtpUseCase(cfg, otpRepository,helper)
 	otpHandler := handler.NewOtpHandler(otpUseCase)
 
 
 	orderRepository := repository.NewOrderRepository(gormDB)
 
 	userRepository := repository.NewUserRepository(gormDB)
-	userUseCase := usecase.NewUserUseCase(userRepository,cfg,otpRepository,inventoryRepository,orderRepository)
+	userUseCase := usecase.NewUserUseCase(userRepository,cfg,otpRepository,inventoryRepository,orderRepository,helper)
 	userHandler := handler.NewUserHandler(userUseCase)
 
 	couponRepository := repository.NewCouponRepository(gormDB)

@@ -6,7 +6,7 @@ import (
 
 	"jerseyhub/pkg/config"
 	"jerseyhub/pkg/domain"
-	"jerseyhub/pkg/helper"
+	helper_interface "jerseyhub/pkg/helper/interface"
 	interfaces "jerseyhub/pkg/repository/interface"
 	"jerseyhub/pkg/utils/models"
 
@@ -20,15 +20,17 @@ type userUseCase struct {
 	otpRepository       interfaces.OtpRepository
 	inventoryRepository interfaces.InventoryRepository
 	orderRepository     interfaces.OrderRepository
+	helper              helper_interface.Helper
 }
 
-func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, inv interfaces.InventoryRepository, order interfaces.OrderRepository) *userUseCase {
+func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, inv interfaces.InventoryRepository, order interfaces.OrderRepository, h helper_interface.Helper) *userUseCase {
 	return &userUseCase{
 		userRepo:            repo,
 		cfg:                 cfg,
 		otpRepository:       otp,
 		inventoryRepository: inv,
 		orderRepository:     order,
+		helper:              h,
 	}
 }
 
@@ -48,14 +50,15 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 	}
 
 	// Hash password since details are validated
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+
+	hashedPassword, err := u.helper.PasswordHashing(user.Password)
 	if err != nil {
-		return models.TokenUsers{}, errors.New("internal server error")
+		return models.TokenUsers{}, err
 	}
 
-	user.Password = string(hashedPassword)
+	user.Password = hashedPassword
 
-	referral, err := helper.GenerateRefferalCode()
+	referral, err := u.helper.GenerateRefferalCode()
 	if err != nil {
 		return models.TokenUsers{}, errors.New("internal server error")
 	}
@@ -67,7 +70,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 	}
 
 	// crete a JWT token string for the user
-	tokenString, err := helper.GenerateTokenClients(userData)
+	tokenString, err := u.helper.GenerateTokenClients(userData)
 	if err != nil {
 		return models.TokenUsers{}, errors.New("could not create token due to some internal error")
 	}
@@ -128,7 +131,7 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 		return models.TokenUsers{}, err
 	}
 
-	tokenString, err := helper.GenerateTokenClients(userDetails)
+	tokenString, err := u.helper.GenerateTokenClients(userDetails)
 	if err != nil {
 		return models.TokenUsers{}, errors.New("could not create token")
 	}
@@ -207,15 +210,15 @@ func (i *userUseCase) ChangePassword(id int, old string, password string, repass
 
 }
 
-func (i *userUseCase) ForgotPasswordSend(phone string) error {
+func (u *userUseCase) ForgotPasswordSend(phone string) error {
 
-	ok := i.otpRepository.FindUserByMobileNumber(phone)
+	ok := u.otpRepository.FindUserByMobileNumber(phone)
 	if !ok {
 		return errors.New("the user does not exist")
 	}
 
-	helper.TwilioSetup(i.cfg.ACCOUNTSID, i.cfg.AUTHTOKEN)
-	_, err := helper.TwilioSendOTP(phone, i.cfg.SERVICESID)
+	u.helper.TwilioSetup(u.cfg.ACCOUNTSID, u.cfg.AUTHTOKEN)
+	_, err := u.helper.TwilioSendOTP(phone, u.cfg.SERVICESID)
 	if err != nil {
 		return errors.New("error ocurred while generating OTP")
 	}
@@ -224,14 +227,14 @@ func (i *userUseCase) ForgotPasswordSend(phone string) error {
 
 }
 
-func (i *userUseCase) ForgotPasswordVerifyAndChange(model models.ForgotVerify) error {
-	helper.TwilioSetup(i.cfg.ACCOUNTSID, i.cfg.AUTHTOKEN)
-	err := helper.TwilioVerifyOTP(i.cfg.SERVICESID, model.Otp, model.Phone)
+func (u *userUseCase) ForgotPasswordVerifyAndChange(model models.ForgotVerify) error {
+	u.helper.TwilioSetup(u.cfg.ACCOUNTSID, u.cfg.AUTHTOKEN)
+	err := u.helper.TwilioVerifyOTP(u.cfg.SERVICESID, model.Otp, model.Phone)
 	if err != nil {
 		return errors.New("error while verifying")
 	}
 
-	id, err := i.userRepo.FindIdFromPhone(model.Phone)
+	id, err := u.userRepo.FindIdFromPhone(model.Phone)
 	if err != nil {
 		return errors.New("cannot find user from mobile number")
 	}
@@ -242,7 +245,7 @@ func (i *userUseCase) ForgotPasswordVerifyAndChange(model models.ForgotVerify) e
 	}
 
 	// if user is authenticated then change the password i the database
-	if err := i.userRepo.ChangePassword(id, string(newpassword)); err != nil {
+	if err := u.userRepo.ChangePassword(id, string(newpassword)); err != nil {
 		return err
 	}
 

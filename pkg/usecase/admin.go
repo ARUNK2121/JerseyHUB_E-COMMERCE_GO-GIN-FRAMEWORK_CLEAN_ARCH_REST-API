@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	domain "jerseyhub/pkg/domain"
-	helper "jerseyhub/pkg/helper"
+	helper_interface "jerseyhub/pkg/helper/interface"
 	interfaces "jerseyhub/pkg/repository/interface"
 	services "jerseyhub/pkg/usecase/interface"
 	"jerseyhub/pkg/utils/models"
@@ -15,11 +15,13 @@ import (
 
 type adminUseCase struct {
 	adminRepository interfaces.AdminRepository
+	helper          helper_interface.Helper
 }
 
-func NewAdminUseCase(repo interfaces.AdminRepository) services.AdminUseCase {
+func NewAdminUseCase(repo interfaces.AdminRepository, h helper_interface.Helper) services.AdminUseCase {
 	return &adminUseCase{
 		adminRepository: repo,
+		helper:          h,
 	}
 }
 
@@ -45,7 +47,7 @@ func (ad *adminUseCase) LoginHandler(adminDetails models.AdminLogin) (domain.Tok
 		return domain.TokenAdmin{}, err
 	}
 
-	access, refresh, err := helper.GenerateTokenAdmin(adminDetailsResponse)
+	access, refresh, err := ad.helper.GenerateTokenAdmin(adminDetailsResponse)
 
 	if err != nil {
 		return domain.TokenAdmin{}, err
