@@ -21,14 +21,14 @@ func Test_UserSignUp(t *testing.T) {
 	otpRepo := mockrepo.NewMockOtpRepository(ctrl)
 	inventoryRepo := mockrepo.NewMockInventoryRepository(ctrl)
 	helper := mockhelper.NewMockHelper(ctrl)
-
 	cfg := config.Config{}
+
 	userUseCase := NewUserUseCase(userRepo, cfg, otpRepo, inventoryRepo, orderRepo, helper)
 
 	testData := []struct {
 		name           string
 		input          models.UserDetails
-		buildStub      func(mockrepo.MockUserRepository, mockrepo.MockOrderRepository, models.UserDetails)
+		StubDetails    func(mockrepo.MockUserRepository, mockrepo.MockOrderRepository, models.UserDetails, mockhelper.MockHelper)
 		expectedOutput models.TokenUsers
 		expectedError  error
 	}{
@@ -41,31 +41,29 @@ func Test_UserSignUp(t *testing.T) {
 				Password:        gomock.Any().String(),
 				ConfirmPassword: gomock.Any().String(),
 			},
-			buildStub: func(userRepo mockrepo.MockUserRepository, orderRepo mockrepo.MockOrderRepository, signupData models.UserDetails) {
-				userRepo.EXPECT().CheckUserAvailability("arthurbishop120@gmail.com").Times(1).Return(false)
-
-				userRepo.EXPECT().FindUserFromReference("12345").Times(1).Return(1, nil)
-
-				userRepo.EXPECT().
-					UserSignUp(models.UserDetails{
-						Name:            "Arun K",
-						Email:           "arthurbishop120@gmail.com",
-						Phone:           "6282246077",
-						Password:        gomock.Any().String(),
-						ConfirmPassword: gomock.Any().String(),
-					}, "12345").
-					Times(1).
-					Return(
+			StubDetails: func(userRepo mockrepo.MockUserRepository, orderRepo mockrepo.MockOrderRepository, signupData models.UserDetails, helper mockhelper.MockHelper) {
+				gomock.InOrder(
+					userRepo.EXPECT().CheckUserAvailability(signupData.Email).Times(1).Return(false),
+					userRepo.EXPECT().FindUserFromReference("12345").Times(1).Return(1, nil),
+					helper.EXPECT().PasswordHashing(signupData.Password).Times(1).Return(gomock.Any().String(), nil),
+					helper.EXPECT().GenerateRefferalCode().Times(1).Return(gomock.Any().String(), nil),
+					userRepo.EXPECT().UserSignUp(signupData, gomock.Any().String()).Times(1).Return(
 						models.UserDetailsResponse{
 							Id:    1,
-							Name:  "Arun K",
-							Email: "arthurbishop120@gmail.com",
-							Phone: "6282246077",
-						}, nil)
-
-				userRepo.EXPECT().CreditReferencePointsToWallet(1).Times(1).Return(nil)
-
-				orderRepo.EXPECT().CreateNewWallet(1).Times(1).Return(1, nil)
+							Name:  signupData.Name,
+							Email: signupData.Email,
+							Phone: signupData.Phone,
+						}, nil,
+					),
+					helper.EXPECT().GenerateTokenClients(models.UserDetailsResponse{
+						Id:    1,
+						Name:  "Arun K",
+						Email: "arthurbishop120@gmail.com",
+						Phone: "6282246077",
+					}).Times(1).Return(gomock.Any().String(), nil),
+					userRepo.EXPECT().CreditReferencePointsToWallet(1).Times(1).Return(nil),
+					orderRepo.EXPECT().CreateNewWallet(1).Times(1).Return(1, nil),
+				)
 			},
 			expectedOutput: models.TokenUsers{
 				Users: models.UserDetailsResponse{
@@ -82,39 +80,10 @@ func Test_UserSignUp(t *testing.T) {
 	}
 
 	for _, tt := range testData {
-		tt := tt
+
 		t.Run(tt.name, func(t *testing.T) {
 
-			gomock.InOrder(
-				userRepo.EXPECT().CheckUserAvailability(tt.input.Email).Times(1).Return(false),
-				userRepo.EXPECT().FindUserFromReference("12345").Times(1).Return(1, nil),
-				helper.EXPECT().PasswordHashing(tt.input.Password).Times(1).Return(gomock.Any().String(), nil),
-				helper.EXPECT().GenerateRefferalCode().Times(1).Return(gomock.Any().String(), nil),
-				userRepo.EXPECT().UserSignUp(models.UserDetails{
-					Name:            "Arun K",
-					Email:           "arthurbishop120@gmail.com",
-					Phone:           "6282246077",
-					Password:        gomock.Any().String(),
-					ConfirmPassword: gomock.Any().String(),
-				}, gomock.Any().String()).Times(1).Return(
-					models.UserDetailsResponse{
-						Id:    1,
-						Name:  "Arun K",
-						Email: "arthurbishop120@gmail.com",
-						Phone: "6282246077",
-					}, nil,
-				),
-				helper.EXPECT().GenerateTokenClients(models.UserDetailsResponse{
-					Id:    1,
-					Name:  "Arun K",
-					Email: "arthurbishop120@gmail.com",
-					Phone: "6282246077",
-				}).Times(1).Return(gomock.Any().String(), nil),
-				userRepo.EXPECT().CreditReferencePointsToWallet(1).Times(1).Return(nil),
-				orderRepo.EXPECT().CreateNewWallet(1).Times(1).Return(1, nil),
-			)
-
-			// tt.buildStub(*userRepo, *orderRepo, tt.input)
+			tt.StubDetails(*userRepo, *orderRepo, tt.input, *helper)
 
 			tokenusers, err := userUseCase.UserSignUp(tt.input, "12345")
 
