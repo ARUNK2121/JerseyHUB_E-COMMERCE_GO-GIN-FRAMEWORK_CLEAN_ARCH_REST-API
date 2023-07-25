@@ -3,6 +3,7 @@ package helper
 import (
 	"context"
 	"fmt"
+	cfg "jerseyhub/pkg/config"
 	"jerseyhub/pkg/utils/models"
 	"mime/multipart"
 	"time"
@@ -23,10 +24,14 @@ import (
 	"encoding/base32"
 )
 
-type helper struct{}
+type helper struct {
+	cfg cfg.Config
+}
 
-func NewHelper() *helper {
-	return &helper{}
+func NewHelper(config cfg.Config) *helper {
+	return &helper{
+		cfg: config,
+	}
 }
 
 var client *twilio.RestClient

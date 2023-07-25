@@ -24,7 +24,11 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		return nil, err
 	}
 
-	helper:=helper.NewHelper()
+	helper:=helper.NewHelper(cfg)
+
+	wishlistRepository := repository.NewWishlistRepository(gormDB)
+	wishlistUseCase := usecase.NewWishlistUseCase(wishlistRepository)
+	wishlistHandler := handler.NewWishlistHandler(wishlistUseCase)
 
 	offerRepository := repository.NewOfferRepository(gormDB)
 	offerUseCase := usecase.NewOfferUseCase(offerRepository)
@@ -73,7 +77,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	
 
 	
-	serverHTTP := http.NewServerHTTP(userHandler,adminHandler,categoryHandler,inventoryHandler,otpHandler,orderHandler,cartHandler,couponHandler,paymentHandler,offerHandler)
+	serverHTTP := http.NewServerHTTP(userHandler,adminHandler,categoryHandler,inventoryHandler,otpHandler,orderHandler,cartHandler,couponHandler,paymentHandler,offerHandler,wishlistHandler)
 
 
 
