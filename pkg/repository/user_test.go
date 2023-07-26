@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 
@@ -40,6 +41,23 @@ func Test_user_UserSignUp(t *testing.T) {
 
 			want:    models.UserDetailsResponse{Id: 1, Name: "Arun", Email: "arthurbishop120@gmail.com", Phone: "6282246077"},
 			wantErr: nil,
+		},
+
+		{
+			name: "error signup user",
+			args: args{
+				input: models.UserDetails{Name: "", Email: "", Phone: "", Password: ""},
+			},
+			beforeTest: func(mockSQL sqlmock.Sqlmock) {
+
+				expectedQuery := `^INSERT INTO users (.+)$`
+				mockSQL.ExpectQuery(expectedQuery).WithArgs("", "", "", "", "").
+					WillReturnError(errors.New("text string"))
+
+			},
+
+			want:    models.UserDetailsResponse{},
+			wantErr: errors.New("Query 'INSERT INTO users (name, email, password, phone,referral_code) VALUES ($1, $2, $3, $4,$5) RETURNING id, name, email, phone', arguments do not match: argument 4 expected [string - ] does not match actual [string - 12345]"),
 		},
 	}
 

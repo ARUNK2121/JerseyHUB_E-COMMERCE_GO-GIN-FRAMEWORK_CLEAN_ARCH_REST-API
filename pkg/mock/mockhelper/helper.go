@@ -50,6 +50,20 @@ func (mr *MockHelperMockRecorder) AddImageToS3(file interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddImageToS3", reflect.TypeOf((*MockHelper)(nil).AddImageToS3), file)
 }
 
+// Copy mocks base method.
+func (m *MockHelper) Copy(userData *models.UserDetailsResponse) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Copy", userData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Copy indicates an expected call of Copy.
+func (mr *MockHelperMockRecorder) Copy(userData interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Copy", reflect.TypeOf((*MockHelper)(nil).Copy), userData)
+}
+
 // GenerateRefferalCode mocks base method.
 func (m *MockHelper) GenerateRefferalCode() (string, error) {
 	m.ctrl.T.Helper()

@@ -46,14 +46,14 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 
 	referenceUser, err := u.userRepo.FindUserFromReference(ref)
 	if err != nil {
-		return models.TokenUsers{}, err
+		return models.TokenUsers{}, errors.New("cannot find reference user")
 	}
 
 	// Hash password since details are validated
 
 	hashedPassword, err := u.helper.PasswordHashing(user.Password)
 	if err != nil {
-		return models.TokenUsers{}, err
+		return models.TokenUsers{}, errors.New("error in hashing password")
 	}
 
 	user.Password = hashedPassword
@@ -66,7 +66,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 	// add user details to the database
 	userData, err := u.userRepo.UserSignUp(user, referral)
 	if err != nil {
-		return models.TokenUsers{}, err
+		return models.TokenUsers{}, errors.New("could not add the user")
 	}
 
 	// crete a JWT token string for the user
@@ -75,24 +75,17 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 		return models.TokenUsers{}, errors.New("could not create token due to some internal error")
 	}
 
-	// copies all the details except the password of the user
-	var userDetails models.UserDetailsResponse
-	err = copier.Copy(&userDetails, &userData)
-	if err != nil {
-		return models.TokenUsers{}, err
-	}
-
 	//credit 20 rupees to the user which is the source of the reference code
 	if err := u.userRepo.CreditReferencePointsToWallet(referenceUser); err != nil {
-		return models.TokenUsers{}, err
+		return models.TokenUsers{}, errors.New("error in crediting gift")
 	}
 
 	//create new wallet for user
 	if _, err := u.orderRepository.CreateNewWallet(userData.Id); err != nil {
-		return models.TokenUsers{}, err
+		return models.TokenUsers{}, errors.New("errror in creating new wallet")
 	}
 	return models.TokenUsers{
-		Users: userDetails,
+		Users: userData,
 		Token: tokenString,
 	}, nil
 }
