@@ -45,6 +45,7 @@ help                           Display this help screen
 ```
 
 # Environment variables needed:
+# fill with your corresponding values:
 
 - postgres
 --------
@@ -66,4 +67,3 @@ AWS_REGION=?
 AWS_ACCESS_KEY_ID=?
 AWS_SECRET_ACCESS_KEY=?
 
-# fill with your corresponding values
