@@ -26,13 +26,14 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 
 	helper:=helper.NewHelper(cfg)
 
-	wishlistRepository := repository.NewWishlistRepository(gormDB)
-	wishlistUseCase := usecase.NewWishlistUseCase(wishlistRepository)
-	wishlistHandler := handler.NewWishlistHandler(wishlistUseCase)
-
 	offerRepository := repository.NewOfferRepository(gormDB)
 	offerUseCase := usecase.NewOfferUseCase(offerRepository)
 	offerHandler := handler.NewOfferHandler(offerUseCase)
+
+	wishlistRepository := repository.NewWishlistRepository(gormDB)
+	wishlistUseCase := usecase.NewWishlistUseCase(wishlistRepository,offerRepository)
+	wishlistHandler := handler.NewWishlistHandler(wishlistUseCase)
+
 
 	adminRepository := repository.NewAdminRepository(gormDB)
 	adminUseCase := usecase.NewAdminUseCase(adminRepository,helper)

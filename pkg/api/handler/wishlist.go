@@ -56,3 +56,23 @@ func (w *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully Removed product from wishlist", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 }
+
+func (w *WishlistHandler) GetWishList(c *gin.Context) {
+	pageStr := c.Query("id")
+	id, err := strconv.Atoi(pageStr)
+
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "id not in right format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	products, err := w.usecase.GetWishList(id)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", products, nil)
+	c.JSON(http.StatusOK, successRes)
+}

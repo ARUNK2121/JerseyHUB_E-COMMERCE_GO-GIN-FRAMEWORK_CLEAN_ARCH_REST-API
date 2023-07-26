@@ -78,6 +78,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 
 		wishlist := engine.Group("/wishlist")
 		{
+			wishlist.GET("/", wishlisthandler.GetWishList)
 			wishlist.DELETE("/remove", wishlisthandler.RemoveFromWishlist)
 		}
 
