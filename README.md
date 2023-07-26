@@ -21,7 +21,7 @@ cd ./go-gin-clean-arch
 make deps
 
 # Generate wire_gen.go for dependency injection
-# Please make sure you are export the env for GOPATH
+# Please make sure you exported the env for GOPATH
 make wire
 
 # Run the project in Development Mode
@@ -44,3 +44,26 @@ swag                           Generate swagger docs
 help                           Display this help screen
 ```
 
+# Environment variables needed:
+
+- postgres
+--------
+DB_HOST=?
+DB_NAME=?
+DB_USER=?
+DB_PORT=?
+DB_PASSWORD=?
+
+- twilio
+--------
+DB_AUTHTOKEN=?
+DB_ACCOUNTSID=?
+DB_SERVICESID=?
+
+- AWS
+--------
+AWS_REGION=?
+AWS_ACCESS_KEY_ID=?
+AWS_SECRET_ACCESS_KEY=?
+
+# fill with your corresponding values
