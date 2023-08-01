@@ -139,3 +139,119 @@ func TestUserSignup(t *testing.T) {
 
 	}
 }
+
+func TestLoginHandler(t *testing.T) {
+	testCase := map[string]struct {
+		input         interface{}
+		buildStub     func(useCaseMock *mockusecase.MockUserUseCase, signup interface{})
+		checkResponse func(t *testing.T, responseRecorder *httptest.ResponseRecorder)
+	}{
+		"successfull login": {
+			input: models.UserLogin{
+				Email:    "arthurbishop120@gmail.com",
+				Password: "12345",
+			},
+			buildStub: func(useCaseMock *mockusecase.MockUserUseCase, loginData interface{}) {
+				// copying signupData to domain.user for pass to Mock usecase
+				err := validator.New().Struct(loginData)
+				if err != nil {
+					fmt.Println("validation failed")
+				}
+
+				useCaseMock.EXPECT().LoginHandler(loginData).Times(1).Return(models.TokenUsers{
+					Users: models.UserDetailsResponse{
+						Id:    1,
+						Name:  "Arun K",
+						Email: "arthurbishop120@gmail.com",
+						Phone: "6282246077",
+					},
+					Token: "aksjgnal.fiugliagbldfgbldf.gdbladfjnb",
+				}, nil)
+			},
+			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
+				assert.Equal(t, http.StatusOK, responseRecorder.Code)
+
+			},
+		},
+		"fields provided in wrong format": {
+			input: "",
+			buildStub: func(useCaseMock *mockusecase.MockUserUseCase, loginData interface{}) {
+				// copying signupData to domain.user for pass to Mock usecase
+				err := validator.New().Struct(loginData)
+				if err != nil {
+					fmt.Println("validation failed")
+				}
+			},
+			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
+				assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
+
+			},
+		},
+		"struct validation fails": {
+			input: models.SetNewName{},
+			buildStub: func(useCaseMock *mockusecase.MockUserUseCase, loginData interface{}) {
+				// copying signupData to domain.user for pass to Mock usecase
+				err := validator.New().Struct(loginData)
+				if err != nil {
+					fmt.Println("validation failed")
+				}
+			},
+			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
+				assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
+
+			},
+		},
+		"user couldnot login": {
+			input: models.UserLogin{
+				Email:    "anonymous@some.com",
+				Password: "no password",
+			},
+			buildStub: func(useCaseMock *mockusecase.MockUserUseCase, loginData interface{}) {
+				// copying signupData to domain.user for pass to Mock usecase
+				err := validator.New().Struct(loginData)
+				if err != nil {
+					fmt.Println("validation failed")
+				}
+
+				useCaseMock.EXPECT().LoginHandler(loginData).Times(1).Return(models.TokenUsers{}, errors.New("cannot login up"))
+			},
+			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
+				assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
+
+			},
+		},
+	}
+
+	for testName, test := range testCase {
+		test := test
+		t.Run(testName, func(t *testing.T) {
+			t.Parallel()
+			ctrl := gomock.NewController(t)
+			mockUseCase := mockusecase.NewMockUserUseCase(ctrl)
+			test.buildStub(mockUseCase, test.input)
+
+			userHandler := NewUserHandler(mockUseCase)
+
+			server := gin.Default()
+			server.POST("/login", userHandler.LoginHandler)
+
+			jsonData, err := json.Marshal(test.input)
+			assert.NoError(t, err)
+			body := bytes.NewBuffer(jsonData)
+
+			mockRequest, err := http.NewRequest(http.MethodPost, "/login", body)
+			assert.NoError(t, err)
+			responseRecorder := httptest.NewRecorder()
+
+			server.ServeHTTP(responseRecorder, mockRequest)
+
+			test.checkResponse(t, responseRecorder)
+
+		})
+
+	}
+}
+
+func TestAddAddress(t *testing.T) {
+
+}
