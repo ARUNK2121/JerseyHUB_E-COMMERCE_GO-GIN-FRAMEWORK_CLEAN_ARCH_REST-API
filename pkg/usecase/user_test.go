@@ -26,15 +26,13 @@ func Test_UserSignUp(t *testing.T) {
 
 	userUseCase := NewUserUseCase(userRepo, cfg, otpRepo, inventoryRepo, orderRepo, helper)
 
-	testData := []struct {
-		name           string
+	testData := map[string]struct {
 		input          models.UserDetails
 		StubDetails    func(mockrepo.MockUserRepository, mockrepo.MockOrderRepository, models.UserDetails, mockhelper.MockHelper)
 		expectedOutput models.TokenUsers
 		expectedError  error
 	}{
-		{
-			name: "success",
+		"success": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -78,8 +76,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError: nil,
 		},
 
-		{
-			name: "user already exists",
+		"user already exists": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -96,8 +93,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError:  errors.New("user already exist, sign in"),
 		},
 
-		{
-			name: "password missmatch",
+		"password missmatch": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -114,8 +110,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError:  errors.New("password does not match"),
 		},
 
-		{
-			name: "could not find the owner of reference id",
+		"could not find the owner of reference id": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -133,8 +128,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError:  errors.New("cannot find reference user"),
 		},
 
-		{
-			name: "password hashing problem",
+		"password hashing problem": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -153,8 +147,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError:  errors.New("error in hashing password"),
 		},
 
-		{
-			name: "could not generate reference code",
+		"could not generate reference code": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -174,8 +167,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError:  errors.New("internal server error"),
 		},
 
-		{
-			name: "could not add the user to database",
+		"could not add the user to database": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -198,8 +190,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError:  errors.New("could not add the user"),
 		},
 
-		{
-			name: "could not generate the token",
+		"could not generate the token": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -233,8 +224,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError:  errors.New("could not create token due to some internal error"),
 		},
 
-		{
-			name: "could not credit the amount ",
+		"could not credit the amount ": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -269,8 +259,7 @@ func Test_UserSignUp(t *testing.T) {
 			expectedError:  errors.New("error in crediting gift"),
 		},
 
-		{
-			name: "could not create the wallet",
+		"could not create the wallet": {
 			input: models.UserDetails{
 				Name:            "Arun K",
 				Email:           "arthurbishop120@gmail.com",
@@ -307,18 +296,16 @@ func Test_UserSignUp(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testData {
+	for _, test := range testData {
 
-		t.Run(tt.name, func(t *testing.T) {
+		test.StubDetails(*userRepo, *orderRepo, test.input, *helper)
 
-			tt.StubDetails(*userRepo, *orderRepo, tt.input, *helper)
+		tokenusers, err := userUseCase.UserSignUp(test.input, "12345")
 
-			tokenusers, err := userUseCase.UserSignUp(tt.input, "12345")
+		assert.Equal(t, test.expectedOutput.Users.Id, tokenusers.Users.Id)
+		assert.Equal(t, test.expectedOutput.Users.Name, tokenusers.Users.Name)
+		assert.Equal(t, test.expectedOutput.Users.Email, tokenusers.Users.Email)
+		assert.Equal(t, test.expectedError, err)
 
-			assert.Equal(t, tt.expectedOutput.Users.Id, tokenusers.Users.Id)
-			assert.Equal(t, tt.expectedOutput.Users.Name, tokenusers.Users.Name)
-			assert.Equal(t, tt.expectedOutput.Users.Email, tokenusers.Users.Email)
-			assert.Equal(t, tt.expectedError, err)
-		})
 	}
 }

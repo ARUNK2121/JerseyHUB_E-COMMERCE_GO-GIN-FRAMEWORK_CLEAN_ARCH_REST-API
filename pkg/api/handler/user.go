@@ -161,7 +161,6 @@ func (i *UserHandler) AddAddress(c *gin.Context) {
 func (i *UserHandler) GetAddresses(c *gin.Context) {
 	idString := c.Query("id")
 	id, err := strconv.Atoi(idString)
-
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check your id again", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
@@ -191,7 +190,6 @@ func (i *UserHandler) GetAddresses(c *gin.Context) {
 func (i *UserHandler) GetUserDetails(c *gin.Context) {
 	idString := c.Query("id")
 	id, err := strconv.Atoi(idString)
-
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check your id again", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
@@ -261,6 +259,7 @@ func (i *UserHandler) ForgotPasswordSend(c *gin.Context) {
 	if err := c.BindJSON(&model); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
+		return
 	}
 	err := i.userUseCase.ForgotPasswordSend(model.Phone)
 	if err != nil {
@@ -370,7 +369,7 @@ func (i *UserHandler) EditEmail(c *gin.Context) {
 		return
 	}
 
-	if err := i.userUseCase.EditName(id, model.Email); err != nil {
+	if err := i.userUseCase.EditEmail(id, model.Email); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not change the Email", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
@@ -408,7 +407,7 @@ func (i *UserHandler) EditPhone(c *gin.Context) {
 		return
 	}
 
-	if err := i.userUseCase.EditName(id, model.Phone); err != nil {
+	if err := i.userUseCase.EditPhone(id, model.Phone); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not change the Phone", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
@@ -466,7 +465,7 @@ func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 	}
 
 	if err := i.userUseCase.RemoveFromCart(id); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve cart", nil, err.Error())
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not remove from cart", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
