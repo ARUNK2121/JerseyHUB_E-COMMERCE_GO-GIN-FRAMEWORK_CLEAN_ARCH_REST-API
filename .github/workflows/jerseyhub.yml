@@ -27,7 +27,7 @@ jobs:
     - name: Test
       run: go test -v ./...
 
-#     - name: Deploy to
+#     - name: Deploy to aws instance
 #       uses: appleboy/ssh-action@master
 #       with:
 #           host: ${{secrets.EC2_PUBLIC_IP}}
