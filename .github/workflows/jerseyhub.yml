@@ -26,3 +26,16 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+#     - name: Deploy to
+#       uses: appleboy/ssh-action@master
+#       with:
+#           host: ${{secrets.EC2_PUBLIC_IP}}
+#           username: ubuntu
+#           key: ${{secrets.EC2_SSH_KEY}}
+#           script: |
+#             echo "Connected to AWS EC2 instance"
+#             cd JERSEYHUB-e-commerce-CLEAN-ARCH-GO
+#             git pull
+#             go build -o api ./cmd/api
+#             sudo systemctl restart go_app.service
