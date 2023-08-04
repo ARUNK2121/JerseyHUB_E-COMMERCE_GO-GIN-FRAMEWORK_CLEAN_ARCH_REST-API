@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/golang-jwt/jwt"
+	"github.com/jinzhu/copier"
 	"golang.org/x/crypto/bcrypt"
 
 	"errors"
@@ -207,4 +208,21 @@ func (h *helper) PasswordHashing(password string) (string, error) {
 
 	hash := string(hashedPassword)
 	return hash, nil
+}
+
+func (h *helper) CompareHashAndPassword(a string, b string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(a), []byte(b))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *helper) Copy(a *models.UserDetailsResponse, b *models.UserSignInResponse) (models.UserDetailsResponse, error) {
+	err := copier.Copy(a, b)
+	if err != nil {
+		return models.UserDetailsResponse{}, err
+	}
+
+	return *a, nil
 }

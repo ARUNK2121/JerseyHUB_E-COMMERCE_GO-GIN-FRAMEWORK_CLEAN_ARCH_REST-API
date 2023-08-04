@@ -50,18 +50,33 @@ func (mr *MockHelperMockRecorder) AddImageToS3(file interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddImageToS3", reflect.TypeOf((*MockHelper)(nil).AddImageToS3), file)
 }
 
-// Copy mocks base method.
-func (m *MockHelper) Copy(userData *models.UserDetailsResponse) error {
+// CompareHashAndPassword mocks base method.
+func (m *MockHelper) CompareHashAndPassword(a, b string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Copy", userData)
+	ret := m.ctrl.Call(m, "CompareHashAndPassword", a, b)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Copy indicates an expected call of Copy.
-func (mr *MockHelperMockRecorder) Copy(userData interface{}) *gomock.Call {
+// CompareHashAndPassword indicates an expected call of CompareHashAndPassword.
+func (mr *MockHelperMockRecorder) CompareHashAndPassword(a, b interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Copy", reflect.TypeOf((*MockHelper)(nil).Copy), userData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompareHashAndPassword", reflect.TypeOf((*MockHelper)(nil).CompareHashAndPassword), a, b)
+}
+
+// Copy mocks base method.
+func (m *MockHelper) Copy(a *models.UserDetailsResponse, b *models.UserSignInResponse) (models.UserDetailsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Copy", a, b)
+	ret0, _ := ret[0].(models.UserDetailsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Copy indicates an expected call of Copy.
+func (mr *MockHelperMockRecorder) Copy(a, b interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Copy", reflect.TypeOf((*MockHelper)(nil).Copy), a, b)
 }
 
 // GenerateRefferalCode mocks base method.

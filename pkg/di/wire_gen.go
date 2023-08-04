@@ -76,8 +76,6 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	paymentHandler := handler.NewPaymentHandler(paymentUseCase)
 
 	
-
-	
 	serverHTTP := http.NewServerHTTP(userHandler,adminHandler,categoryHandler,inventoryHandler,otpHandler,orderHandler,cartHandler,couponHandler,paymentHandler,offerHandler,wishlistHandler)
 
 

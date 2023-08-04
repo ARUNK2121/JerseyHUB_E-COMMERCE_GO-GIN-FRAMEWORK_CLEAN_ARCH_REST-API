@@ -14,4 +14,6 @@ type Helper interface {
 	GenerateTokenClients(user models.UserDetailsResponse) (string, error)
 	GenerateRefferalCode() (string, error)
 	PasswordHashing(string) (string, error)
+	CompareHashAndPassword(a string, b string) error
+	Copy(a *models.UserDetailsResponse, b *models.UserSignInResponse) (models.UserDetailsResponse, error)
 }
