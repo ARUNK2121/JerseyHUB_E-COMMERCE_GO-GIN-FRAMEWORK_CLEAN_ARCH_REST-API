@@ -72,11 +72,10 @@ func (c *userDatabase) FindUserByEmail(user models.UserLogin) (models.UserSignIn
 func (i *userDatabase) AddAddress(id int, address models.AddAddress, result bool) error {
 	err := i.DB.Exec(`
 		INSERT INTO addresses (user_id, name, house_name, street, city, state, pin,"default")
-		VALUES ($1, $2, $3, $4, $5, $6, $7,$8 )
-		RETURNING id`,
+		VALUES ($1, $2, $3, $4, $5, $6, $7,$8 )`,
 		id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Pin, result).Error
 	if err != nil {
-		return err
+		return errors.New("could not add address")
 	}
 
 	return nil
@@ -99,7 +98,7 @@ func (ad *userDatabase) GetAddresses(id int) ([]domain.Address, error) {
 	var addresses []domain.Address
 
 	if err := ad.DB.Raw("select * from addresses where user_id=?", id).Scan(&addresses).Error; err != nil {
-		return []domain.Address{}, err
+		return []domain.Address{}, errors.New("error in getting addresses")
 	}
 
 	return addresses, nil
@@ -111,7 +110,7 @@ func (ad *userDatabase) GetUserDetails(id int) (models.UserDetailsResponse, erro
 	var details models.UserDetailsResponse
 
 	if err := ad.DB.Raw("select id,name,email,phone from users where id=?", id).Scan(&details).Error; err != nil {
-		return models.UserDetailsResponse{}, err
+		return models.UserDetailsResponse{}, errors.New("could not get user details")
 	}
 
 	return details, nil
