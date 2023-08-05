@@ -229,17 +229,6 @@ func (ad *userDatabase) UpdateQuantityLess(id, inv_id int) error {
 
 }
 
-func (cr *userDatabase) FindUserByOrderID(orderId string) (domain.Users, error) {
-
-	var userDetails domain.Users
-	err := cr.DB.Raw("select users.name,users.email,users.phone from users inner join orders on orders.user_id = users.id where order_id = ?", orderId).Scan(&userDetails).Error
-	if err != nil {
-		return domain.Users{}, err
-	}
-
-	return userDetails, nil
-}
-
 func (ad *userDatabase) GetCartID(id int) (int, error) {
 
 	var cart_id int
