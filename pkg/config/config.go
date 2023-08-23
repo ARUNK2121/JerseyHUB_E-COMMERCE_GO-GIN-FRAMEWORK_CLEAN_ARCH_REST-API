@@ -6,6 +6,7 @@ import (
 )
 
 type Config struct {
+	BASE_URL              string `mapstructure:"BASE_URL"`
 	DBHost                string `mapstructure:"DB_HOST"`
 	DBName                string `mapstructure:"DB_NAME"`
 	DBUser                string `mapstructure:"DB_USER"`
@@ -20,7 +21,7 @@ type Config struct {
 }
 
 var envs = []string{
-	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "DB_AUTHTOKEN", "DB_ACCOUNTSID", "DB_SERVICESID", "AWS_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY",
+	"BASE_URL", "DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "DB_AUTHTOKEN", "DB_ACCOUNTSID", "DB_SERVICESID", "AWS_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY",
 }
 
 func LoadConfig() (Config, error) {
