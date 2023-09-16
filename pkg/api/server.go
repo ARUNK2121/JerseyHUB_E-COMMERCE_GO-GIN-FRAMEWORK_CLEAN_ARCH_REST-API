@@ -26,13 +26,6 @@ func NewServerHTTP(userHandler *handler.UserHandler, adminHandler *handler.Admin
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// engine.POST("users/signup", userHandler.UserSignUp)
-	// engine.POST("users/login", userHandler.LoginHandler)
-
-	// engine.GET("inventory/productdetails", inventoryHandler.ShowIndividualProducts)
-	// engine.GET("inventory/productlist", inventoryHandler.ListProducts)
-
-	// engine.POST("otp/send-otp", otpHandler.SendOTP)
-	// engine.POST("otp/verify-otp", otpHandler.VerifyOTP)
 
 	routes.UserRoutes(engine.Group("/users"), userHandler, otpHandler, inventoryHandler, orderHandler, cartHandler, paymentHandler, wishlistHandler)
 	routes.AdminRoutes(engine.Group("/admin"), adminHandler, inventoryHandler, userHandler, categoryHandler, orderHandler, couponHandler, offerhandler)
