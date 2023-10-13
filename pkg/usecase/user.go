@@ -317,6 +317,17 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 		price = append(price, q)
 	}
 
+	var images []string
+
+	for _, v := range products {
+		image, err := u.userRepo.FindProductImage(v)
+		if err != nil {
+			return []models.GetCart{}, errors.New("internal error")
+		}
+
+		images = append(images, image)
+	}
+
 	var categories []int
 	for i := range products {
 		c, err := u.userRepo.FindCategory(products[i])

@@ -339,3 +339,13 @@ func (i *userDatabase) GetReferralCodeFromID(id int) (string, error) {
 
 	return referral, nil
 }
+
+func (i *userDatabase) FindProductImage(id int) (string, error) {
+	var image string
+	err := i.DB.Raw("SELECT image FROM inventories WHERE id = ?", id).Scan(&image).Error
+	if err != nil {
+		return "", err
+	}
+
+	return image, nil
+}

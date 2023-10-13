@@ -207,6 +207,21 @@ func (mr *MockUserRepositoryMockRecorder) FindPrice(inventory_id interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindPrice", reflect.TypeOf((*MockUserRepository)(nil).FindPrice), inventory_id)
 }
 
+// FindProductImage mocks base method.
+func (m *MockUserRepository) FindProductImage(id int) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindProductImage", id)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindProductImage indicates an expected call of FindProductImage.
+func (mr *MockUserRepositoryMockRecorder) FindProductImage(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindProductImage", reflect.TypeOf((*MockUserRepository)(nil).FindProductImage), id)
+}
+
 // FindProductNames mocks base method.
 func (m *MockUserRepository) FindProductNames(inventory_id int) (string, error) {
 	m.ctrl.T.Helper()

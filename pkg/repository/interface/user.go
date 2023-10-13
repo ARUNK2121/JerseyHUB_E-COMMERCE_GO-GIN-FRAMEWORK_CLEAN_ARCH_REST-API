@@ -38,4 +38,6 @@ type UserRepository interface {
 	FindUserFromReference(ref string) (int, error)
 
 	GetReferralCodeFromID(id int) (string, error)
+
+	FindProductImage(id int) (string, error)
 }
