@@ -347,6 +347,7 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 	var getcart []models.GetCart
 	for i := range product_names {
 		var get models.GetCart
+		get.ID = products[i]
 		get.ProductName = product_names[i]
 		get.Image = images[i]
 		get.Category_id = categories[i]

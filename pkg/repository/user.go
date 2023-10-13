@@ -269,7 +269,7 @@ func (ad *userDatabase) FindCartQuantity(cart_id, inventory_id int) (int, error)
 
 	var quantity int
 
-	if err := ad.DB.Raw("select quantity from line_items where id=$1 and inventory_id=$2", cart_id, inventory_id).Scan(&quantity).Error; err != nil {
+	if err := ad.DB.Raw("select quantity from line_items where cart_id=$1 and inventory_id=$2", cart_id, inventory_id).Scan(&quantity).Error; err != nil {
 		return 0, err
 	}
 
