@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	helper_interface "jerseyhub/pkg/helper/interface"
 	interfaces "jerseyhub/pkg/repository/interface"
 	"jerseyhub/pkg/utils/models"
@@ -99,6 +100,8 @@ func (i *inventoryUseCase) ListProducts(page int) ([]models.Inventories, error) 
 	if err != nil {
 		return []models.Inventories{}, err
 	}
+
+	fmt.Println("product details is:", productDetails)
 
 	//loop inside products and then calculate discounted price of each then return
 	for j := range productDetails {

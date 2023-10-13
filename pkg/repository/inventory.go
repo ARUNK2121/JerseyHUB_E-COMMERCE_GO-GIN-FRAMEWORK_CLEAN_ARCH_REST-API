@@ -117,7 +117,7 @@ func (ad *inventoryRepository) ListProducts(page int) ([]models.Inventories, err
 	offset := (page - 1) * 5
 	var productDetails []models.Inventories
 
-	if err := ad.DB.Raw("select id,category_id,product_name,size,stock,price from inventories limit $1 offset $2", 5, offset).Scan(&productDetails).Error; err != nil {
+	if err := ad.DB.Raw("select id,category_id,product_name,image,size,stock,price from inventories limit $1 offset $2", 5, offset).Scan(&productDetails).Error; err != nil {
 		return []models.Inventories{}, err
 	}
 
