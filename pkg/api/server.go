@@ -14,7 +14,18 @@ type ServerHTTP struct {
 	engine *gin.Engine
 }
 
-func NewServerHTTP(userHandler *handler.UserHandler, adminHandler *handler.AdminHandler, categoryHandler *handler.CategoryHandler, inventoryHandler *handler.InventoryHandler, otpHandler *handler.OtpHandler, orderHandler *handler.OrderHandler, cartHandler *handler.CartHandler, couponHandler *handler.CouponHandler, paymentHandler *handler.PaymentHandler, offerhandler *handler.OfferHandler, wishlistHandler *handler.WishlistHandler) *ServerHTTP {
+func NewServerHTTP(userHandler *handler.UserHandler,
+	adminHandler *handler.AdminHandler,
+	categoryHandler *handler.CategoryHandler,
+	inventoryHandler *handler.InventoryHandler,
+	otpHandler *handler.OtpHandler,
+	orderHandler *handler.OrderHandler,
+	cartHandler *handler.CartHandler,
+	couponHandler *handler.CouponHandler,
+	paymentHandler *handler.PaymentHandler,
+	offerhandler *handler.OfferHandler,
+	wishlistHandler *handler.WishlistHandler) *ServerHTTP {
+
 	engine := gin.New()
 
 	engine.LoadHTMLGlob("templates/*.html")
