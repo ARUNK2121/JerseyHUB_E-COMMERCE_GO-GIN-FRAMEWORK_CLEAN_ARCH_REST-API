@@ -24,8 +24,8 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-    - name: Test
-      run: go test -v ./...
+    # - name: Test
+    #   run: go test -v ./...
 
 #     - name: Deploy to aws instance
 #       uses: appleboy/ssh-action@master

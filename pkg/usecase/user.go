@@ -318,6 +318,7 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 	}
 
 	var images []string
+	var stocks []int
 
 	for _, v := range products {
 		image, err := u.userRepo.FindProductImage(v)
@@ -325,7 +326,13 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 			return []models.GetCart{}, errors.New("internal error")
 		}
 
+		stock, err := u.userRepo.FindStock(v)
+		if err != nil {
+			return []models.GetCart{}, errors.New("internal error")
+		}
+
 		images = append(images, image)
+		stocks = append(stocks, stock)
 	}
 
 	var categories []int
@@ -341,6 +348,7 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 	for i := range product_names {
 		var get models.GetCart
 		get.ProductName = product_names[i]
+		get.Image = images[i]
 		get.Category_id = categories[i]
 		get.Quantity = quantity[i]
 		get.Total = price[i]

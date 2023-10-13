@@ -237,6 +237,21 @@ func (mr *MockUserRepositoryMockRecorder) FindProductNames(inventory_id interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindProductNames", reflect.TypeOf((*MockUserRepository)(nil).FindProductNames), inventory_id)
 }
 
+// FindStock mocks base method.
+func (m *MockUserRepository) FindStock(id int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindStock", id)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindStock indicates an expected call of FindStock.
+func (mr *MockUserRepositoryMockRecorder) FindStock(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindStock", reflect.TypeOf((*MockUserRepository)(nil).FindStock), id)
+}
+
 // FindUserByEmail mocks base method.
 func (m *MockUserRepository) FindUserByEmail(user models.UserLogin) (models.UserSignInResponse, error) {
 	m.ctrl.T.Helper()

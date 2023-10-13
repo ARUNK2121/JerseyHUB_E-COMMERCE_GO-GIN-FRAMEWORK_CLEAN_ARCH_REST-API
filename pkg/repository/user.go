@@ -349,3 +349,13 @@ func (i *userDatabase) FindProductImage(id int) (string, error) {
 
 	return image, nil
 }
+
+func (i *userDatabase) FindStock(id int) (int, error) {
+	var stock int
+	err := i.DB.Raw("SELECT stock FROM inventories WHERE id = ?", id).Scan(&stock).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return stock, nil
+}

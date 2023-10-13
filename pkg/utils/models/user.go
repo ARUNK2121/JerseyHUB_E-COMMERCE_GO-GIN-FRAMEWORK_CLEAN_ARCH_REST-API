@@ -97,6 +97,7 @@ type GetCart struct {
 	Image           string  `json:"image"`
 	Category_id     int     `json:"category_id"`
 	Quantity        int     `json:"quantity"`
+	StockAvailable  int     `json:"stock"`
 	Total           float64 `json:"total_price"`
 	DiscountedPrice float64 `json:"discounted_price"`
 }

@@ -44,6 +44,7 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
+
 	product_name := c.Request.FormValue("product_name")
 	size := c.Request.FormValue("size")
 	p, err := strconv.Atoi(c.Request.FormValue("price"))

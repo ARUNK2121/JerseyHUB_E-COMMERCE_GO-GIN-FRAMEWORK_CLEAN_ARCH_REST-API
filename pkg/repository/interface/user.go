@@ -40,4 +40,5 @@ type UserRepository interface {
 	GetReferralCodeFromID(id int) (string, error)
 
 	FindProductImage(id int) (string, error)
+	FindStock(id int) (int, error)
 }
