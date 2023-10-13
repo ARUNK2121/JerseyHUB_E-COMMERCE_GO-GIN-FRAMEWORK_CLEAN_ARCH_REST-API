@@ -40,7 +40,7 @@ func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid i
 	}
 
 	var total float64
-	for _, v := range cart {
+	for _, v := range cart.Data {
 		total = total + v.DiscountedPrice
 	}
 
@@ -56,7 +56,7 @@ func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid i
 		return err
 	}
 
-	if err := i.orderRepository.AddOrderProducts(order_id, cart); err != nil {
+	if err := i.orderRepository.AddOrderProducts(order_id, cart.Data); err != nil {
 		return err
 	}
 

@@ -276,24 +276,24 @@ func (i *userUseCase) EditPhone(id int, phone string) error {
 
 }
 
-func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
+func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 
 	//find cart id
 	cart_id, err := u.userRepo.GetCartID(id)
 	if err != nil {
-		return []models.GetCart{}, errors.New("internal error")
+		return models.GetCartResponse{}, errors.New("internal error")
 	}
 	//find products inide cart
 	products, err := u.userRepo.GetProductsInCart(cart_id)
 	if err != nil {
-		return []models.GetCart{}, errors.New("internal error")
+		return models.GetCartResponse{}, errors.New("internal error")
 	}
 	//find product names
 	var product_names []string
 	for i := range products {
 		product_name, err := u.userRepo.FindProductNames(products[i])
 		if err != nil {
-			return []models.GetCart{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New("internal error")
 		}
 		product_names = append(product_names, product_name)
 	}
@@ -303,7 +303,7 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 	for i := range products {
 		q, err := u.userRepo.FindCartQuantity(cart_id, products[i])
 		if err != nil {
-			return []models.GetCart{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New("internal error")
 		}
 		quantity = append(quantity, q)
 	}
@@ -312,7 +312,7 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 	for i := range products {
 		q, err := u.userRepo.FindPrice(products[i])
 		if err != nil {
-			return []models.GetCart{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New("internal error")
 		}
 		price = append(price, q)
 	}
@@ -323,12 +323,12 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 	for _, v := range products {
 		image, err := u.userRepo.FindProductImage(v)
 		if err != nil {
-			return []models.GetCart{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New("internal error")
 		}
 
 		stock, err := u.userRepo.FindStock(v)
 		if err != nil {
-			return []models.GetCart{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New("internal error")
 		}
 
 		images = append(images, image)
@@ -339,7 +339,7 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 	for i := range products {
 		c, err := u.userRepo.FindCategory(products[i])
 		if err != nil {
-			return []models.GetCart{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New("internal error")
 		}
 		categories = append(categories, c)
 	}
@@ -363,7 +363,7 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 	for i := range categories {
 		c, err := u.userRepo.FindofferPercentage(categories[i])
 		if err != nil {
-			return []models.GetCart{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New("internal error")
 		}
 		offers = append(offers, c)
 	}
@@ -373,9 +373,13 @@ func (u *userUseCase) GetCart(id int) ([]models.GetCart, error) {
 		getcart[i].DiscountedPrice = (getcart[i].Total) - (getcart[i].Total * float64(offers[i]) / 100)
 	}
 
+	var response models.GetCartResponse
+	response.ID = cart_id
+	response.Data = getcart
+
 	//then return in appropriate format
 
-	return getcart, nil
+	return response, nil
 
 }
 

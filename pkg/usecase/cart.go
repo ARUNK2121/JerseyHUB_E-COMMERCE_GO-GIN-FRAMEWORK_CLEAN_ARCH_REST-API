@@ -19,6 +19,9 @@ func NewCartUseCase(repo interfaces.CartRepository, inventoryRepo interfaces.Inv
 }
 
 func (i *cartUseCase) AddToCart(user_id, inventory_id int) error {
+
+	//check if item already added if already present send error as already added
+
 	//check if the desired product has quantity available
 	stock, err := i.inventoryRepository.CheckStock(inventory_id)
 	if err != nil {
@@ -40,6 +43,15 @@ func (i *cartUseCase) AddToCart(user_id, inventory_id int) error {
 		if err != nil {
 			return errors.New("cannot create cart fro user")
 		}
+	}
+
+	exists, err := i.repo.CheckIfItemIsAlreadyAdded(cart_id, inventory_id)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return errors.New("item already exists in cart")
 	}
 
 	//add product to line items

@@ -91,3 +91,15 @@ func (i *cartRepository) AddLineItems(cart_id, inventory_id int) error {
 
 	return nil
 }
+
+func (ad *cartRepository) CheckIfItemIsAlreadyAdded(cart_id, inventory_id int) (bool, error) {
+
+	var count int
+
+	if err := ad.DB.Raw("SELECT COUNT(*) FROM line_items WHERE cart_id = $1 AND inventory_id = $2", cart_id, inventory_id).Scan(&count).Error; err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+
+}

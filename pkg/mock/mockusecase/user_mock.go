@@ -149,10 +149,10 @@ func (mr *MockUserUseCaseMockRecorder) GetAddresses(id interface{}) *gomock.Call
 }
 
 // GetCart mocks base method.
-func (m *MockUserUseCase) GetCart(id int) ([]models.GetCart, error) {
+func (m *MockUserUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetCart", id)
-	ret0, _ := ret[0].([]models.GetCart)
+	ret0, _ := ret[0].(models.GetCartResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

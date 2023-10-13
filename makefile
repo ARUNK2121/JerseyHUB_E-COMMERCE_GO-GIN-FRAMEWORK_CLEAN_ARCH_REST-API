@@ -39,6 +39,7 @@ wire: ## Generate wire_gen.go
 
 mock: ##make mock files using mockgen
 	mockgen -source=pkg/repository/interface/user.go -destination=pkg/mock/mockrepo/user_mock.go -package=mockrepo
+	mockgen -source=pkg/usecase/interface/user.go -destination=pkg/mock/mockusecase/user_mock.go -package=mockusecase
 
 swag: ## Generate swagger docs
 		swag init -g pkg/api/handler/admin.go -o ./cmd/api/docs

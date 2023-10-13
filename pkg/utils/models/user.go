@@ -113,3 +113,8 @@ type CheckOut struct {
 type Search struct {
 	Key string `json:"searchkey"`
 }
+
+type GetCartResponse struct {
+	ID   int
+	Data []GetCart
+}

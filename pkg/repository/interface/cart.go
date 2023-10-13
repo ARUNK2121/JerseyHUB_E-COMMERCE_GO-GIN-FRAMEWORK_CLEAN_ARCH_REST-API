@@ -9,4 +9,5 @@ type CartRepository interface {
 	GetCartId(user_id int) (int, error)
 	CreateNewCart(user_id int) (int, error)
 	AddLineItems(cart_id, inventory_id int) error
+	CheckIfItemIsAlreadyAdded(cart_id, inventory_id int) (bool, error)
 }
