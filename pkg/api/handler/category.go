@@ -107,3 +107,17 @@ func (Cat *CategoryHandler) DeleteCategory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+func (Cat *CategoryHandler) GetCategory(c *gin.Context) {
+
+	categories, err := Cat.CategoryUseCase.GetCategories()
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all categories", categories, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}

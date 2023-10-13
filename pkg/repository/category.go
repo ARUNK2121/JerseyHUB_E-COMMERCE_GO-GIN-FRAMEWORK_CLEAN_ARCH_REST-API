@@ -93,3 +93,13 @@ func (c *categoryRepository) DeleteCategory(categoryID string) error {
 
 	return nil
 }
+
+func (c *categoryRepository) GetCategories() ([]domain.Category, error) {
+	var model []domain.Category
+	err := c.DB.Raw("SELECT * FROM categories").Scan(&model).Error
+	if err != nil {
+		return []domain.Category{}, err
+	}
+
+	return model, nil
+}

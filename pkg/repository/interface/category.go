@@ -7,4 +7,5 @@ type CategoryRepository interface {
 	CheckCategory(currrent string) (bool, error)
 	UpdateCategory(current, new string) (domain.Category, error)
 	DeleteCategory(categoryID string) error
+	GetCategories() ([]domain.Category, error)
 }
