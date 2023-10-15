@@ -31,6 +31,9 @@ func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp inter
 	}
 }
 
+var InternalError = "Internal Server Error"
+var ErrorHashingPassword = "Error In Hashing Password"
+
 func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.TokenUsers, error) {
 	// Check whether the user already exist. If yes, show the error message, since this is signUp
 	userExist := u.userRepo.CheckUserAvailability(user.Email)
@@ -50,14 +53,14 @@ func (u *userUseCase) UserSignUp(user models.UserDetails, ref string) (models.To
 
 	hashedPassword, err := u.helper.PasswordHashing(user.Password)
 	if err != nil {
-		return models.TokenUsers{}, errors.New("error in hashing password")
+		return models.TokenUsers{}, errors.New(ErrorHashingPassword)
 	}
 
 	user.Password = hashedPassword
 
 	referral, err := u.helper.GenerateRefferalCode()
 	if err != nil {
-		return models.TokenUsers{}, errors.New("internal server error")
+		return models.TokenUsers{}, errors.New(InternalError)
 	}
 
 	// add user details to the database
@@ -97,7 +100,7 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 
 	isBlocked, err := u.userRepo.UserBlockStatus(user.Email)
 	if err != nil {
-		return models.TokenUsers{}, errors.New("internal error")
+		return models.TokenUsers{}, errors.New(InternalError)
 	}
 
 	if isBlocked {
@@ -107,7 +110,7 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 	// Get the user details in order to check the password, in this case ( The same function can be reused in future )
 	user_details, err := u.userRepo.FindUserByEmail(user)
 	if err != nil {
-		return models.TokenUsers{}, errors.New("internal error")
+		return models.TokenUsers{}, errors.New(InternalError)
 	}
 
 	err = u.helper.CompareHashAndPassword(user_details.Password, user.Password)
@@ -180,7 +183,7 @@ func (i *userUseCase) ChangePassword(id int, old string, password string, repass
 
 	userPassword, err := i.userRepo.GetPassword(id)
 	if err != nil {
-		return errors.New("internal error")
+		return errors.New(InternalError)
 	}
 
 	err = i.helper.CompareHashAndPassword(userPassword, old)
@@ -281,19 +284,19 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	//find cart id
 	cart_id, err := u.userRepo.GetCartID(id)
 	if err != nil {
-		return models.GetCartResponse{}, errors.New("internal error")
+		return models.GetCartResponse{}, errors.New(InternalError)
 	}
 	//find products inide cart
 	products, err := u.userRepo.GetProductsInCart(cart_id)
 	if err != nil {
-		return models.GetCartResponse{}, errors.New("internal error")
+		return models.GetCartResponse{}, errors.New(InternalError)
 	}
 	//find product names
 	var product_names []string
 	for i := range products {
 		product_name, err := u.userRepo.FindProductNames(products[i])
 		if err != nil {
-			return models.GetCartResponse{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New(InternalError)
 		}
 		product_names = append(product_names, product_name)
 	}
@@ -303,7 +306,7 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	for i := range products {
 		q, err := u.userRepo.FindCartQuantity(cart_id, products[i])
 		if err != nil {
-			return models.GetCartResponse{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New(InternalError)
 		}
 		quantity = append(quantity, q)
 	}
@@ -312,7 +315,7 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	for i := range products {
 		q, err := u.userRepo.FindPrice(products[i])
 		if err != nil {
-			return models.GetCartResponse{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New(InternalError)
 		}
 		price = append(price, q)
 	}
@@ -323,12 +326,12 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	for _, v := range products {
 		image, err := u.userRepo.FindProductImage(v)
 		if err != nil {
-			return models.GetCartResponse{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New(InternalError)
 		}
 
 		stock, err := u.userRepo.FindStock(v)
 		if err != nil {
-			return models.GetCartResponse{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New(InternalError)
 		}
 
 		images = append(images, image)
@@ -339,7 +342,7 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	for i := range products {
 		c, err := u.userRepo.FindCategory(products[i])
 		if err != nil {
-			return models.GetCartResponse{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New(InternalError)
 		}
 		categories = append(categories, c)
 	}
@@ -353,6 +356,7 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 		get.Category_id = categories[i]
 		get.Quantity = quantity[i]
 		get.Total = price[i]
+		get.StockAvailable = stocks[i]
 		get.DiscountedPrice = 0
 
 		getcart = append(getcart, get)
@@ -363,7 +367,7 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	for i := range categories {
 		c, err := u.userRepo.FindofferPercentage(categories[i])
 		if err != nil {
-			return models.GetCartResponse{}, errors.New("internal error")
+			return models.GetCartResponse{}, errors.New(InternalError)
 		}
 		offers = append(offers, c)
 	}
@@ -394,9 +398,9 @@ func (i *userUseCase) RemoveFromCart(id int) error {
 
 }
 
-func (i *userUseCase) UpdateQuantityAdd(id, inv_id int) error {
+func (i *userUseCase) UpdateQuantityAdd(id, inv int) error {
 
-	err := i.userRepo.UpdateQuantityAdd(id, inv_id)
+	err := i.userRepo.UpdateQuantityAdd(id, inv)
 	if err != nil {
 		return err
 	}
@@ -405,9 +409,9 @@ func (i *userUseCase) UpdateQuantityAdd(id, inv_id int) error {
 
 }
 
-func (i *userUseCase) UpdateQuantityLess(id, inv_id int) error {
+func (i *userUseCase) UpdateQuantityLess(id, inv int) error {
 
-	err := i.userRepo.UpdateQuantityLess(id, inv_id)
+	err := i.userRepo.UpdateQuantityLess(id, inv)
 	if err != nil {
 		return err
 	}
