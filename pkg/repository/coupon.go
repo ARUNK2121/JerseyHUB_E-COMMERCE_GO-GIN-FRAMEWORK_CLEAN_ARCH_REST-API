@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"jerseyhub/pkg/domain"
 	"jerseyhub/pkg/utils/models"
 
 	"gorm.io/gorm"
@@ -40,4 +41,14 @@ func (repo *couponRepository) FindCouponDiscount(couponID int) int {
 	}
 
 	return coupon.DiscountRate
+}
+
+func (c *couponRepository) GetAllCoupons() ([]domain.Coupons, error) {
+	var model []domain.Coupons
+	err := c.DB.Raw("SELECT * FROM coupons").Scan(&model).Error
+	if err != nil {
+		return []domain.Coupons{}, err
+	}
+
+	return model, nil
 }

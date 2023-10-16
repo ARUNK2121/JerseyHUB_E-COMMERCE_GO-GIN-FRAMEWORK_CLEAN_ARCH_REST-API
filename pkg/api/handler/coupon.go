@@ -78,3 +78,17 @@ func (coup *CouponHandler) MakeCouponInvalid(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+func (co *CouponHandler) GetAllCoupons(c *gin.Context) {
+
+	categories, err := co.usecase.GetAllCoupons()
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "error in getting coupons", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all categories", categories, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}

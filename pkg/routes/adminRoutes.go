@@ -51,8 +51,9 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, in
 
 		coupons := engine.Group("/coupons")
 		{
-			coupons.POST("/create", couponHandler.CreateNewCoupon)
-			coupons.DELETE("/delete", couponHandler.MakeCouponInvalid)
+			coupons.GET("/", couponHandler.GetAllCoupons)
+			coupons.POST("/", couponHandler.CreateNewCoupon)
+			coupons.DELETE("/", couponHandler.MakeCouponInvalid)
 		}
 
 		offers := engine.Group("/offers")

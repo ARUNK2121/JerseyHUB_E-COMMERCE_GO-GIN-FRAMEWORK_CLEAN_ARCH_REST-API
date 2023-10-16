@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	"jerseyhub/pkg/utils/models"
 )
@@ -29,4 +30,14 @@ func (coup *couponUseCase) MakeCouponInvalid(id int) error {
 	}
 
 	return nil
+}
+
+func (Cat *couponUseCase) GetAllCoupons() ([]domain.Coupons, error) {
+
+	coupons, err := Cat.repository.GetAllCoupons()
+	if err != nil {
+		return []domain.Coupons{}, err
+	}
+	return coupons, nil
+
 }
