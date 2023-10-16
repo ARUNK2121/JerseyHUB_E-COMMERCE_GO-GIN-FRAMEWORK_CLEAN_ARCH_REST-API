@@ -11,6 +11,6 @@ type LineItems struct {
 	CartID      uint        `json:"cart_id" gorm:"not null"`
 	Cart        Cart        `json:"-" gorm:"foreignkey:CartID"`
 	InventoryID uint        `json:"inventory_id" gorm:"not null"`
-	Inventories Inventories `json:"-" gorm:"foreignkey:InventoryID"`
+	Inventories Inventories `json:"-" gorm:"foreignkey:InventoryID;constraint:OnDelete:CASCADE"`
 	Quantity    int         `json:"quantity" gorm:"default:1"`
 }
