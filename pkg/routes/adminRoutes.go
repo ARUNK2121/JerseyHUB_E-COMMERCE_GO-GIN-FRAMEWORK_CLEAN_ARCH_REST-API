@@ -17,9 +17,9 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, in
 	{
 		usermanagement := engine.Group("/users")
 		{
+			usermanagement.GET("", adminHandler.GetUsers)
 			usermanagement.PUT("/block", adminHandler.BlockUser)
 			usermanagement.PUT("/unblock", adminHandler.UnBlockUser)
-			usermanagement.GET("/getusers", adminHandler.GetUsers)
 		}
 
 		categorymanagement := engine.Group("/category")
@@ -40,26 +40,27 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, in
 
 		payment := engine.Group("/payment")
 		{
-			payment.POST("/payment-method/new", adminHandler.NewPaymentMethod)
+			payment.POST("/payment-method", adminHandler.NewPaymentMethod)
 		}
 
 		orders := engine.Group("/orders")
 		{
-			orders.PUT("/edit/status", orderHandler.EditOrderStatus)
+			orders.PUT("/status", orderHandler.EditOrderStatus)
 			orders.GET("", orderHandler.AdminOrders)
 		}
 
 		coupons := engine.Group("/coupons")
 		{
-			coupons.GET("/", couponHandler.GetAllCoupons)
-			coupons.POST("/", couponHandler.CreateNewCoupon)
-			coupons.DELETE("/", couponHandler.MakeCouponInvalid)
+			coupons.GET("", couponHandler.GetAllCoupons)
+			coupons.POST("", couponHandler.CreateNewCoupon)
+			coupons.DELETE("", couponHandler.MakeCouponInvalid)
 		}
 
 		offers := engine.Group("/offers")
 		{
-			offers.POST("/add", offerHandler.AddNewOffer)
-			offers.DELETE("/delete", offerHandler.MakeOfferExpire)
+			offers.GET("", offerHandler.GetOffers)
+			offers.POST("", offerHandler.AddNewOffer)
+			offers.DELETE("", offerHandler.MakeOfferExpire)
 		}
 	}
 
