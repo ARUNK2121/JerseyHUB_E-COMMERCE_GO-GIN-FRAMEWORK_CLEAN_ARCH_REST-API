@@ -48,11 +48,11 @@ type UserSignInResponse struct {
 }
 
 type UserDetailsAtAdmin struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Email       string `json:"email"`
-	Phone       string `json:"phone"`
-	BlockStatus bool   `json:"block_status"`
+	Id      int    `json:"id"`
+	Name    string `json:"name"`
+	Email   string `json:"email"`
+	Phone   string `json:"phone"`
+	Blocked bool   `json:"blocked"`
 }
 
 type AddAddress struct {
