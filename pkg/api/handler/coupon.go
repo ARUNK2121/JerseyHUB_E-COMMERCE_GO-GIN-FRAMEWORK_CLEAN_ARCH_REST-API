@@ -88,7 +88,7 @@ func (co *CouponHandler) GetAllCoupons(c *gin.Context) {
 		return
 	}
 
-	successRes := response.ClientResponse(http.StatusOK, "Successfully got all categories", categories, nil)
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all coupons", categories, nil)
 	c.JSON(http.StatusOK, successRes)
 
 }

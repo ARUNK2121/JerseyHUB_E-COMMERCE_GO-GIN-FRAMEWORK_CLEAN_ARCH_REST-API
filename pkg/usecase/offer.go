@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	domain "jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	"jerseyhub/pkg/utils/models"
 )
@@ -29,4 +30,14 @@ func (off *offerUseCase) MakeOfferExpire(id int) error {
 	}
 
 	return nil
+}
+
+func (o *offerUseCase) GetOffers() ([]domain.Offer, error) {
+
+	offers, err := o.repository.GetOffers()
+	if err != nil {
+		return []domain.Offer{}, err
+	}
+	return offers, nil
+
 }

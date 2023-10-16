@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"jerseyhub/pkg/domain"
 	"jerseyhub/pkg/utils/models"
 
 	"gorm.io/gorm"
@@ -40,4 +41,14 @@ func (repo *offerRepository) FindDiscountPercentage(cat_id int) (int, error) {
 	}
 
 	return percentage, nil
+}
+
+func (c *offerRepository) GetOffers() ([]domain.Offer, error) {
+	var model []domain.Offer
+	err := c.DB.Raw("SELECT * FROM offers").Scan(&model).Error
+	if err != nil {
+		return []domain.Offer{}, err
+	}
+
+	return model, nil
 }
