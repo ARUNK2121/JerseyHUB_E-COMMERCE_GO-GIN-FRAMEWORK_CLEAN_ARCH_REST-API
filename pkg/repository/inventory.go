@@ -159,9 +159,9 @@ func (ad *inventoryRepository) SearchProducts(key string) ([]models.Inventories,
 	return productDetails, nil
 }
 
-func (i *inventoryRepository) UpdateProductImage(int, string) error {
+func (i *inventoryRepository) UpdateProductImage(id int, url string) error {
 
-	err := i.DB.Exec("").Error
+	err := i.DB.Exec("UPDATE inventories SET image = $1 WHERE id = $2", url, id).Error
 	if err != nil {
 		return err
 	}
