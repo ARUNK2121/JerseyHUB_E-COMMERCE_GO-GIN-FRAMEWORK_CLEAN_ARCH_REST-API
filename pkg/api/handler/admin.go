@@ -167,3 +167,17 @@ func (i *AdminHandler) NewPaymentMethod(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+func (a *AdminHandler) ListPaymentMethods(c *gin.Context) {
+
+	categories, err := a.adminUseCase.ListPaymentMethods()
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all payment methods", categories, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}

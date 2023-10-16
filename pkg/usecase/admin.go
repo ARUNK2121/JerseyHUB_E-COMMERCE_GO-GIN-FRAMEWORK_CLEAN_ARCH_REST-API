@@ -127,3 +127,13 @@ func (i *adminUseCase) NewPaymentMethod(inv string) error {
 	return nil
 
 }
+
+func (a *adminUseCase) ListPaymentMethods() ([]domain.PaymentMethod, error) {
+
+	categories, err := a.adminRepository.ListPaymentMethods()
+	if err != nil {
+		return []domain.PaymentMethod{}, err
+	}
+	return categories, nil
+
+}

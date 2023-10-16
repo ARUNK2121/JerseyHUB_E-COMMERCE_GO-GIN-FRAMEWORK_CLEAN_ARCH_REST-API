@@ -11,4 +11,5 @@ type AdminUseCase interface {
 	UnBlockUser(id string) error
 	GetUsers(page int) ([]models.UserDetailsAtAdmin, error)
 	NewPaymentMethod(string) error
+	ListPaymentMethods() ([]domain.PaymentMethod, error)
 }

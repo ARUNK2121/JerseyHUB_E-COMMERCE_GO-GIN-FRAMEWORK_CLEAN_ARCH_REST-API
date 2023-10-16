@@ -94,3 +94,13 @@ func (i *adminRepository) NewPaymentMethod(pay string) error {
 	return nil
 
 }
+
+func (a *adminRepository) ListPaymentMethods() ([]domain.PaymentMethod, error) {
+	var model []domain.PaymentMethod
+	err := a.DB.Raw("SELECT * FROM payment_methods").Scan(&model).Error
+	if err != nil {
+		return []domain.PaymentMethod{}, err
+	}
+
+	return model, nil
+}

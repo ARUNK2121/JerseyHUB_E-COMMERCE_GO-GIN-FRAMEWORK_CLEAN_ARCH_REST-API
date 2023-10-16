@@ -41,6 +41,7 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, in
 		payment := engine.Group("/payment")
 		{
 			payment.POST("/payment-method", adminHandler.NewPaymentMethod)
+			payment.GET("/payment-method", adminHandler.ListPaymentMethods)
 		}
 
 		orders := engine.Group("/orders")
