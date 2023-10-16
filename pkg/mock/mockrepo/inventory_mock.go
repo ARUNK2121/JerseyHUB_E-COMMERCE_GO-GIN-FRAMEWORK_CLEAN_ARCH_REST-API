@@ -167,3 +167,17 @@ func (mr *MockInventoryRepositoryMockRecorder) UpdateInventory(pid, stock interf
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInventory", reflect.TypeOf((*MockInventoryRepository)(nil).UpdateInventory), pid, stock)
 }
+
+// UpdateProductImage mocks base method.
+func (m *MockInventoryRepository) UpdateProductImage(arg0 int, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateProductImage", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateProductImage indicates an expected call of UpdateProductImage.
+func (mr *MockInventoryRepositoryMockRecorder) UpdateProductImage(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProductImage", reflect.TypeOf((*MockInventoryRepository)(nil).UpdateProductImage), arg0, arg1)
+}

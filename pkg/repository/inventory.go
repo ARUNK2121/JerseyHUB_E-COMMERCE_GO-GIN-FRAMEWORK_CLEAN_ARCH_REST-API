@@ -158,3 +158,13 @@ func (ad *inventoryRepository) SearchProducts(key string) ([]models.Inventories,
 
 	return productDetails, nil
 }
+
+func (i *inventoryRepository) UpdateProductImage(int, string) error {
+
+	err := i.DB.Exec("").Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

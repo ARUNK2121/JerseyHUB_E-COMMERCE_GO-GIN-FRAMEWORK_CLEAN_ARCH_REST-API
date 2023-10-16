@@ -227,3 +227,31 @@ func (i *InventoryHandler) SearchProducts(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", results, nil)
 	c.JSON(http.StatusOK, successRes)
 }
+
+func (i *InventoryHandler) UpdateProductImage(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "parameter problem", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "retrieving image from form error", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	err = i.InventoryUseCase.UpdateProductImage(id, file)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not change the image", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully changed image", nil, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}

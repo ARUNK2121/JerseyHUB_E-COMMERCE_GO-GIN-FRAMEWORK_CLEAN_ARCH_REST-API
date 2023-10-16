@@ -13,4 +13,6 @@ type InventoryUseCase interface {
 	ShowIndividualProducts(sku string) (models.Inventories, error)
 	ListProducts(page int) ([]models.Inventories, error)
 	SearchProducts(key string) ([]models.Inventories, error)
+
+	UpdateProductImage(id int, file *multipart.FileHeader) error
 }

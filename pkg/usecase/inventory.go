@@ -149,3 +149,20 @@ func (i *inventoryUseCase) SearchProducts(key string) ([]models.Inventories, err
 	return productDetails, nil
 
 }
+
+func (i *inventoryUseCase) UpdateProductImage(id int, file *multipart.FileHeader) error {
+
+	url, err := i.helper.AddImageToS3(file)
+	if err != nil {
+		return err
+	}
+
+	//send the url and save it in database
+	err = i.repository.UpdateProductImage(id, url)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
