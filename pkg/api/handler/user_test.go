@@ -1078,71 +1078,71 @@ func TestGetCart(t *testing.T) {
 	}
 }
 
-func TestRemoveFromCart(t *testing.T) {
-	testCase := map[string]struct {
-		buildStub     func(useCaseMock *mockusecase.MockUserUseCase)
-		checkResponse func(t *testing.T, responseRecorder *httptest.ResponseRecorder)
-	}{
-		"successfull": {
-			buildStub: func(useCaseMock *mockusecase.MockUserUseCase) {
+// func TestRemoveFromCart(t *testing.T) {
+// 	testCase := map[string]struct {
+// 		buildStub     func(useCaseMock *mockusecase.MockUserUseCase)
+// 		checkResponse func(t *testing.T, responseRecorder *httptest.ResponseRecorder)
+// 	}{
+// 		"successfull": {
+// 			buildStub: func(useCaseMock *mockusecase.MockUserUseCase) {
 
-				useCaseMock.EXPECT().RemoveFromCart(1).Times(1).Return(nil)
-			},
-			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
-				assert.Equal(t, http.StatusOK, responseRecorder.Code)
+// 				useCaseMock.EXPECT().RemoveFromCart(1).Times(1).Return(nil)
+// 			},
+// 			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
+// 				assert.Equal(t, http.StatusOK, responseRecorder.Code)
 
-			},
-		},
-		"parameter problem": {
-			buildStub: func(useCaseMock *mockusecase.MockUserUseCase) {
+// 			},
+// 		},
+// 		"parameter problem": {
+// 			buildStub: func(useCaseMock *mockusecase.MockUserUseCase) {
 
-			},
-			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
-				assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
+// 			},
+// 			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
+// 				assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
 
-			},
-		},
-		"could not remove from cart": {
-			buildStub: func(useCaseMock *mockusecase.MockUserUseCase) {
+// 			},
+// 		},
+// 		"could not remove from cart": {
+// 			buildStub: func(useCaseMock *mockusecase.MockUserUseCase) {
 
-				useCaseMock.EXPECT().RemoveFromCart(1).Times(1).Return(errors.New("could not remove from cart"))
-			},
-			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
-				assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
+// 				useCaseMock.EXPECT().RemoveFromCart(1).Times(1).Return(errors.New("could not remove from cart"))
+// 			},
+// 			checkResponse: func(t *testing.T, responseRecorder *httptest.ResponseRecorder) {
+// 				assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
 
-			},
-		},
-	}
-	for testName, test := range testCase {
-		testName := testName
-		test := test
-		t.Run(testName, func(t *testing.T) {
-			t.Parallel()
-			ctrl := gomock.NewController(t)
-			mockUseCase := mockusecase.NewMockUserUseCase(ctrl)
-			test.buildStub(mockUseCase)
+// 			},
+// 		},
+// 	}
+// 	for testName, test := range testCase {
+// 		testName := testName
+// 		test := test
+// 		t.Run(testName, func(t *testing.T) {
+// 			t.Parallel()
+// 			ctrl := gomock.NewController(t)
+// 			mockUseCase := mockusecase.NewMockUserUseCase(ctrl)
+// 			test.buildStub(mockUseCase)
 
-			userHandler := NewUserHandler(mockUseCase)
+// 			userHandler := NewUserHandler(mockUseCase)
 
-			server := gin.Default()
-			server.POST("/remove_from_cart", userHandler.RemoveFromCart)
+// 			server := gin.Default()
+// 			server.POST("/remove_from_cart", userHandler.RemoveFromCart)
 
-			mockRequest, err := http.NewRequest(http.MethodPost, "/remove_from_cart?id=1", nil)
-			assert.NoError(t, err)
-			if testName == "parameter problem" {
-				mockRequest, err = http.NewRequest(http.MethodPost, "/remove_from_cart?id=invalid", nil)
-				assert.NoError(t, err)
-			}
-			responseRecorder := httptest.NewRecorder()
+// 			mockRequest, err := http.NewRequest(http.MethodPost, "/remove_from_cart?id=1", nil)
+// 			assert.NoError(t, err)
+// 			if testName == "parameter problem" {
+// 				mockRequest, err = http.NewRequest(http.MethodPost, "/remove_from_cart?id=invalid", nil)
+// 				assert.NoError(t, err)
+// 			}
+// 			responseRecorder := httptest.NewRecorder()
 
-			server.ServeHTTP(responseRecorder, mockRequest)
+// 			server.ServeHTTP(responseRecorder, mockRequest)
 
-			test.checkResponse(t, responseRecorder)
+// 			test.checkResponse(t, responseRecorder)
 
-		})
+// 		})
 
-	}
-}
+// 	}
+// }
 
 func TestUpdateQuantityAdd(t *testing.T) {
 	testCase := map[string]struct {

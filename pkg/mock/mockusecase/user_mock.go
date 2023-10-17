@@ -209,17 +209,17 @@ func (mr *MockUserUseCaseMockRecorder) LoginHandler(user interface{}) *gomock.Ca
 }
 
 // RemoveFromCart mocks base method.
-func (m *MockUserUseCase) RemoveFromCart(id int) error {
+func (m *MockUserUseCase) RemoveFromCart(cart, inventory int) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RemoveFromCart", id)
+	ret := m.ctrl.Call(m, "RemoveFromCart", cart, inventory)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RemoveFromCart indicates an expected call of RemoveFromCart.
-func (mr *MockUserUseCaseMockRecorder) RemoveFromCart(id interface{}) *gomock.Call {
+func (mr *MockUserUseCaseMockRecorder) RemoveFromCart(cart, inventory interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveFromCart", reflect.TypeOf((*MockUserUseCase)(nil).RemoveFromCart), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveFromCart", reflect.TypeOf((*MockUserUseCase)(nil).RemoveFromCart), cart, inventory)
 }
 
 // UpdateQuantityAdd mocks base method.

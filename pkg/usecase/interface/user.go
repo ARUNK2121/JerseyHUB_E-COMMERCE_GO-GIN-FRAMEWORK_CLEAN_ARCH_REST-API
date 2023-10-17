@@ -20,7 +20,7 @@ type UserUseCase interface {
 	EditPhone(id int, phone string) error
 
 	GetCart(id int) (models.GetCartResponse, error)
-	RemoveFromCart(id int) error
+	RemoveFromCart(cart, inventory int) error
 	UpdateQuantityAdd(id, inv_id int) error
 	UpdateQuantityLess(id, inv_id int) error
 

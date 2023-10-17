@@ -457,14 +457,22 @@ func (i *UserHandler) GetCart(c *gin.Context) {
 // @Failure		500	{object}	response.Response{}
 // @Router			/users/cart/remove [delete]
 func (i *UserHandler) RemoveFromCart(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
+
+	cartID, err := strconv.Atoi(c.Query("cart_id"))
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
 
-	if err := i.userUseCase.RemoveFromCart(id); err != nil {
+	InventoryID, err := strconv.Atoi(c.Query("inventory_id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	if err := i.userUseCase.RemoveFromCart(cartID, InventoryID); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not remove from cart", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return

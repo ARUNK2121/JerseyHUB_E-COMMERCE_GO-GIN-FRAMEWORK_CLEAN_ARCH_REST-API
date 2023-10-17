@@ -387,9 +387,9 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 
 }
 
-func (i *userUseCase) RemoveFromCart(id int) error {
+func (i *userUseCase) RemoveFromCart(cart, inventory int) error {
 
-	err := i.userRepo.RemoveFromCart(id)
+	err := i.userRepo.RemoveFromCart(cart, inventory)
 	if err != nil {
 		return err
 	}

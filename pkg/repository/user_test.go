@@ -1032,13 +1032,15 @@ func Test_RemoveFromCart(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		args    int
+		arg1    int
+		arg2    int
 		stub    func(sqlmock.Sqlmock)
 		wantErr error
 	}{
 		{
 			name: "success",
-			args: 1,
+			arg1: 1,
+			arg2: 2,
 			stub: func(mockSQL sqlmock.Sqlmock) {
 
 				expectedQuery := `delete from cart_products`
@@ -1051,7 +1053,8 @@ func Test_RemoveFromCart(t *testing.T) {
 		},
 		{
 			name: "error",
-			args: 1,
+			arg1: 1,
+			arg2: 2,
 			stub: func(mockSQL sqlmock.Sqlmock) {
 
 				expectedQuery := `delete from cart_products`
@@ -1078,7 +1081,7 @@ func Test_RemoveFromCart(t *testing.T) {
 
 			u := NewUserRepository(gormDB)
 
-			err := u.RemoveFromCart(tt.args)
+			err := u.RemoveFromCart(tt.arg1, tt.arg2)
 
 			assert.Equal(t, tt.wantErr, err)
 		})

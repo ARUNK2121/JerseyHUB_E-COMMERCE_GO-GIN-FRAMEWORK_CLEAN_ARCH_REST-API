@@ -190,9 +190,9 @@ func (ad *userDatabase) GetCart(id int) ([]models.GetCart, error) {
 
 }
 
-func (ad *userDatabase) RemoveFromCart(id int) error {
+func (ad *userDatabase) RemoveFromCart(cart, inventory int) error {
 
-	if err := ad.DB.Exec(`delete from cart_products where id=$1`, id).Error; err != nil {
+	if err := ad.DB.Exec(`DELETE FROM line_items WHERE cart_id = $1 AND inventory_id = $2`, cart, inventory).Error; err != nil {
 		return err
 	}
 
