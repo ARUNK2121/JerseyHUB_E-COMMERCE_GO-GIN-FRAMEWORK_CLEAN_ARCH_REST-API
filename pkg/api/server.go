@@ -38,7 +38,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 
 	// engine.POST("users/signup", userHandler.UserSignUp)
 
-	routes.UserRoutes(engine.Group("/users"), userHandler, otpHandler, inventoryHandler, orderHandler, cartHandler, paymentHandler, wishlistHandler, categoryHandler)
+	routes.UserRoutes(engine.Group("/users"), userHandler, otpHandler, inventoryHandler, orderHandler, cartHandler, paymentHandler, wishlistHandler, categoryHandler, couponHandler)
 	routes.AdminRoutes(engine.Group("/admin"), adminHandler, inventoryHandler, userHandler, categoryHandler, orderHandler, couponHandler, offerhandler)
 
 	return &ServerHTTP{engine: engine}
