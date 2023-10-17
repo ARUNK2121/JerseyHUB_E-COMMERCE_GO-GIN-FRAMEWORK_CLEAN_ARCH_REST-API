@@ -219,7 +219,7 @@ func (ad *userDatabase) UpdateQuantityAdd(id, inv_id int) error {
 func (ad *userDatabase) UpdateQuantityLess(id, inv_id int) error {
 
 	if err := ad.DB.Exec(`UPDATE line_items
-	SET quantity = quantity - 1,
+	SET quantity = quantity - 1
 	WHERE cart_id = $1 AND inventory_id=$2;
 	`, id, inv_id).Error; err != nil {
 		return err
