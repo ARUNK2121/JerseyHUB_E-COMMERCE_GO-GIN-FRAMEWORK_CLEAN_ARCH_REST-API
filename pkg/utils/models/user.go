@@ -61,6 +61,7 @@ type AddAddress struct {
 	Street    string `json:"street" validate:"required"`
 	City      string `json:"city" validate:"required"`
 	State     string `json:"state" validate:"required"`
+	Phone     string `json:"phone" validate:"require"`
 	Pin       string `json:"pin" validate:"required"`
 }
 

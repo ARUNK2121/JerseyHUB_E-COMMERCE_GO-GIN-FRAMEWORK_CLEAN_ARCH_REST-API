@@ -71,9 +71,9 @@ func (c *userDatabase) FindUserByEmail(user models.UserLogin) (models.UserSignIn
 
 func (i *userDatabase) AddAddress(id int, address models.AddAddress, result bool) error {
 	err := i.DB.Exec(`
-		INSERT INTO addresses (user_id, name, house_name, street, city, state, pin,"default")
-		VALUES ($1, $2, $3, $4, $5, $6, $7,$8 )`,
-		id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Pin, result).Error
+		INSERT INTO addresses (user_id, name, house_name, street, city, state, phone, pin,"default")
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9 )`,
+		id, address.Name, address.HouseName, address.Street, address.City, address.State, address.Phone, address.Pin, result).Error
 	if err != nil {
 		return errors.New("could not add address")
 	}
