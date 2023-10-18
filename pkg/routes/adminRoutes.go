@@ -41,10 +41,11 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, in
 			// inventorymanagement.PUT("/:id/details", inventoryHandler.UpdateProductDetails)
 		}
 
-		payment := engine.Group("/payment")
+		payment := engine.Group("/payment-method")
 		{
-			payment.POST("/payment-method", adminHandler.NewPaymentMethod)
-			payment.GET("/payment-method", adminHandler.ListPaymentMethods)
+			payment.POST("", adminHandler.NewPaymentMethod)
+			payment.GET("", adminHandler.ListPaymentMethods)
+			payment.DELETE("", adminHandler.DeletePaymentMethod)
 		}
 
 		orders := engine.Group("/orders")

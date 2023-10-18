@@ -172,12 +172,33 @@ func (a *AdminHandler) ListPaymentMethods(c *gin.Context) {
 
 	categories, err := a.adminUseCase.ListPaymentMethods()
 	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "fields provided are in wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
 
 	successRes := response.ClientResponse(http.StatusOK, "Successfully got all payment methods", categories, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}
+
+func (a *AdminHandler) DeletePaymentMethod(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	err = a.adminUseCase.DeletePaymentMethod(id)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "error in deleting data", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully deleted the Category", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 
 }

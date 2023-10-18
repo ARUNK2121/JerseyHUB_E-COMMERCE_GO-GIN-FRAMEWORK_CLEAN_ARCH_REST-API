@@ -146,3 +146,13 @@ func (a *adminUseCase) ListPaymentMethods() ([]domain.PaymentMethod, error) {
 	return categories, nil
 
 }
+
+func (a *adminUseCase) DeletePaymentMethod(id int) error {
+
+	err := a.adminRepository.DeletePaymentMethod(id)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}

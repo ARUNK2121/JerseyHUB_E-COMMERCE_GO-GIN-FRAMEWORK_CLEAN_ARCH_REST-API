@@ -12,4 +12,5 @@ type AdminUseCase interface {
 	GetUsers(page int) ([]models.UserDetailsAtAdmin, error)
 	NewPaymentMethod(string) error
 	ListPaymentMethods() ([]domain.PaymentMethod, error)
+	DeletePaymentMethod(id int) error
 }

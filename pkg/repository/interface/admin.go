@@ -13,4 +13,5 @@ type AdminRepository interface {
 	NewPaymentMethod(string) error
 	ListPaymentMethods() ([]domain.PaymentMethod, error)
 	CheckIfPaymentMethodAlreadyExists(payment string) (bool, error)
+	DeletePaymentMethod(id int) error
 }
