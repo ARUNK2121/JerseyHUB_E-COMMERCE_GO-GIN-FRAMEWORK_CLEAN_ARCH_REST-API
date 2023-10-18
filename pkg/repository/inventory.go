@@ -159,12 +159,14 @@ func (ad *inventoryRepository) SearchProducts(key string) ([]models.Inventories,
 	var productDetails []models.Inventories
 
 	query := `
-		SELECT *
-		FROM inventories
-		WHERE product_name ILIKE '%' || ? || '%'
-	`
-
-	if err := ad.DB.Raw(query, key).Scan(&productDetails).Error; err != nil {
+	SELECT i.*
+	FROM inventories i
+	LEFT JOIN categories c ON i.category_id = c.id
+	WHERE i.product_name ILIKE '%' || ? || '%'
+	OR
+	c.category ILIKE '%' || ? || '%'
+`
+	if err := ad.DB.Raw(query, key, key).Scan(&productDetails).Error; err != nil {
 		return []models.Inventories{}, err
 	}
 
