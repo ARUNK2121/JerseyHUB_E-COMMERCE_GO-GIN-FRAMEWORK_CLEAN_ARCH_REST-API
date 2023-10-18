@@ -11,6 +11,7 @@ type InventoryRepository interface {
 	DeleteInventory(id string) error
 	ShowIndividualProducts(id string) (models.Inventories, error)
 	ListProducts(page int) ([]models.Inventories, error)
+	ListProductsByCategory(id int) ([]models.Inventories, error)
 	CheckStock(inventory_id int) (int, error)
 	CheckPrice(inventory_id int) (float64, error)
 	SearchProducts(key string) ([]models.Inventories, error)

@@ -123,6 +123,21 @@ func (mr *MockInventoryRepositoryMockRecorder) ListProducts(page interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProducts", reflect.TypeOf((*MockInventoryRepository)(nil).ListProducts), page)
 }
 
+// ListProductsByCategory mocks base method.
+func (m *MockInventoryRepository) ListProductsByCategory(id int) ([]models.Inventories, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListProductsByCategory", id)
+	ret0, _ := ret[0].([]models.Inventories)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListProductsByCategory indicates an expected call of ListProductsByCategory.
+func (mr *MockInventoryRepositoryMockRecorder) ListProductsByCategory(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProductsByCategory", reflect.TypeOf((*MockInventoryRepository)(nil).ListProductsByCategory), id)
+}
+
 // SearchProducts mocks base method.
 func (m *MockInventoryRepository) SearchProducts(key string) ([]models.Inventories, error) {
 	m.ctrl.T.Helper()

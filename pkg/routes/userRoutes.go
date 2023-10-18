@@ -52,6 +52,7 @@ func UserRoutes(engine *gin.RouterGroup,
 		categorymanagement := engine.Group("/category")
 		{
 			categorymanagement.GET("", categoryHandler.GetCategory)
+			categorymanagement.GET("/products", categoryHandler.GetProductDetailsInACategory)
 
 		}
 

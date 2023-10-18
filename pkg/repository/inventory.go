@@ -125,6 +125,18 @@ func (ad *inventoryRepository) ListProducts(page int) ([]models.Inventories, err
 
 }
 
+func (ad *inventoryRepository) ListProductsByCategory(id int) ([]models.Inventories, error) {
+
+	var productDetails []models.Inventories
+
+	if err := ad.DB.Raw("select id,category_id,product_name,image,size,stock,price from inventories WHERE category_id = $1", id).Scan(&productDetails).Error; err != nil {
+		return []models.Inventories{}, err
+	}
+
+	return productDetails, nil
+
+}
+
 func (i *inventoryRepository) CheckStock(pid int) (int, error) {
 	var k int
 	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=$1", pid).Scan(&k).Error; err != nil {

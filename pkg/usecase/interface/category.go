@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"jerseyhub/pkg/domain"
+	"jerseyhub/pkg/utils/models"
 )
 
 type CategoryUseCase interface {
@@ -9,4 +10,5 @@ type CategoryUseCase interface {
 	UpdateCategory(current string, new string) (domain.Category, error)
 	DeleteCategory(categoryID string) error
 	GetCategories() ([]domain.Category, error)
+	GetProductDetailsInACategory(id int) ([]models.Inventories, error)
 }

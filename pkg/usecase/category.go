@@ -2,18 +2,24 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	services "jerseyhub/pkg/usecase/interface"
+	"jerseyhub/pkg/utils/models"
 )
 
 type categoryUseCase struct {
-	repository interfaces.CategoryRepository
+	repository          interfaces.CategoryRepository
+	inventoryRepository interfaces.InventoryRepository
+	offerRepository     interfaces.OfferRepository
 }
 
-func NewCategoryUseCase(repo interfaces.CategoryRepository) services.CategoryUseCase {
+func NewCategoryUseCase(repo interfaces.CategoryRepository, inv interfaces.InventoryRepository, offer interfaces.OfferRepository) services.CategoryUseCase {
 	return &categoryUseCase{
-		repository: repo,
+		repository:          repo,
+		inventoryRepository: inv,
+		offerRepository:     offer,
 	}
 }
 
@@ -65,5 +71,34 @@ func (Cat *categoryUseCase) GetCategories() ([]domain.Category, error) {
 		return []domain.Category{}, err
 	}
 	return categories, nil
+
+}
+
+func (i *categoryUseCase) GetProductDetailsInACategory(id int) ([]models.Inventories, error) {
+
+	productDetails, err := i.inventoryRepository.ListProductsByCategory(id)
+	if err != nil {
+		return []models.Inventories{}, err
+	}
+
+	fmt.Println("product details is:", productDetails)
+
+	//loop inside products and then calculate discounted price of each then return
+	for j := range productDetails {
+		discount_percentage, err := i.offerRepository.FindDiscountPercentage(productDetails[j].CategoryID)
+		if err != nil {
+			return []models.Inventories{}, errors.New("there was some error in finding the discounted prices")
+		}
+		var discount float64
+
+		if discount_percentage > 0 {
+			discount = (productDetails[j].Price * float64(discount_percentage)) / 100
+		}
+
+		productDetails[j].DiscountedPrice = productDetails[j].Price - discount
+
+	}
+
+	return productDetails, nil
 
 }

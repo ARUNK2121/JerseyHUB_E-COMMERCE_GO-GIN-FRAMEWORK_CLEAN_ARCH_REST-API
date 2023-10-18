@@ -39,13 +39,15 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	adminUseCase := usecase.NewAdminUseCase(adminRepository,helper)
 	adminHandler := handler.NewAdminHandler(adminUseCase)
 
-	categoryRepository := repository.NewCategoryRepository(gormDB)
-	categoryUseCase := usecase.NewCategoryUseCase(categoryRepository)
-	categoryHandler := handler.NewCategoryHandler(categoryUseCase)
-
 	inventoryRepository := repository.NewInventoryRepository(gormDB)
 	inventoryUseCase := usecase.NewInventoryUseCase(inventoryRepository,offerRepository,helper)
 	inventoryHandler := handler.NewInventoryHandler(inventoryUseCase)
+
+	categoryRepository := repository.NewCategoryRepository(gormDB)
+	categoryUseCase := usecase.NewCategoryUseCase(categoryRepository,inventoryRepository,offerRepository)
+	categoryHandler := handler.NewCategoryHandler(categoryUseCase)
+
+
 
 	otpRepository := repository.NewOtpRepository(gormDB)
 	otpUseCase := usecase.NewOtpUseCase(cfg, otpRepository,helper)

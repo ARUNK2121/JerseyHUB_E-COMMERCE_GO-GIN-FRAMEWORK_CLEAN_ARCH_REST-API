@@ -6,6 +6,7 @@ import (
 	"jerseyhub/pkg/utils/models"
 	"jerseyhub/pkg/utils/response"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -118,6 +119,27 @@ func (Cat *CategoryHandler) GetCategory(c *gin.Context) {
 	}
 
 	successRes := response.ClientResponse(http.StatusOK, "Successfully got all categories", categories, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}
+
+func (Cat *CategoryHandler) GetProductDetailsInACategory(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	products, err := Cat.CategoryUseCase.GetProductDetailsInACategory(id)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "error in fetching data", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all categories", products, nil)
 	c.JSON(http.StatusOK, successRes)
 
 }
