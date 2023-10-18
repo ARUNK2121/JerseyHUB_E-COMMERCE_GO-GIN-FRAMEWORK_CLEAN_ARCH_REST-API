@@ -105,6 +105,7 @@ type GetCart struct {
 }
 
 type CheckOut struct {
+	CartID         int
 	Addresses      []Address
 	Products       []GetCart
 	PaymentMethods []PaymentMethod

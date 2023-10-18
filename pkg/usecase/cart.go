@@ -89,6 +89,7 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 
 	var checkout models.CheckOut
 
+	checkout.CartID = products.ID
 	checkout.Addresses = address
 	checkout.Products = products.Data
 	checkout.PaymentMethods = payment
