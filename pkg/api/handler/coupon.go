@@ -79,6 +79,25 @@ func (coup *CouponHandler) MakeCouponInvalid(c *gin.Context) {
 
 }
 
+func (coup *CouponHandler) ReActivateCoupon(c *gin.Context) {
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	if err := coup.usecase.ReActivateCoupon(id); err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "Coupon cannot be reactivated", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully made Coupon as invaid", nil, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}
+
 func (co *CouponHandler) GetAllCoupons(c *gin.Context) {
 
 	categories, err := co.usecase.GetAllCoupons()

@@ -33,6 +33,14 @@ func (repo *couponRepository) MakeCouponInvalid(id int) error {
 	return nil
 }
 
+func (repo *couponRepository) ReActivateCoupon(id int) error {
+	if err := repo.DB.Exec("UPDATE coupons SET valid=true where id = $1", id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (repo *couponRepository) FindCouponDiscount(couponID int) int {
 	var coupon models.Coupons
 	err := repo.DB.Raw("select coupon,discount_rate,valid from coupons where id=$1", couponID).Scan(&coupon).Error

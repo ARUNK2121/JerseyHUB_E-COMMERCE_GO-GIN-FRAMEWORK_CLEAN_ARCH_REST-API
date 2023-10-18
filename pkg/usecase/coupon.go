@@ -32,6 +32,14 @@ func (coup *couponUseCase) MakeCouponInvalid(id int) error {
 	return nil
 }
 
+func (coup *couponUseCase) ReActivateCoupon(id int) error {
+	if err := coup.repository.ReActivateCoupon(id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (Cat *couponUseCase) GetAllCoupons() ([]domain.Coupons, error) {
 
 	coupons, err := Cat.repository.GetAllCoupons()
