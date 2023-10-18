@@ -104,3 +104,13 @@ func (a *adminRepository) ListPaymentMethods() ([]domain.PaymentMethod, error) {
 
 	return model, nil
 }
+
+func (a *adminRepository) CheckIfPaymentMethodAlreadyExists(payment string) (bool, error) {
+	var count int64
+	err := a.DB.Raw("SELECT COUNT(*) FROM payment_methods WHERE payment_name = $1", payment).Scan(&count).Error
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}

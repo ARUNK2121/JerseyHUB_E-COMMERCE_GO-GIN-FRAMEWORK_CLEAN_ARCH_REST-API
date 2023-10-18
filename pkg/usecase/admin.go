@@ -117,9 +117,18 @@ func (ad *adminUseCase) GetUsers(page int) ([]models.UserDetailsAtAdmin, error) 
 
 }
 
-func (i *adminUseCase) NewPaymentMethod(inv string) error {
+func (i *adminUseCase) NewPaymentMethod(id string) error {
 
-	err := i.adminRepository.NewPaymentMethod(inv)
+	exists, err := i.adminRepository.CheckIfPaymentMethodAlreadyExists(id)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return errors.New("payment method already exists")
+	}
+
+	err = i.adminRepository.NewPaymentMethod(id)
 	if err != nil {
 		return err
 	}

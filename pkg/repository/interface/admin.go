@@ -12,4 +12,5 @@ type AdminRepository interface {
 	GetUsers(page int) ([]models.UserDetailsAtAdmin, error)
 	NewPaymentMethod(string) error
 	ListPaymentMethods() ([]domain.PaymentMethod, error)
+	CheckIfPaymentMethodAlreadyExists(payment string) (bool, error)
 }
