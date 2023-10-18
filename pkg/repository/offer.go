@@ -26,7 +26,7 @@ func (repo *offerRepository) AddNewOffer(model models.OfferMaking) error {
 }
 
 func (repo *offerRepository) MakeOfferExpire(id int) error {
-	if err := repo.DB.Exec("UPDATE offers SET valid=false where id=$1", id).Error; err != nil {
+	if err := repo.DB.Exec("DELETE FROM offers WHERE id = $1", id).Error; err != nil {
 		return err
 	}
 
