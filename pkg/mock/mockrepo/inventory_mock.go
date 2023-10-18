@@ -108,6 +108,20 @@ func (mr *MockInventoryRepositoryMockRecorder) DeleteInventory(id interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInventory", reflect.TypeOf((*MockInventoryRepository)(nil).DeleteInventory), id)
 }
 
+// EditInventoryDetails mocks base method.
+func (m *MockInventoryRepository) EditInventoryDetails(id int, model models.EditInventoryDetails) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EditInventoryDetails", id, model)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// EditInventoryDetails indicates an expected call of EditInventoryDetails.
+func (mr *MockInventoryRepositoryMockRecorder) EditInventoryDetails(id, model interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditInventoryDetails", reflect.TypeOf((*MockInventoryRepository)(nil).EditInventoryDetails), id, model)
+}
+
 // ListProducts mocks base method.
 func (m *MockInventoryRepository) ListProducts(page int) ([]models.Inventories, error) {
 	m.ctrl.T.Helper()

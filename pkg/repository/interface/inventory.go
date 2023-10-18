@@ -16,4 +16,5 @@ type InventoryRepository interface {
 	CheckPrice(inventory_id int) (float64, error)
 	SearchProducts(key string) ([]models.Inventories, error)
 	UpdateProductImage(int, string) error
+	EditInventoryDetails(id int, model models.EditInventoryDetails) error
 }

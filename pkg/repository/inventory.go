@@ -182,3 +182,13 @@ func (i *inventoryRepository) UpdateProductImage(id int, url string) error {
 
 	return nil
 }
+
+func (i *inventoryRepository) EditInventoryDetails(id int, model models.EditInventoryDetails) error {
+
+	err := i.DB.Exec("UPDATE inventories SET product_name = $1, category_id = $2, price = $3, size = $4 WHERE id = $5", model.Name, model.CategoryID, model.Price, model.Size, id).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

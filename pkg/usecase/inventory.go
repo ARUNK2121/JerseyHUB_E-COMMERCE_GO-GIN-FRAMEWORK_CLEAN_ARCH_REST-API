@@ -166,3 +166,15 @@ func (i *inventoryUseCase) UpdateProductImage(id int, file *multipart.FileHeader
 	return nil
 
 }
+
+func (i *inventoryUseCase) EditInventoryDetails(id int, model models.EditInventoryDetails) error {
+
+	//send the url and save it in database
+	err := i.repository.EditInventoryDetails(id, model)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

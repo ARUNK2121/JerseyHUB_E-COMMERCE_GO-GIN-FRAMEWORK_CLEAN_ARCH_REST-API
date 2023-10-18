@@ -255,3 +255,33 @@ func (i *InventoryHandler) UpdateProductImage(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+func (i *InventoryHandler) EditInventoryDetails(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "parameter problem", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	var model models.EditInventoryDetails
+
+	err = c.BindJSON(&model)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "parameter problem", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	err = i.InventoryUseCase.EditInventoryDetails(id, model)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not edit the details", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully edited details", nil, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}

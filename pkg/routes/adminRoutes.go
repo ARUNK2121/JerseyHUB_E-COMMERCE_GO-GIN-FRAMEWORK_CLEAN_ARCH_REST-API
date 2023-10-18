@@ -35,6 +35,7 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, in
 			inventorymanagement.GET("", inventoryHandler.ListProducts)
 			inventorymanagement.POST("", inventoryHandler.AddInventory)
 			inventorymanagement.DELETE("", inventoryHandler.DeleteInventory)
+			inventorymanagement.PUT("/details", inventoryHandler.EditInventoryDetails)
 
 			inventorymanagement.PUT("/:id/stock", inventoryHandler.UpdateInventory)
 			inventorymanagement.PUT("/:id/image", inventoryHandler.UpdateProductImage)

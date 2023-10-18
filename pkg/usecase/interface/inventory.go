@@ -15,4 +15,5 @@ type InventoryUseCase interface {
 	SearchProducts(key string) ([]models.Inventories, error)
 
 	UpdateProductImage(id int, file *multipart.FileHeader) error
+	EditInventoryDetails(int, models.EditInventoryDetails) error
 }
