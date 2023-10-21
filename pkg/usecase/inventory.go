@@ -96,7 +96,7 @@ func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.Inventories
 
 }
 
-func (i *inventoryUseCase) ListProducts(page, userID int) ([]models.Inventories, error) {
+func (i *inventoryUseCase) ListProductsForUser(page, userID int) ([]models.Inventories, error) {
 
 	productDetails, err := i.repository.ListProducts(page)
 	if err != nil {
@@ -128,6 +128,35 @@ func (i *inventoryUseCase) ListProducts(page, userID int) ([]models.Inventories,
 		if err != nil {
 			return []models.Inventories{}, errors.New("error while checking ")
 		}
+
+	}
+
+	return productDetails, nil
+
+}
+
+func (i *inventoryUseCase) ListProductsForAdmin(page int) ([]models.Inventories, error) {
+
+	productDetails, err := i.repository.ListProducts(page)
+	if err != nil {
+		return []models.Inventories{}, err
+	}
+
+	fmt.Println("product details is:", productDetails)
+
+	//loop inside products and then calculate discounted price of each then return
+	for j := range productDetails {
+		discount_percentage, err := i.offerRepository.FindDiscountPercentage(productDetails[j].CategoryID)
+		if err != nil {
+			return []models.Inventories{}, errors.New("there was some error in finding the discounted prices")
+		}
+		var discount float64
+
+		if discount_percentage > 0 {
+			discount = (productDetails[j].Price * float64(discount_percentage)) / 100
+		}
+
+		productDetails[j].DiscountedPrice = productDetails[j].Price - discount
 
 	}
 

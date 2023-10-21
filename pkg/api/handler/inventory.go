@@ -179,7 +179,7 @@ func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
 // @Router			/users/home/products [get]
-func (i *InventoryHandler) ListProducts(c *gin.Context) {
+func (i *InventoryHandler) ListProductsForUser(c *gin.Context) {
 	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)
 
@@ -198,7 +198,7 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 		return
 	}
 
-	products, err := i.InventoryUseCase.ListProducts(page, userID)
+	products, err := i.InventoryUseCase.ListProductsForUser(page, userID)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
@@ -293,4 +293,24 @@ func (i *InventoryHandler) EditInventoryDetails(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully edited details", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 
+}
+
+func (i *InventoryHandler) ListProductsForAdmin(c *gin.Context) {
+	pageStr := c.Query("page")
+	page, err := strconv.Atoi(pageStr)
+
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "page number not in right format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	products, err := i.InventoryUseCase.ListProductsForAdmin(page)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", products, nil)
+	c.JSON(http.StatusOK, successRes)
 }
