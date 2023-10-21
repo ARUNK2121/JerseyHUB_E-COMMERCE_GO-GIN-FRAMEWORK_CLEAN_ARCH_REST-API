@@ -75,7 +75,7 @@ func (w *wishlistRepository) CheckIfTheItemIsPresentAtWishlist(userID, productID
 
 	if err := w.DB.Raw(`SELECT COUNT (*)
 	 FROM wishlists 
-	 WHERE users.id = $1
+	 WHERE user_id = $1
 	 AND 
 	 inventory_id = $2;`, userID, productID).Scan(&result).Error; err != nil {
 		return false, err
