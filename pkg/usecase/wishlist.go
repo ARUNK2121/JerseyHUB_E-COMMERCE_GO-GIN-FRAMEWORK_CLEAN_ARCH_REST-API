@@ -18,18 +18,27 @@ func NewWishlistUseCase(repo interfaces.WishlistRepository, offer interfaces.Off
 	}
 }
 
-func (w *wishlistUseCase) AddToWishlist(user_id, inventory_id int) error {
+func (w *wishlistUseCase) AddToWishlist(userID, inventoryID int) error {
 
-	if err := w.repository.AddToWishlist(user_id, inventory_id); err != nil {
+	exists, err := w.repository.CheckIfTheItemIsPresentAtWishlist(userID, inventoryID)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return errors.New("item already exists in wishlist")
+	}
+
+	if err := w.repository.AddToWishlist(userID, inventoryID); err != nil {
 		return errors.New("could not add to wishlist")
 	}
 
 	return nil
 }
 
-func (w *wishlistUseCase) RemoveFromWishlist(inventory_id int) error {
+func (w *wishlistUseCase) RemoveFromWishlist(inventoryID int) error {
 
-	if err := w.repository.RemoveFromWishlist(inventory_id); err != nil {
+	if err := w.repository.RemoveFromWishlist(inventoryID); err != nil {
 		return errors.New("could not remove from wishlist")
 	}
 

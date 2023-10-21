@@ -100,7 +100,7 @@ func (i *orderRepository) EditOrderStatus(status string, id int) error {
 func (or *orderRepository) AdminOrders(status string) ([]domain.OrderDetails, error) {
 
 	var orders []domain.OrderDetails
-	if err := or.DB.Raw("SELECT orders.id AS order_id, users.name AS username, CONCAT(addresses.house_name, ' ', addresses.street, ' ', addresses.city) AS address, payment_methods.payment_name AS payment_method, orders.final_price As total FROM orders JOIN users ON users.id = orders.user_id JOIN payment_methods ON payment_methods.id = orders.payment_method_id JOIN addresses ON orders.address_id = addresses.id WHERE order_status = $1", status).Scan(&orders).Error; err != nil {
+	if err := or.DB.Raw("SELECT orders.id AS order_id, users.name AS username, CONCAT(addresses.house_name, ' ', addresses.street, ' ', addresses.city, ' ', addresses.state, ' ',) AS address, payment_methods.payment_name AS payment_method, orders.final_price As total FROM orders JOIN users ON users.id = orders.user_id JOIN payment_methods ON payment_methods.id = orders.payment_method_id JOIN addresses ON orders.address_id = addresses.id WHERE order_status = $1", status).Scan(&orders).Error; err != nil {
 		return []domain.OrderDetails{}, err
 	}
 
@@ -153,7 +153,7 @@ func (i *orderRepository) ReturnOrder(id int) error {
 
 }
 
-func (o *orderRepository) CheckIfTheOrderIsAlreadyReturned(id int) (string, error) {
+func (o *orderRepository) CheckOrderStatusByID(id int) (string, error) {
 
 	var status string
 	err := o.DB.Raw("select order_status from orders where id = ?", id).Scan(&status).Error
@@ -218,15 +218,25 @@ func (o *orderRepository) FindWalletIdFromUserID(userId int) (int, error) {
 
 func (o *orderRepository) CreateNewWallet(userID int) (int, error) {
 
-	var wallet_id int
+	var walletID int
 	err := o.DB.Exec("Insert into wallets(user_id,amount) values($1,$2)", userID, 0).Error
 	if err != nil {
 		return 0, err
 	}
 
-	if err := o.DB.Raw("select id from wallets where user_id=$1", userID).Scan(&wallet_id).Error; err != nil {
+	if err := o.DB.Raw("select id from wallets where user_id=$1", userID).Scan(&walletID).Error; err != nil {
 		return 0, err
 	}
 
-	return wallet_id, nil
+	return walletID, nil
+}
+
+func (o *orderRepository) MakePaymentStatusAsPaid(id int) error {
+
+	err := o.DB.Exec("UPDATE orders SET payment_status = 'PAID' WHERE id = $1", id).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

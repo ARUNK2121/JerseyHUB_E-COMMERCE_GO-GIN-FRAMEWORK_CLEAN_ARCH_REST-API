@@ -72,7 +72,17 @@ func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid i
 
 func (i *orderUseCase) CancelOrder(id int) error {
 
-	err := i.orderRepository.CancelOrder(id)
+	//the order has to be less than status delivered (pending,shipped) to be canceled
+	status, err := i.orderRepository.CheckOrderStatusByID(id)
+	if err != nil {
+		return err
+	}
+
+	if status != "PENDING" {
+		return errors.New("order cannot be canceled if you accidently booked kindly return the product")
+	}
+
+	err = i.orderRepository.CancelOrder(id)
 	if err != nil {
 		return err
 	}
@@ -133,7 +143,7 @@ func (i *orderUseCase) ReturnOrder(id int) error {
 
 	//should check if the order is already returned peoples will misuse this security breach
 	// and will get  unlimited money into their wallet
-	status, err := i.orderRepository.CheckIfTheOrderIsAlreadyReturned(id)
+	status, err := i.orderRepository.CheckOrderStatusByID(id)
 	if err != nil {
 		return err
 	}
@@ -182,6 +192,16 @@ func (i *orderUseCase) ReturnOrder(id int) error {
 		return err
 	}
 
+	return nil
+
+}
+
+func (i *orderUseCase) MakePaymentStatusAsPaid(id int) error {
+
+	err := i.orderRepository.MakePaymentStatusAsPaid(id)
+	if err != nil {
+		return err
+	}
 	return nil
 
 }
