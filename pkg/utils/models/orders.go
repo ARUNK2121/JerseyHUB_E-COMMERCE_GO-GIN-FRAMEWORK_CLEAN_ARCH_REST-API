@@ -30,3 +30,8 @@ type OrderPaymentDetails struct {
 	OrderID    int     `json:"order_id"`
 	FinalPrice float64 `json:"final_price"`
 }
+
+type EditOrderStatus struct {
+	OrderID int    `json:"order_id"`
+	Status  string `json:"order_status"`
+}

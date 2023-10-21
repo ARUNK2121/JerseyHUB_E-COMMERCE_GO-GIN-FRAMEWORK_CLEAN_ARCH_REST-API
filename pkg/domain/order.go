@@ -40,9 +40,9 @@ type AdminOrdersResponse struct {
 }
 
 type OrderDetails struct {
-	Id            int     `json:"order_id"`
+	Id            int     `json:"id" gorm:"id"`
 	Username      string  `json:"name"`
 	Address       string  `json:"address"`
-	Paymentmethod string  `json:"payment_method"`
+	Paymentmethod string  `json:"payment_method" gorm:"payment_method"`
 	Total         float64 `json:"total"`
 }
