@@ -24,7 +24,10 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url 
     INSERT INTO inventories (category_id, product_name, size, stock, price, image)
     VALUES (?, ?, ?, ?, ?, ?);
     `
-	i.DB.Exec(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price, url)
+	err := i.DB.Exec(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price, url).Error
+	if err != nil {
+		return models.InventoryResponse{}, err
+	}
 
 	var inventoryResponse models.InventoryResponse
 
