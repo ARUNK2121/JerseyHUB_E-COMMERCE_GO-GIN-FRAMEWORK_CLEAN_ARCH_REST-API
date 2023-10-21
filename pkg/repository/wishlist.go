@@ -51,7 +51,7 @@ func (w *wishlistRepository) GetWishList(id int) ([]models.Inventories, error) {
 
 }
 
-func (w *wishlistRepository) CheckIfTheItemIsPresentAtWishlist(userID, productID int) (bool, error) {
+func (w *wishlistRepository) CheckIfTheItemIsPresentAtCart(userID, productID int) (bool, error) {
 
 	var result int64
 
@@ -62,6 +62,22 @@ func (w *wishlistRepository) CheckIfTheItemIsPresentAtWishlist(userID, productID
 	 WHERE users.id = $1
 	 AND 
 	 line_items.inventory_id = $2;`, userID, productID).Scan(&result).Error; err != nil {
+		return false, err
+	}
+
+	return result > 0, nil
+
+}
+
+func (w *wishlistRepository) CheckIfTheItemIsPresentAtWishlist(userID, productID int) (bool, error) {
+
+	var result int64
+
+	if err := w.DB.Raw(`SELECT COUNT (*)
+	 FROM wishlists 
+	 WHERE users.id = $1
+	 AND 
+	 inventory_id = $2;`, userID, productID).Scan(&result).Error; err != nil {
 		return false, err
 	}
 
