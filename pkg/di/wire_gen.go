@@ -40,7 +40,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 	adminHandler := handler.NewAdminHandler(adminUseCase)
 
 	inventoryRepository := repository.NewInventoryRepository(gormDB)
-	inventoryUseCase := usecase.NewInventoryUseCase(inventoryRepository,offerRepository,helper)
+	inventoryUseCase := usecase.NewInventoryUseCase(inventoryRepository,offerRepository,helper,wishlistRepository)
 	inventoryHandler := handler.NewInventoryHandler(inventoryUseCase)
 
 	categoryRepository := repository.NewCategoryRepository(gormDB)

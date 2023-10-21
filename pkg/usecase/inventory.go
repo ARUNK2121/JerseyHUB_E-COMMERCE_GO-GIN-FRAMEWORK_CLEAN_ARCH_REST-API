@@ -10,16 +10,18 @@ import (
 )
 
 type inventoryUseCase struct {
-	repository      interfaces.InventoryRepository
-	offerRepository interfaces.OfferRepository
-	helper          helper_interface.Helper
+	repository         interfaces.InventoryRepository
+	offerRepository    interfaces.OfferRepository
+	helper             helper_interface.Helper
+	wishlistRepository interfaces.WishlistRepository
 }
 
-func NewInventoryUseCase(repo interfaces.InventoryRepository, offer interfaces.OfferRepository, h helper_interface.Helper) *inventoryUseCase {
+func NewInventoryUseCase(repo interfaces.InventoryRepository, offer interfaces.OfferRepository, h helper_interface.Helper, w interfaces.WishlistRepository) *inventoryUseCase {
 	return &inventoryUseCase{
-		repository:      repo,
-		offerRepository: offer,
-		helper:          h,
+		repository:         repo,
+		offerRepository:    offer,
+		helper:             h,
+		wishlistRepository: w,
 	}
 }
 
@@ -94,7 +96,7 @@ func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.Inventories
 
 }
 
-func (i *inventoryUseCase) ListProducts(page int) ([]models.Inventories, error) {
+func (i *inventoryUseCase) ListProducts(page, userID int) ([]models.Inventories, error) {
 
 	productDetails, err := i.repository.ListProducts(page)
 	if err != nil {
@@ -116,6 +118,11 @@ func (i *inventoryUseCase) ListProducts(page int) ([]models.Inventories, error) 
 		}
 
 		productDetails[j].DiscountedPrice = productDetails[j].Price - discount
+
+		productDetails[j].IfPresentAtWishlist, err = i.wishlistRepository.CheckIfTheItemIsPresentAtWishlist(userID, int(productDetails[j].ID))
+		if err != nil {
+			return []models.Inventories{}, errors.New("error while checking ")
+		}
 
 	}
 
