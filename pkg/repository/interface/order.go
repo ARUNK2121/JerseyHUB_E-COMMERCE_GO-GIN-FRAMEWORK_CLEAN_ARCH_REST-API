@@ -17,7 +17,7 @@ type OrderRepository interface {
 	CheckOrder(orderID string, userID int) error
 	GetOrderDetail(orderID string) (domain.Order, error)
 
-	CheckIfTheOrderIsAlreadyReturned(id int) (string, error)
+	CheckOrderStatusByID(id int) (string, error)
 	ReturnOrder(id int) error
 	FindAmountFromOrderID(id int) (float64, error)
 	CreditToUserWallet(amount float64, walletID int) error

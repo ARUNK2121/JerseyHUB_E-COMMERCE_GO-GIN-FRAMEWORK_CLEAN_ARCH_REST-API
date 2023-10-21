@@ -41,6 +41,7 @@ mock: ##make mock files using mockgen
 	mockgen -source=pkg/repository/interface/user.go -destination=pkg/mock/mockrepo/user_mock.go -package=mockrepo
 	mockgen -source=pkg/usecase/interface/user.go -destination=pkg/mock/mockusecase/user_mock.go -package=mockusecase
 	mockgen -source=pkg/repository/interface/inventory.go -destination=pkg/mock/mockrepo/inventory_mock.go -package=mockrepo
+	mockgen -source=pkg/repository/interface/order.go -destination=pkg/mock/mockrepo/order_mock.go -package=mockrepo
 
 swag: ## Generate swagger docs
 		swag init -g pkg/api/handler/admin.go -o ./cmd/api/docs

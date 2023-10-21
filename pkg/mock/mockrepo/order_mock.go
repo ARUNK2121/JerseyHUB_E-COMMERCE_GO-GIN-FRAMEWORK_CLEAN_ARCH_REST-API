@@ -78,21 +78,6 @@ func (mr *MockOrderRepositoryMockRecorder) CancelOrder(id interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CancelOrder", reflect.TypeOf((*MockOrderRepository)(nil).CancelOrder), id)
 }
 
-// CheckIfTheOrderIsAlreadyReturned mocks base method.
-func (m *MockOrderRepository) CheckIfTheOrderIsAlreadyReturned(id int) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckIfTheOrderIsAlreadyReturned", id)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CheckIfTheOrderIsAlreadyReturned indicates an expected call of CheckIfTheOrderIsAlreadyReturned.
-func (mr *MockOrderRepositoryMockRecorder) CheckIfTheOrderIsAlreadyReturned(id interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckIfTheOrderIsAlreadyReturned", reflect.TypeOf((*MockOrderRepository)(nil).CheckIfTheOrderIsAlreadyReturned), id)
-}
-
 // CheckOrder mocks base method.
 func (m *MockOrderRepository) CheckOrder(orderID string, userID int) error {
 	m.ctrl.T.Helper()
@@ -105,6 +90,21 @@ func (m *MockOrderRepository) CheckOrder(orderID string, userID int) error {
 func (mr *MockOrderRepositoryMockRecorder) CheckOrder(orderID, userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckOrder", reflect.TypeOf((*MockOrderRepository)(nil).CheckOrder), orderID, userID)
+}
+
+// CheckOrderStatusByID mocks base method.
+func (m *MockOrderRepository) CheckOrderStatusByID(id int) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckOrderStatusByID", id)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckOrderStatusByID indicates an expected call of CheckOrderStatusByID.
+func (mr *MockOrderRepositoryMockRecorder) CheckOrderStatusByID(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckOrderStatusByID", reflect.TypeOf((*MockOrderRepository)(nil).CheckOrderStatusByID), id)
 }
 
 // CreateNewWallet mocks base method.
