@@ -59,9 +59,9 @@ func (w *wishlistRepository) CheckIfTheItemIsPresentAtWishlist(userID, productID
 	 FROM line_items 
 	 JOIN carts ON carts.id = line_items.cart_id
 	 JOIN users ON users.id = carts.user_id
-	 WHERE users.id = 1
+	 WHERE users.id = $1
 	 AND 
-	 line_items.inventory_id = 7;`, userID, productID).Scan(&result).Error; err != nil {
+	 line_items.inventory_id = $2;`, userID, productID).Scan(&result).Error; err != nil {
 		return false, err
 	}
 

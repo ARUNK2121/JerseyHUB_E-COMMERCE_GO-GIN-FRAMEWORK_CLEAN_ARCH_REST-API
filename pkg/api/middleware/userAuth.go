@@ -37,7 +37,6 @@ func UserAuthMiddleware(c *gin.Context) {
 	}
 
 	fmt.Println("claims", claims)
-	fmt.Println("id", claims["id"].(string))
 
 	role, ok := claims["role"].(string)
 	if !ok || role != "client" {
