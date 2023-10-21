@@ -11,4 +11,5 @@ type OrderUseCase interface {
 	EditOrderStatus(status string, id int) error
 	AdminOrders() (domain.AdminOrdersResponse, error)
 	ReturnOrder(id int) error
+	MakePaymentStatusAsPaid(id int) error
 }

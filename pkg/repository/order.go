@@ -218,15 +218,25 @@ func (o *orderRepository) FindWalletIdFromUserID(userId int) (int, error) {
 
 func (o *orderRepository) CreateNewWallet(userID int) (int, error) {
 
-	var wallet_id int
+	var walletID int
 	err := o.DB.Exec("Insert into wallets(user_id,amount) values($1,$2)", userID, 0).Error
 	if err != nil {
 		return 0, err
 	}
 
-	if err := o.DB.Raw("select id from wallets where user_id=$1", userID).Scan(&wallet_id).Error; err != nil {
+	if err := o.DB.Raw("select id from wallets where user_id=$1", userID).Scan(&walletID).Error; err != nil {
 		return 0, err
 	}
 
-	return wallet_id, nil
+	return walletID, nil
+}
+
+func (o *orderRepository) MakePaymentStatusAsPaid(id int) error {
+
+	err := o.DB.Exec("UPDATE orders SET payment_status = 'PAID' WHERE id = $1", id).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

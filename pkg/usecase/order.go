@@ -195,3 +195,13 @@ func (i *orderUseCase) ReturnOrder(id int) error {
 	return nil
 
 }
+
+func (i *orderUseCase) MakePaymentStatusAsPaid(id int) error {
+
+	err := i.orderRepository.MakePaymentStatusAsPaid(id)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}

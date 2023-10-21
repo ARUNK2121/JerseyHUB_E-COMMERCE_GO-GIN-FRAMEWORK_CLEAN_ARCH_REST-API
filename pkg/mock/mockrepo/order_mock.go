@@ -240,6 +240,20 @@ func (mr *MockOrderRepositoryMockRecorder) GetOrders(id interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockOrderRepository)(nil).GetOrders), id)
 }
 
+// MakePaymentStatusAsPaid mocks base method.
+func (m *MockOrderRepository) MakePaymentStatusAsPaid(id int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MakePaymentStatusAsPaid", id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MakePaymentStatusAsPaid indicates an expected call of MakePaymentStatusAsPaid.
+func (mr *MockOrderRepositoryMockRecorder) MakePaymentStatusAsPaid(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MakePaymentStatusAsPaid", reflect.TypeOf((*MockOrderRepository)(nil).MakePaymentStatusAsPaid), id)
+}
+
 // OrderItems mocks base method.
 func (m *MockOrderRepository) OrderItems(userid, addressid, paymentid int, total float64) (int, error) {
 	m.ctrl.T.Helper()

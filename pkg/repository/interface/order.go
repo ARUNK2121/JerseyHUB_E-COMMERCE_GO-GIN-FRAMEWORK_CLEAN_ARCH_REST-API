@@ -24,4 +24,5 @@ type OrderRepository interface {
 	FindUserIdFromOrderID(id int) (int, error)
 	FindWalletIdFromUserID(userId int) (int, error)
 	CreateNewWallet(userID int) (int, error)
+	MakePaymentStatusAsPaid(id int) error
 }
