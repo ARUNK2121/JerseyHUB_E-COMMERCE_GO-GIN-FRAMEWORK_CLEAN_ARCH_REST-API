@@ -60,6 +60,12 @@ func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid i
 		return err
 	}
 
+	for _, v := range cart.Data {
+		if err := i.userUseCase.RemoveFromCart(cart.ID, v.ID); err != nil {
+			return err
+		}
+	}
+
 	return nil
 
 }
