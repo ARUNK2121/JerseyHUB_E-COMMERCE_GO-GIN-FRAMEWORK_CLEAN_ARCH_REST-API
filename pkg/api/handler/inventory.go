@@ -189,7 +189,16 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 		return
 	}
 
-	products, err := i.InventoryUseCase.ListProducts(page)
+	id := c.MustGet("id")
+
+	userID, ok := id.(int)
+	if !ok {
+		errorRes := response.ClientResponse(http.StatusForbidden, "problem in identifying user from the context", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	products, err := i.InventoryUseCase.ListProducts(page, userID)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
