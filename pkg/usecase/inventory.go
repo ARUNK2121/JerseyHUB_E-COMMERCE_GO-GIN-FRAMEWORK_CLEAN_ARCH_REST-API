@@ -124,6 +124,11 @@ func (i *inventoryUseCase) ListProducts(page, userID int) ([]models.Inventories,
 			return []models.Inventories{}, errors.New("error while checking ")
 		}
 
+		productDetails[j].IfPresentAtCart, err = i.wishlistRepository.CheckIfTheItemIsPresentAtCart(userID, int(productDetails[j].ID))
+		if err != nil {
+			return []models.Inventories{}, errors.New("error while checking ")
+		}
+
 	}
 
 	return productDetails, nil

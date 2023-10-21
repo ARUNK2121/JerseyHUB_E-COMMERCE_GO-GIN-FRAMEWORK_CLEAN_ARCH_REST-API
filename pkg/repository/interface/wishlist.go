@@ -7,4 +7,5 @@ type WishlistRepository interface {
 	RemoveFromWishlist(inventory_id int) error
 	GetWishList(id int) ([]models.Inventories, error)
 	CheckIfTheItemIsPresentAtWishlist(userID, productID int) (bool, error)
+	CheckIfTheItemIsPresentAtCart(userID, productID int) (bool, error)
 }
