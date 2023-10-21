@@ -56,22 +56,11 @@ func (i *OrderHandler) GetOrders(c *gin.Context) {
 // @Accept			json
 // @Produce		    json
 // @Param			order body	models.Order  true	"id"
-// @Param			coupon-id query	int  true	"coupon-id"
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
 // @Router			/users/check-out/order [post]
 func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
-	idstring := c.Query("coupon-id")
-	if idstring == "" {
-		idstring = "0"
-	}
-	couponId, err := strconv.Atoi(idstring)
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "coupon id trouble", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
 
 	var order models.Order
 	if err := c.BindJSON(&order); err != nil {
@@ -79,7 +68,7 @@ func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	if err := i.orderUseCase.OrderItemsFromCart(order.UserID, order.AddressID, order.PaymentMethodID, couponId); err != nil {
+	if err := i.orderUseCase.OrderItemsFromCart(order.UserID, order.AddressID, order.PaymentMethodID, order.CouponID); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not make the order", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return

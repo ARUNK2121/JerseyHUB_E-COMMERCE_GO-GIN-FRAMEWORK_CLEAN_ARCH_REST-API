@@ -42,7 +42,7 @@ func UserRoutes(engine *gin.RouterGroup,
 
 		home := engine.Group("/home")
 		{
-			home.GET("/products", inventoryHandler.ListProducts)
+			home.GET("/products", inventoryHandler.ListProductsForUser)
 			home.GET("/products/details", inventoryHandler.ShowIndividualProducts)
 			home.POST("/add-to-cart", cartHandler.AddToCart)
 			home.POST("/wishlist/add", wishlisthandler.AddToWishlist)
