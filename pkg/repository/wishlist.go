@@ -16,11 +16,11 @@ func NewWishlistRepository(db *gorm.DB) *wishlistRepository {
 	}
 }
 
-func (w *wishlistRepository) AddToWishlist(user_id, inventory_id int) error {
+func (w *wishlistRepository) AddToWishlist(userID, inventoryID int) error {
 
 	err := w.DB.Exec(`
 		INSERT INTO wishlists (user_id,inventory_id)
-		VALUES ($1,$2)`, user_id, inventory_id).Error
+		VALUES ($1,$2)`, userID, inventoryID).Error
 	if err != nil {
 		return err
 	}

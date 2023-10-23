@@ -45,7 +45,7 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 		return
 	}
 
-	product_name := c.Request.FormValue("product_name")
+	productName := c.Request.FormValue("product_name")
 	size := c.Request.FormValue("size")
 	p, err := strconv.Atoi(c.Request.FormValue("price"))
 	if err != nil {
@@ -62,7 +62,7 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 	}
 
 	inventory.CategoryID = categoryID
-	inventory.ProductName = product_name
+	inventory.ProductName = productName
 	inventory.Size = size
 	inventory.Price = price
 	inventory.Stock = stock
