@@ -43,7 +43,7 @@ func (w *wishlistRepository) GetWishList(id int) ([]models.Inventories, error) {
 
 	var productDetails []models.Inventories
 
-	if err := w.DB.Raw("select inventories.id,inventories.category_id,inventories.product_name,inventories.image,inventories.size,inventories.stock,inventories.price from wishlists join inventories on wishlists.inventory_id=inventories.id where user_id=$1", id).Scan(&productDetails).Error; err != nil {
+	if err := w.DB.Raw("select inventories.id,inventories.category_id,inventories.product_name,inventories.image,inventories.size,inventories.stock,inventories.price from wishlists join inventories on wishlists.inventory_id=inventories.id where user_id=$1 and is_deleted = false", id).Scan(&productDetails).Error; err != nil {
 		return []models.Inventories{}, err
 	}
 
