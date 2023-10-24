@@ -116,7 +116,7 @@ func (a *adminRepository) CheckIfPaymentMethodAlreadyExists(payment string) (boo
 }
 
 func (a *adminRepository) DeletePaymentMethod(id int) error {
-	err := a.DB.Raw("DELETE FROM payment_methods WHERE id = $1 ", id).Error
+	err := a.DB.Exec("DELETE FROM payment_methods WHERE id = $1 ", id).Error
 	if err != nil {
 		return err
 	}
