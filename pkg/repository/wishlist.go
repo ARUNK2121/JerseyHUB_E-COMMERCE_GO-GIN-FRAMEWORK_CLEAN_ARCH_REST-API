@@ -28,9 +28,9 @@ func (w *wishlistRepository) AddToWishlist(userID, inventoryID int) error {
 	return nil
 }
 
-func (w *wishlistRepository) RemoveFromWishlist(id int) error {
+func (w *wishlistRepository) RemoveFromWishlist(invID, userID int) error {
 
-	err := w.DB.Exec("UPDATE wishlists SET is_deleted=$1 WHERE inventory_id=$2", true, id).Error
+	err := w.DB.Exec("UPDATE wishlists SET is_deleted = $1 WHERE inventory_id = $2 AND user_id = $3", true, invID, userID).Error
 	if err != nil {
 		return err
 	}
@@ -40,15 +40,27 @@ func (w *wishlistRepository) RemoveFromWishlist(id int) error {
 }
 
 func (w *wishlistRepository) GetWishList(id int) ([]models.Inventories, error) {
-
 	var productDetails []models.Inventories
 
-	if err := w.DB.Raw("select inventories.id,inventories.category_id,inventories.product_name,inventories.image,inventories.size,inventories.stock,inventories.price from wishlists join inventories on wishlists.inventory_id=inventories.id where user_id=$1 and is_deleted = false", id).Scan(&productDetails).Error; err != nil {
-		return []models.Inventories{}, err
+	query := `
+        SELECT inventories.id,
+               inventories.category_id,
+               inventories.product_name,
+               inventories.image,
+               inventories.size,
+               inventories.stock,
+               inventories.price
+        FROM inventories
+        JOIN wishlists ON wishlists.inventory_id = inventories.id
+        WHERE wishlists.user_id = ? AND wishlists.is_deleted = false
+    `
+
+	if err := w.DB.Raw(query, id).Scan(&productDetails).Error; err != nil {
+		// Log or handle the error appropriately.
+		return nil, err
 	}
 
 	return productDetails, nil
-
 }
 
 func (w *wishlistRepository) CheckIfTheItemIsPresentAtCart(userID, productID int) (bool, error) {
@@ -61,7 +73,7 @@ func (w *wishlistRepository) CheckIfTheItemIsPresentAtCart(userID, productID int
 	 JOIN users ON users.id = carts.user_id
 	 WHERE users.id = $1
 	 AND 
-	 line_items.inventory_id = $2;`, userID, productID).Scan(&result).Error; err != nil {
+	 line_items.inventory_id = $2`, userID, productID).Scan(&result).Error; err != nil {
 		return false, err
 	}
 
@@ -77,7 +89,9 @@ func (w *wishlistRepository) CheckIfTheItemIsPresentAtWishlist(userID, productID
 	 FROM wishlists 
 	 WHERE user_id = $1
 	 AND 
-	 inventory_id = $2;`, userID, productID).Scan(&result).Error; err != nil {
+	 inventory_id = $2
+	 AND
+	 is_deleted = false`, userID, productID).Scan(&result).Error; err != nil {
 		return false, err
 	}
 

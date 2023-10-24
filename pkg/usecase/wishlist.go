@@ -36,9 +36,9 @@ func (w *wishlistUseCase) AddToWishlist(userID, inventoryID int) error {
 	return nil
 }
 
-func (w *wishlistUseCase) RemoveFromWishlist(inventoryID int) error {
+func (w *wishlistUseCase) RemoveFromWishlist(inventoryID, UserID int) error {
 
-	if err := w.repository.RemoveFromWishlist(inventoryID); err != nil {
+	if err := w.repository.RemoveFromWishlist(inventoryID, UserID); err != nil {
 		return errors.New("could not remove from wishlist")
 	}
 

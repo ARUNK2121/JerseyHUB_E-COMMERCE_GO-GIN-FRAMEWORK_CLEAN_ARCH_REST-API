@@ -40,14 +40,21 @@ func (w *WishlistHandler) AddToWishlist(c *gin.Context) {
 }
 
 func (w *WishlistHandler) RemoveFromWishlist(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
+	invID, err := strconv.Atoi(c.Query("inv_id"))
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
 
-	if err := w.usecase.RemoveFromWishlist(id); err != nil {
+	UserID, ok := c.MustGet("id").(int)
+	if !ok {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not find id from context", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	if err := w.usecase.RemoveFromWishlist(invID, UserID); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not remove from wishlist", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
