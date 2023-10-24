@@ -37,10 +37,9 @@ func AdminAuthMiddleware(c *gin.Context) {
 	newAccessToken, err := CreateNewAccessTokenAdmin()
 	if err != nil {
 		// An error occurred while generating the new access token.
-		c.AbortWithStatus(500)
+		c.AbortWithStatus(401)
 		return
 	}
-
 	// Set the new access token in the response header.
 	c.Header("Authorization", "Bearer "+newAccessToken)
 	c.Next()
