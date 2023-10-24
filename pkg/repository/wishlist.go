@@ -16,11 +16,11 @@ func NewWishlistRepository(db *gorm.DB) *wishlistRepository {
 	}
 }
 
-func (w *wishlistRepository) AddToWishlist(user_id, inventory_id int) error {
+func (w *wishlistRepository) AddToWishlist(userID, inventoryID int) error {
 
 	err := w.DB.Exec(`
 		INSERT INTO wishlists (user_id,inventory_id)
-		VALUES ($1,$2)`, user_id, inventory_id).Error
+		VALUES ($1,$2)`, userID, inventoryID).Error
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func (w *wishlistRepository) GetWishList(id int) ([]models.Inventories, error) {
 
 	var productDetails []models.Inventories
 
-	if err := w.DB.Raw("select inventories.id,inventories.category_id,inventories.product_name,inventories.image,inventories.size,inventories.stock,inventories.price from wishlists join inventories on wishlists.inventory_id=inventories.id where user_id=$1", id).Scan(&productDetails).Error; err != nil {
+	if err := w.DB.Raw("select inventories.id,inventories.category_id,inventories.product_name,inventories.image,inventories.size,inventories.stock,inventories.price from wishlists join inventories on wishlists.inventory_id=inventories.id where user_id=$1 and is_deleted = false", id).Scan(&productDetails).Error; err != nil {
 		return []models.Inventories{}, err
 	}
 

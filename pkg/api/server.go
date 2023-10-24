@@ -1,6 +1,8 @@
 package http
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 
 	handler "jerseyhub/pkg/api/handler"
@@ -45,5 +47,8 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 }
 
 func (sh *ServerHTTP) Start() {
-	sh.engine.Run(":3000")
+	err := sh.engine.Run(":3000")
+	if err != nil {
+		log.Fatal("gin engine couldn't start")
+	}
 }

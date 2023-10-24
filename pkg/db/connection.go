@@ -15,20 +15,48 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 	psqlInfo := fmt.Sprintf("host=%s user=%s dbname=%s port=%s password=%s", cfg.DBHost, cfg.DBUser, cfg.DBName, cfg.DBPort, cfg.DBPassword)
 	db, dbErr := gorm.Open(postgres.Open(psqlInfo), &gorm.Config{SkipDefaultTransaction: true})
 
-	db.AutoMigrate(&domain.Inventories{})
-	db.AutoMigrate(&domain.Category{})
-	db.AutoMigrate(&domain.Users{})
-	db.AutoMigrate(&domain.Admin{})
-	db.AutoMigrate(domain.Cart{})
-	db.AutoMigrate(domain.Address{})
-	db.AutoMigrate(domain.Order{})
-	db.AutoMigrate(domain.OrderItem{})
-	db.AutoMigrate(domain.PaymentMethod{})
-	db.AutoMigrate(domain.Coupons{})
-	db.AutoMigrate(domain.Wallet{})
-	db.AutoMigrate(domain.Offer{})
-	db.AutoMigrate(domain.LineItems{})
-	db.AutoMigrate(domain.Wishlist{})
+	if err := db.AutoMigrate(&domain.Inventories{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(&domain.Category{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(&domain.Users{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(&domain.Admin{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.Cart{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.Address{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.Order{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.OrderItem{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.PaymentMethod{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.Coupons{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.Wallet{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.Offer{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.LineItems{}); err != nil {
+		return db, err
+	}
+	if err := db.AutoMigrate(domain.Wishlist{}); err != nil {
+		return db, err
+	}
 	CheckAndCreateAdmin(db)
 
 	return db, dbErr

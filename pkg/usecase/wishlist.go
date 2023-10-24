@@ -66,6 +66,16 @@ func (w *wishlistUseCase) GetWishList(id int) ([]models.Inventories, error) {
 
 		productDetails[j].DiscountedPrice = productDetails[j].Price - discount
 
+		productDetails[j].IfPresentAtWishlist, err = w.repository.CheckIfTheItemIsPresentAtWishlist(id, int(productDetails[j].ID))
+		if err != nil {
+			return []models.Inventories{}, errors.New("error while checking ")
+		}
+
+		productDetails[j].IfPresentAtCart, err = w.repository.CheckIfTheItemIsPresentAtCart(id, int(productDetails[j].ID))
+		if err != nil {
+			return []models.Inventories{}, errors.New("error while checking ")
+		}
+
 	}
 
 	return productDetails, nil
