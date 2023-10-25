@@ -5,6 +5,7 @@ import (
 	domain "jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	services "jerseyhub/pkg/usecase/interface"
+	"jerseyhub/pkg/utils/models"
 )
 
 type orderUseCase struct {
@@ -218,4 +219,21 @@ func (i *orderUseCase) MakePaymentStatusAsPaid(id int) error {
 	}
 	return nil
 
+}
+
+func (i *orderUseCase) GetIndividualOrderDetails(id int) (models.IndividualOrderDetails, error) {
+
+	details, err := i.orderRepository.GetIndividualOrderDetails(id)
+	if err != nil {
+		return models.IndividualOrderDetails{}, err
+	}
+
+	productDetail, err := i.orderRepository.GetProductDetailsInOrder(id)
+	if err != nil {
+		return models.IndividualOrderDetails{}, err
+	}
+
+	details.Products = productDetail
+
+	return details, nil
 }

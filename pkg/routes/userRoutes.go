@@ -66,6 +66,7 @@ func UserRoutes(engine *gin.RouterGroup,
 			orders := profile.Group("/orders")
 			{
 				orders.GET("", orderHandler.GetOrders)
+				orders.GET("/:id", orderHandler.GetIndividualOrderDetails)
 				orders.DELETE("", orderHandler.CancelOrder)
 				orders.PUT("/return", orderHandler.ReturnOrder)
 			}

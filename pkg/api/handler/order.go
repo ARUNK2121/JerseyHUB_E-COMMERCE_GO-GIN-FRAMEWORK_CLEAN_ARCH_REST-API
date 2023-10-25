@@ -204,3 +204,23 @@ func (i *OrderHandler) MakePaymentStatusAsPaid(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+func (i *OrderHandler) GetIndividualOrderDetails(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "error in getting parameter", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	details, err := i.orderUseCase.GetIndividualOrderDetails(id)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not fetch the details", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "successfully fetched order details", details, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}

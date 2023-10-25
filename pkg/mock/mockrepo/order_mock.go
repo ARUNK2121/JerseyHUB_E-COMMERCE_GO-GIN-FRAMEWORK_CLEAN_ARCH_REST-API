@@ -210,6 +210,21 @@ func (mr *MockOrderRepositoryMockRecorder) GetCart(userid interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCart", reflect.TypeOf((*MockOrderRepository)(nil).GetCart), userid)
 }
 
+// GetIndividualOrderDetails mocks base method.
+func (m *MockOrderRepository) GetIndividualOrderDetails(id int) (models.IndividualOrderDetails, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetIndividualOrderDetails", id)
+	ret0, _ := ret[0].(models.IndividualOrderDetails)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetIndividualOrderDetails indicates an expected call of GetIndividualOrderDetails.
+func (mr *MockOrderRepositoryMockRecorder) GetIndividualOrderDetails(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIndividualOrderDetails", reflect.TypeOf((*MockOrderRepository)(nil).GetIndividualOrderDetails), id)
+}
+
 // GetOrderDetail mocks base method.
 func (m *MockOrderRepository) GetOrderDetail(orderID string) (domain.Order, error) {
 	m.ctrl.T.Helper()
@@ -238,6 +253,21 @@ func (m *MockOrderRepository) GetOrders(id int) ([]domain.Order, error) {
 func (mr *MockOrderRepositoryMockRecorder) GetOrders(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockOrderRepository)(nil).GetOrders), id)
+}
+
+// GetProductDetailsInOrder mocks base method.
+func (m *MockOrderRepository) GetProductDetailsInOrder(id int) ([]models.ProductDetails, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetProductDetailsInOrder", id)
+	ret0, _ := ret[0].([]models.ProductDetails)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetProductDetailsInOrder indicates an expected call of GetProductDetailsInOrder.
+func (mr *MockOrderRepositoryMockRecorder) GetProductDetailsInOrder(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductDetailsInOrder", reflect.TypeOf((*MockOrderRepository)(nil).GetProductDetailsInOrder), id)
 }
 
 // GetProductImagesInAOrder mocks base method.

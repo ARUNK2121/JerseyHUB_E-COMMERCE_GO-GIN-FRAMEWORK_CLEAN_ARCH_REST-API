@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"jerseyhub/pkg/domain"
+	"jerseyhub/pkg/utils/models"
 )
 
 type OrderUseCase interface {
@@ -12,4 +13,5 @@ type OrderUseCase interface {
 	AdminOrders() (domain.AdminOrdersResponse, error)
 	ReturnOrder(id int) error
 	MakePaymentStatusAsPaid(id int) error
+	GetIndividualOrderDetails(id int) (models.IndividualOrderDetails, error)
 }

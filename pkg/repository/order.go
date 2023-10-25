@@ -255,3 +255,43 @@ func (o *orderRepository) GetProductImagesInAOrder(id int) ([]string, error) {
 
 	return []string{}, nil
 }
+
+func (o *orderRepository) GetIndividualOrderDetails(id int) (models.IndividualOrderDetails, error) {
+
+	var details models.IndividualOrderDetails
+	err := o.DB.Raw(`SELECT orders.id AS order_id,
+	CONCAT('House Name:',addresses.house_name, ' ', 'Street:', addresses.street, ' ', 'City:', addresses.city, ' ', 'State', addresses.state) AS address,
+	addresses.phone AS phone, 
+	orders.coupon_used,
+	payment_methods.payment_name AS payment_method, 
+	orders.final_price As total_amount ,
+	orders.order_status,
+	orders.payment_status
+	FROM orders 
+	 JOIN payment_methods ON payment_methods.id = orders.payment_method_id 
+	JOIN addresses ON orders.address_id = addresses.id 
+	WHERE orders.id = $1;`, id).Scan(&details).Error
+	if err != nil {
+		return models.IndividualOrderDetails{}, err
+	}
+
+	return details, nil
+}
+
+func (o *orderRepository) GetProductDetailsInOrder(id int) ([]models.ProductDetails, error) {
+
+	var products []models.ProductDetails
+	err := o.DB.Raw(`SELECT  inventories.product_name,
+	inventories.image,
+	order_items.quantity,
+	order_items.total_price 
+	FROM order_items 
+	JOIN inventories ON inventories.id = order_items.inventory_id 
+	JOIN orders ON order_items.order_id = orders.id 
+	WHERE orders.id = $1`, id).Scan(&products).Error
+	if err != nil {
+		return []models.ProductDetails{}, err
+	}
+
+	return []models.ProductDetails{}, nil
+}
