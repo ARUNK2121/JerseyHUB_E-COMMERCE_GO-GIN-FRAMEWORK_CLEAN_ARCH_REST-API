@@ -25,4 +25,5 @@ type OrderRepository interface {
 	FindWalletIdFromUserID(userId int) (int, error)
 	CreateNewWallet(userID int) (int, error)
 	MakePaymentStatusAsPaid(id int) error
+	GetProductImagesInAOrder(id int) ([]string, error)
 }

@@ -21,14 +21,28 @@ func NewOrderUseCase(repo interfaces.OrderRepository, coup interfaces.CouponRepo
 	}
 }
 
-func (i *orderUseCase) GetOrders(id int) ([]domain.Order, error) {
+func (i *orderUseCase) GetOrders(id int) ([]domain.OrderDetailsWithImages, error) {
 
 	orders, err := i.orderRepository.GetOrders(id)
 	if err != nil {
-		return []domain.Order{}, err
+		return []domain.OrderDetailsWithImages{}, err
 	}
 
-	return orders, nil
+	var result []domain.OrderDetailsWithImages
+	for _, v := range orders {
+		var o domain.OrderDetailsWithImages
+		images, err := i.orderRepository.GetProductImagesInAOrder(int(v.ID))
+		if err != nil {
+			return []domain.OrderDetailsWithImages{}, err
+		}
+
+		o.OrderDetails = v
+		o.Images = images
+
+		result = append(result, o)
+	}
+
+	return result, nil
 
 }
 

@@ -240,3 +240,18 @@ func (o *orderRepository) MakePaymentStatusAsPaid(id int) error {
 
 	return nil
 }
+
+func (o *orderRepository) GetProductImagesInAOrder(id int) ([]string, error) {
+
+	var images []string
+	err := o.DB.Raw(`SELECT inventories.image
+	FROM inventories 
+	JOIN order_items ON inventories.id = order_items.inventory_id
+	JOIN orders ON orders.id = order_items.order_id 
+	WHERE orders.id = $1`, id).Scan(&images).Error
+	if err != nil {
+		return []string{}, err
+	}
+
+	return []string{}, nil
+}
