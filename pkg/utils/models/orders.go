@@ -35,3 +35,21 @@ type EditOrderStatus struct {
 	OrderID int    `json:"order_id"`
 	Status  string `json:"order_status"`
 }
+
+type IndividualOrderDetails struct {
+	OrderID       int
+	Address       string
+	Phone         string
+	Products      []ProductDetails
+	TotalAmount   float64
+	CouponUsed    string
+	OrderStatus   string
+	PaymentStatus string
+}
+
+type ProductDetails struct {
+	ProductName string
+	Image       string
+	Quantity    int
+	Amount      float64
+}

@@ -46,3 +46,8 @@ type OrderDetails struct {
 	PaymentMethod string  `json:"payment_method" gorm:"payment_method"`
 	Total         float64 `json:"total"`
 }
+
+type OrderDetailsWithImages struct {
+	OrderDetails Order
+	Images       []string
+}
