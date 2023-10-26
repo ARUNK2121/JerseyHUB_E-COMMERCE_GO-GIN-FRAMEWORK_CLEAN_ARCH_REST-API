@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	domain "jerseyhub/pkg/domain"
 	interfaces "jerseyhub/pkg/repository/interface"
 	services "jerseyhub/pkg/usecase/interface"
@@ -39,6 +40,11 @@ func (i *orderUseCase) GetOrders(id int) ([]domain.OrderDetailsWithImages, error
 
 		o.OrderDetails = v
 		o.Images = images
+
+		fmt.Println("images:", images)
+		fmt.Println("o.images", o.Images)
+
+		fmt.Println("o", o)
 
 		result = append(result, o)
 	}

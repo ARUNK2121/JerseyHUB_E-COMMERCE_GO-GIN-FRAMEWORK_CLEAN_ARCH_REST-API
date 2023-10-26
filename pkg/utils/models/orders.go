@@ -40,7 +40,7 @@ type IndividualOrderDetails struct {
 	OrderID       int
 	Address       string
 	Phone         string
-	Products      []ProductDetails
+	Products      []ProductDetails `gorm:"-"`
 	TotalAmount   float64
 	CouponUsed    string
 	OrderStatus   string
