@@ -105,11 +105,12 @@ type GetCart struct {
 }
 
 type CheckOut struct {
-	CartID         int
-	Addresses      []Address
-	Products       []GetCart
-	PaymentMethods []PaymentMethod
-	TotalPrice     float64
+	CartID          int
+	Addresses       []Address
+	Products        []GetCart
+	PaymentMethods  []PaymentMethod
+	TotalPrice      float64
+	DiscountedPrice float64
 }
 
 type Search struct {

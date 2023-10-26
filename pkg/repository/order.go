@@ -187,13 +187,13 @@ func (i *orderRepository) CreditToUserWallet(amount float64, walletId int) error
 
 func (o *orderRepository) FindUserIdFromOrderID(id int) (int, error) {
 
-	var user_id int
-	err := o.DB.Raw("select user_id from orders where id = ?", id).Scan(&user_id).Error
+	var userID int
+	err := o.DB.Raw("select user_id from orders where id = ?", id).Scan(&userID).Error
 	if err != nil {
 		return 0, err
 	}
 
-	return user_id, nil
+	return userID, nil
 }
 
 func (o *orderRepository) FindWalletIdFromUserID(userId int) (int, error) {
@@ -293,5 +293,5 @@ func (o *orderRepository) GetProductDetailsInOrder(id int) ([]models.ProductDeta
 		return []models.ProductDetails{}, err
 	}
 
-	return []models.ProductDetails{}, nil
+	return products, nil
 }
