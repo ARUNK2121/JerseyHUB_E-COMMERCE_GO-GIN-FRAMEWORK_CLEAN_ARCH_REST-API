@@ -8,7 +8,7 @@ import (
 type OrderRepository interface {
 	GetOrders(id int) ([]domain.Order, error)
 	GetCart(userid int) ([]models.GetCart, error)
-	OrderItems(userid, addressid, paymentid int, total float64) (int, error)
+	OrderItems(userid, addressid, paymentid int, total float64, coupon string) (int, error)
 	AddOrderProducts(order_id int, cart []models.GetCart) error
 	CancelOrder(id int) error
 	EditOrderStatus(status string, id int) error
