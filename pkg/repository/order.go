@@ -270,7 +270,7 @@ func (o *orderRepository) GetIndividualOrderDetails(id int) (models.IndividualOr
 	FROM orders 
 	 JOIN payment_methods ON payment_methods.id = orders.payment_method_id 
 	JOIN addresses ON orders.address_id = addresses.id 
-	WHERE orders.id = $1;`, id).Scan(&details).Error
+	WHERE orders.id = $1`, id).Scan(&details).Error
 	if err != nil {
 		return models.IndividualOrderDetails{}, err
 	}

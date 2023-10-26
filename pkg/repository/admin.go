@@ -77,7 +77,7 @@ func (ad *adminRepository) GetUsers(page int) ([]models.UserDetailsAtAdmin, erro
 	offset := (page - 1) * 5
 	var userDetails []models.UserDetailsAtAdmin
 
-	if err := ad.DB.Raw("select id,name,email,phone,blocked from users limit ? offset ?", 5, offset).Scan(&userDetails).Error; err != nil {
+	if err := ad.DB.Raw("select id,name,email,phone,blocked from users limit ? offset ?", 20, offset).Scan(&userDetails).Error; err != nil {
 		return []models.UserDetailsAtAdmin{}, err
 	}
 
@@ -97,7 +97,7 @@ func (i *adminRepository) NewPaymentMethod(pay string) error {
 
 func (a *adminRepository) ListPaymentMethods() ([]domain.PaymentMethod, error) {
 	var model []domain.PaymentMethod
-	err := a.DB.Raw("SELECT * FROM payment_methods").Scan(&model).Error
+	err := a.DB.Raw("SELECT * FROM payment_methods where is_deleted = false").Scan(&model).Error
 	if err != nil {
 		return []domain.PaymentMethod{}, err
 	}
@@ -107,7 +107,7 @@ func (a *adminRepository) ListPaymentMethods() ([]domain.PaymentMethod, error) {
 
 func (a *adminRepository) CheckIfPaymentMethodAlreadyExists(payment string) (bool, error) {
 	var count int64
-	err := a.DB.Raw("SELECT COUNT(*) FROM payment_methods WHERE payment_name = $1", payment).Scan(&count).Error
+	err := a.DB.Raw("SELECT COUNT(*) FROM payment_methods WHERE payment_name = $1 and is_deleted = false", payment).Scan(&count).Error
 	if err != nil {
 		return false, err
 	}
@@ -116,7 +116,7 @@ func (a *adminRepository) CheckIfPaymentMethodAlreadyExists(payment string) (boo
 }
 
 func (a *adminRepository) DeletePaymentMethod(id int) error {
-	err := a.DB.Exec("DELETE FROM payment_methods WHERE id = $1 ", id).Error
+	err := a.DB.Exec("UPDATE payment_methods SET is_deleted = true WHERE id = $1 ", id).Error
 	if err != nil {
 		return err
 	}
