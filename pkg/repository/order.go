@@ -245,15 +245,15 @@ func (o *orderRepository) GetProductImagesInAOrder(id int) ([]string, error) {
 
 	var images []string
 	err := o.DB.Raw(`SELECT inventories.image
-	FROM inventories 
-	JOIN order_items ON inventories.id = order_items.inventory_id
+	FROM order_items 
+	JOIN inventories ON inventories.id = order_items.inventory_id
 	JOIN orders ON orders.id = order_items.order_id 
 	WHERE orders.id = $1`, id).Scan(&images).Error
 	if err != nil {
 		return []string{}, err
 	}
 
-	return []string{}, nil
+	return images, nil
 }
 
 func (o *orderRepository) GetIndividualOrderDetails(id int) (models.IndividualOrderDetails, error) {
