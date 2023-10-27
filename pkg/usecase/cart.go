@@ -82,9 +82,10 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 		return models.CheckOut{}, err
 	}
 
-	var price float64
+	var discountedPrice, totalPrice float64
 	for _, v := range products.Data {
-		price = price + v.Total
+		discountedPrice += v.DiscountedPrice
+		totalPrice += v.Total
 	}
 
 	var checkout models.CheckOut
@@ -93,7 +94,8 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 	checkout.Addresses = address
 	checkout.Products = products.Data
 	checkout.PaymentMethods = payment
-	checkout.TotalPrice = price
+	checkout.TotalPrice = totalPrice
+	checkout.DiscountedPrice = discountedPrice
 
 	return checkout, err
 }

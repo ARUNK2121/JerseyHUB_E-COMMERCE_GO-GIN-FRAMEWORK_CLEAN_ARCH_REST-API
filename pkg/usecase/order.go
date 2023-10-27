@@ -66,13 +66,16 @@ func (i *orderUseCase) OrderItemsFromCart(userid int, addressid int, paymentid i
 	}
 
 	//finding discount if any
-	DiscountRate := i.couponRepository.FindCouponDiscount(couponID)
+	coupon, err := i.couponRepository.FindCouponDetails(couponID)
+	if err != nil {
+		return err
+	}
 
-	totalDiscount := (total * float64(DiscountRate)) / 100
+	totalDiscount := (total * float64(coupon.DiscountRate)) / 100
 
 	total = total - totalDiscount
 
-	order_id, err := i.orderRepository.OrderItems(userid, addressid, paymentid, total)
+	order_id, err := i.orderRepository.OrderItems(userid, addressid, paymentid, total, coupon.Coupon)
 	if err != nil {
 		return err
 	}

@@ -41,14 +41,14 @@ func (repo *couponRepository) ReActivateCoupon(id int) error {
 	return nil
 }
 
-func (repo *couponRepository) FindCouponDiscount(couponID int) int {
-	var coupon models.Coupons
-	err := repo.DB.Raw("select coupon,discount_rate,valid from coupons where id=$1", couponID).Scan(&coupon).Error
+func (repo *couponRepository) FindCouponDetails(couponID int) (domain.Coupons, error) {
+	var coupon domain.Coupons
+	err := repo.DB.Raw("select * from coupons where id=$1", couponID).Scan(&coupon).Error
 	if err != nil {
-		return 0
+		return domain.Coupons{}, err
 	}
 
-	return coupon.DiscountRate
+	return domain.Coupons{}, nil
 }
 
 func (c *couponRepository) GetAllCoupons() ([]domain.Coupons, error) {
