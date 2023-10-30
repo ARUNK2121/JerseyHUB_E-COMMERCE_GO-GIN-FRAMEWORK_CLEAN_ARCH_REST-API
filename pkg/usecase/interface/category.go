@@ -11,4 +11,5 @@ type CategoryUseCase interface {
 	DeleteCategory(categoryID string) error
 	GetCategories() ([]domain.Category, error)
 	GetProductDetailsInACategory(id int) ([]models.Inventories, error)
+	GetBannersForUsers() ([]models.Banner, error)
 }

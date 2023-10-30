@@ -102,3 +102,23 @@ func (i *categoryUseCase) GetProductDetailsInACategory(id int) ([]models.Invento
 	return productDetails, nil
 
 }
+
+func (Cat *categoryUseCase) GetBannersForUsers() ([]models.Banner, error) {
+
+	//find categories with highest offer percentage atleast one maximum 3
+	banners, err := Cat.repository.GetBannersForUsers()
+	if err != nil {
+		return []models.Banner{}, err
+	}
+
+	//find images of 2 products from each category
+	for _, v := range banners {
+		images, err := Cat.repository.GetImagesOfProductsFromACategory(v.CategoryID)
+		if err != nil {
+			return []models.Banner{}, err
+		}
+		v.Images = images
+	}
+
+	return banners, nil
+}

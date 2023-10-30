@@ -35,6 +35,8 @@ func UserRoutes(engine *gin.RouterGroup,
 	engine.Use(middleware.UserAuthMiddleware)
 	{
 
+		engine.GET("/banners", categoryHandler.GetBannersForUsers)
+
 		search := engine.Group("/search")
 		{
 			search.GET("/", inventoryHandler.SearchProducts)
