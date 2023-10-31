@@ -143,3 +143,17 @@ func (Cat *CategoryHandler) GetProductDetailsInACategory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+func (Cat *CategoryHandler) GetBannersForUsers(c *gin.Context) {
+
+	banners, err := Cat.CategoryUseCase.GetBannersForUsers()
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "error in fetching data", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all banners", banners, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}

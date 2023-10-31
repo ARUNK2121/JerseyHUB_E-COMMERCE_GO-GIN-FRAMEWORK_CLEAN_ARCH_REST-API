@@ -43,3 +43,10 @@ type EditInventoryDetails struct {
 	CategoryID int     `json:"category_id"`
 	Size       string  `json:"size"`
 }
+
+type Banner struct {
+	CategoryID         int
+	CategoryName       string
+	DiscountPercentage int
+	Images             []string
+}

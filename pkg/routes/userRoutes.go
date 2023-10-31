@@ -35,6 +35,8 @@ func UserRoutes(engine *gin.RouterGroup,
 	engine.Use(middleware.UserAuthMiddleware)
 	{
 
+		engine.GET("/banners", categoryHandler.GetBannersForUsers)
+
 		search := engine.Group("/search")
 		{
 			search.GET("/", inventoryHandler.SearchProducts)
@@ -61,7 +63,7 @@ func UserRoutes(engine *gin.RouterGroup,
 			profile.GET("/details", userHandler.GetUserDetails)
 			profile.GET("/address", userHandler.GetAddresses)
 			profile.POST("/address", userHandler.AddAddress)
-			profile.GET("/get-link", userHandler.GetMyReferenceLink)
+			profile.GET("/reference-link", userHandler.GetMyReferenceLink)
 
 			orders := profile.Group("/orders")
 			{
