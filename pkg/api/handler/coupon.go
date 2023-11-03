@@ -29,7 +29,7 @@ func NewCouponHandler(use services.CouponUsecase) *CouponHandler {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/admin/coupons/create [post]
+// @Router			/admin/coupons [post]
 func (coup *CouponHandler) CreateNewCoupon(c *gin.Context) {
 	var coupon models.Coupons
 	if err := c.BindJSON(&coupon); err != nil {
@@ -59,7 +59,7 @@ func (coup *CouponHandler) CreateNewCoupon(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/admin/coupons/delete [delete]
+// @Router			/admin/coupons [delete]
 func (coup *CouponHandler) MakeCouponInvalid(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {

@@ -29,4 +29,6 @@ type OrderRepository interface {
 
 	GetIndividualOrderDetails(id int) (models.IndividualOrderDetails, error)
 	GetProductDetailsInOrder(id int) ([]models.ProductDetails, error)
+
+	FindPaymentMethodOfOrder(id int) (string, error)
 }

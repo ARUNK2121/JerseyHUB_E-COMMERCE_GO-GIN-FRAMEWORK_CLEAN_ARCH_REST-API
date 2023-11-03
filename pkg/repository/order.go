@@ -295,3 +295,16 @@ func (o *orderRepository) GetProductDetailsInOrder(id int) ([]models.ProductDeta
 
 	return products, nil
 }
+
+func (o *orderRepository) FindPaymentMethodOfOrder(id int) (string, error) {
+
+	var payment string
+
+	if err := o.DB.Raw(`select payment_methods.payment_name
+	 from payment_methods
+	  join orders on orders.payment_method_id = payment_methods.id
+	   where orders.id = $1`, id).Scan(&payment).Error; err != nil {
+		return "", err
+	}
+	return payment, nil
+}

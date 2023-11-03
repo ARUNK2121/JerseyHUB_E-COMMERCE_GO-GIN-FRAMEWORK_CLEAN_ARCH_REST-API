@@ -3,6 +3,8 @@ definitions:
     properties:
       category:
         type: string
+      category_image:
+        type: string
       id:
         type: integer
     type: object
@@ -13,6 +15,8 @@ definitions:
       house_name:
         type: string
       name:
+        type: string
+      phone:
         type: string
       pin:
         type: string
@@ -114,6 +118,8 @@ definitions:
     properties:
       address_id:
         type: integer
+      coupon_id:
+        type: integer
       payment_id:
         type: integer
       user_id:
@@ -199,7 +205,33 @@ paths:
       summary: Admin Login
       tags:
       - Admin
-  /admin/category/add:
+  /admin/category:
+    delete:
+      consumes:
+      - application/json
+      description: Admin can delete a category
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Delete Category
+      tags:
+      - Admin
     post:
       consumes:
       - application/json
@@ -227,34 +259,6 @@ paths:
       summary: Add Category
       tags:
       - Admin
-  /admin/category/delete:
-    delete:
-      consumes:
-      - application/json
-      description: Admin can delete a category
-      parameters:
-      - description: id
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: Delete Category
-      tags:
-      - Admin
-  /admin/category/update:
     put:
       consumes:
       - application/json
@@ -282,35 +286,7 @@ paths:
       summary: Update Category
       tags:
       - Admin
-  /admin/coupons/create:
-    post:
-      consumes:
-      - application/json
-      description: Admin can add new coupons
-      parameters:
-      - description: coupon
-        in: body
-        name: coupon
-        required: true
-        schema:
-          $ref: '#/definitions/models.Coupons'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: Add Coupon
-      tags:
-      - Admin
-  /admin/coupons/delete:
+  /admin/coupons:
     delete:
       consumes:
       - application/json
@@ -338,7 +314,60 @@ paths:
       summary: Make Coupon ad invalid
       tags:
       - Admin
-  /admin/inventories/add:
+    post:
+      consumes:
+      - application/json
+      description: Admin can add new coupons
+      parameters:
+      - description: coupon
+        in: body
+        name: coupon
+        required: true
+        schema:
+          $ref: '#/definitions/models.Coupons'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Add Coupon
+      tags:
+      - Admin
+  /admin/inventories:
+    delete:
+      consumes:
+      - application/json
+      description: Admin can delete a product
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Delete Inventory
+      tags:
+      - Admin
     post:
       consumes:
       - multipart/form-data
@@ -390,34 +419,6 @@ paths:
       summary: Add Inventory
       tags:
       - Admin
-  /admin/inventories/delete:
-    delete:
-      consumes:
-      - application/json
-      description: Admin can delete a product
-      parameters:
-      - description: id
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: Delete Inventory
-      tags:
-      - Admin
-  /admin/inventories/update:
     put:
       consumes:
       - application/json
@@ -792,11 +793,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.Order'
-      - description: coupon-id
-        in: query
-        name: coupon-id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -897,6 +893,33 @@ paths:
       summary: List Products
       tags:
       - User
+  /users/home/products/details:
+    get:
+      consumes:
+      - application/json
+      description: user can view the details of the product
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Show Product Details
+      tags:
+      - User
   /users/login:
     post:
       consumes:
@@ -947,33 +970,6 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: Send OTP
-      tags:
-      - User
-  /users/products/details:
-    get:
-      consumes:
-      - application/json
-      description: user can view the details of the product
-      parameters:
-      - description: id
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: Show Product Details
       tags:
       - User
   /users/profile/address:

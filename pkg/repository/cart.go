@@ -44,7 +44,7 @@ func (ad *cartRepository) GetPaymentOptions() ([]models.PaymentMethod, error) {
 
 	var payment []models.PaymentMethod
 
-	if err := ad.DB.Raw("SELECT * FROM payment_methods WHERE id_deleted = false").Scan(&payment).Error; err != nil {
+	if err := ad.DB.Raw("SELECT * FROM payment_methods WHERE is_deleted = false").Scan(&payment).Error; err != nil {
 		return []models.PaymentMethod{}, err
 	}
 
