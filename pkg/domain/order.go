@@ -49,6 +49,7 @@ type OrderDetails struct {
 }
 
 type OrderDetailsWithImages struct {
-	OrderDetails Order
-	Images       []string
+	OrderDetails  Order
+	Images        []string
+	PaymentMethod string
 }

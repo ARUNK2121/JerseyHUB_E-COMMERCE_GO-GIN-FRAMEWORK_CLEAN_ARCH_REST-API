@@ -38,8 +38,14 @@ func (i *orderUseCase) GetOrders(id int) ([]domain.OrderDetailsWithImages, error
 			return []domain.OrderDetailsWithImages{}, err
 		}
 
+		payment, err := i.orderRepository.FindPaymentMethodOfOrder(int(v.ID))
+		if err != nil {
+			return []domain.OrderDetailsWithImages{}, err
+		}
+
 		o.OrderDetails = v
 		o.Images = images
+		o.PaymentMethod = payment
 
 		fmt.Println("images:", images)
 		fmt.Println("o.images", o.Images)

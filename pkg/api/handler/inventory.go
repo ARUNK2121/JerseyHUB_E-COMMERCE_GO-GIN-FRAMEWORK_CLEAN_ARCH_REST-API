@@ -34,7 +34,7 @@ func NewInventoryHandler(usecase services.InventoryUseCase) *InventoryHandler {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/admin/inventories/add [post]
+// @Router			/admin/inventories [post]
 func (i *InventoryHandler) AddInventory(c *gin.Context) {
 
 	var inventory models.AddInventories
@@ -95,7 +95,7 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/admin/inventories/update [put]
+// @Router			/admin/inventories [put]
 func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 
 	var p models.InventoryUpdate
@@ -127,7 +127,7 @@ func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/admin/inventories/delete [delete]
+// @Router			/admin/inventories [delete]
 func (i *InventoryHandler) DeleteInventory(c *gin.Context) {
 
 	inventoryID := c.Query("id")

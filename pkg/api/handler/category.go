@@ -30,7 +30,7 @@ func NewCategoryHandler(usecase services.CategoryUseCase) *CategoryHandler {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/admin/category/add [post]
+// @Router			/admin/category [post]
 func (Cat *CategoryHandler) AddCategory(c *gin.Context) {
 
 	var category domain.Category
@@ -61,7 +61,7 @@ func (Cat *CategoryHandler) AddCategory(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/admin/category/update [put]
+// @Router			/admin/category [put]
 func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 
 	var p models.SetNewName
@@ -93,7 +93,7 @@ func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 // @Security		Bearer
 // @Success		200	{object}	response.Response{}
 // @Failure		500	{object}	response.Response{}
-// @Router			/admin/category/delete [delete]
+// @Router			/admin/category [delete]
 func (Cat *CategoryHandler) DeleteCategory(c *gin.Context) {
 
 	categoryID := c.Query("id")
