@@ -48,5 +48,5 @@ type Banner struct {
 	CategoryID         int
 	CategoryName       string
 	DiscountPercentage int
-	Images             []string
+	Images             []string `gorm:"-"`
 }
