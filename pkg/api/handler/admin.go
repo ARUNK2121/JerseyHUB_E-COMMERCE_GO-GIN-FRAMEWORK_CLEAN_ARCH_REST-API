@@ -1,14 +1,18 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
+	"time"
 
+	"jerseyhub/pkg/helper"
 	services "jerseyhub/pkg/usecase/interface"
 	models "jerseyhub/pkg/utils/models"
 	response "jerseyhub/pkg/utils/response"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 )
 
 type AdminHandler struct {
@@ -201,4 +205,35 @@ func (a *AdminHandler) DeletePaymentMethod(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully deleted the Category", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 
+}
+
+func (a *AdminHandler) ValidateRefreshTokenAndCreateNewAccess(c *gin.Context) {
+
+	refreshToken := c.Request.Header.Get("RefreshToken")
+
+	// Check if the refresh token is valid.
+	_, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+		return []byte("refreshsecret"), nil
+	})
+	if err != nil {
+		// The refresh token is invalid.
+		c.AbortWithError(401, errors.New("refresh token is invalid:user have to login again"))
+		return
+	}
+
+	claims := &helper.AuthCustomClaims{
+		Role: "admin",
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Minute).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	newAccessToken, err := token.SignedString([]byte("accesssecret"))
+	if err != nil {
+		c.AbortWithError(500, errors.New("error in creating new access token"))
+	}
+
+	c.JSON(200, newAccessToken)
 }
