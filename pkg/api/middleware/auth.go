@@ -17,6 +17,7 @@ func AdminAuthMiddleware(c *gin.Context) {
 	_, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte("accesssecret"), nil
 	})
+	fmt.Println("error:", err.Error())
 	if err != nil {
 		// The access token is invalid.
 		fmt.Println("error catches here")
