@@ -284,7 +284,7 @@ func (o *orderRepository) GetProductDetailsInOrder(id int) ([]models.ProductDeta
 	err := o.DB.Raw(`SELECT  inventories.product_name,
 	inventories.image,
 	order_items.quantity,
-	order_items.total_price 
+	order_items.total_price AS amount
 	FROM order_items 
 	JOIN inventories ON inventories.id = order_items.inventory_id 
 	JOIN orders ON order_items.order_id = orders.id 
